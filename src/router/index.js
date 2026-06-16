@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import parseUrl from '../components/parseUrl.vue'
+import resMd from '../components/parseUrl.vue'
 import writeMD from '../components/writeMD.vue'
 import Home from '../components/Home.vue'
 
@@ -19,7 +20,10 @@ const router = createRouter({
     {
       path: '/write-md',
       name: 'WriteMD',
-      component: writeMD
+      component: writeMD,
+      props: {
+        dataMd: resMd.value
+      }
     }
   ]
 })

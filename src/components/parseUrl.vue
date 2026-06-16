@@ -14,12 +14,16 @@
     <p v-else>プレビュー</p>
   </div>
 
-  <input type="button" value="エディタで編集" @click="$router.push('/writeMD')"/>
-  <input type="button" value="このまま保存" @click="$router.push('/')"/>
+  <input type="button" value="エディタで編集" @click="$router.push('/write-md')"/>
+  <input type="button" value="このまま公開" @click="$router.push('/')"/>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import '../assets/main.css'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const url = ref('')
 const resMd = ref('')
@@ -36,6 +40,12 @@ function parseUrl() {
       isLoading=false
       resMd=AIからのレスポンス
       resImg=AIからのレスポンスをhtmlに変換したもの
+      export default {
+        props: {
+          dataMd: String
+        }
+      }
+      が必要かも。それをrouter.jsで受け取ってwriteMD.vueに渡す
   else url=''
   */
 }

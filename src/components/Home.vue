@@ -2,15 +2,7 @@
 import '../assets/main.css'
 
 import { useRouter } from 'vue-router'
-
 const router = useRouter()
-
-function goParseUrl() {
-  router.push('/parse-url')
-}
-function goWriteMD() {
-  router.push('/write-md')
-}
 </script>
 
 <template>
@@ -27,12 +19,12 @@ function goWriteMD() {
     <div class="manga">
       <p>01</p>
       <h3>既存の技術記事をAIで漫画化</h3>
-      <input type="button" value="記事を読み込む" @click="goParseUrl" />
+      <input type="button" value="記事を読み込む" @click="router.push('/parse-url')" />
     </div>
     <div class="manga">
       <p>02</p>
       <h3>独自MarkDownを用いて、一から漫画を作成</h3>
-      <input type="button" value="漫画を作る" @click="goWriteMD" />
+      <input type="button" value="漫画を作る" @click="router.push('/write-md')" />
     </div>
     <div class="manga">
       <p>使い方は</p>

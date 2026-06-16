@@ -1,17 +1,18 @@
 <script setup>
 import '../assets/main.css'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 </script>
 
 <template>
+  <input type="button" value="このまま公開" @click="router.push('/')" />
   <div class="flexbox">
     <div class="manga">
-      <textarea placeholder="独自のMarkDownを入力" />
+      <textarea placeholder="独自のMarkDownを入力" v-model="dataMd" > {{ dataMd }} </textarea>
     </div>
     <div class="manga">
-      <p>プレビュー</p>
-      <div class="preview">
-        ここにプレビューが表示される
-      </div>
+      <p v-if="dataMd" v-html="dataMd"></p>
+      <p v-else>プレビュー</p>
     </div>
   </div>
 </template>
