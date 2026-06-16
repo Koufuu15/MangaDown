@@ -15,7 +15,7 @@
   </div>
 
   <input type="button" value="エディタで編集" @click="$router.push('/write-md')"/>
-  <input type="button" value="このまま公開" @click="$router.push('/')"/>
+  <input type="button" value="このまま公開" @click="$router.push('/save')"/>
 </template>
 
 <script setup>

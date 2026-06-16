@@ -3,6 +3,7 @@ import parseUrl from '../components/parseUrl.vue'
 import resMd from '../components/parseUrl.vue'
 import writeMD from '../components/writeMD.vue'
 import Home from '../components/Home.vue'
+import save from '../components/save.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,6 +25,11 @@ const router = createRouter({
       props: {
         dataMd: resMd.value
       }
+    },
+    {
+      path: '/save',
+      name: 'Save',
+      component: save
     }
   ]
 })

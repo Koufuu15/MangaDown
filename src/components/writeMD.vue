@@ -5,7 +5,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <input type="button" value="このまま公開" @click="router.push('/')" />
+  <input type="button" value="このまま公開" @click="router.push('/save')" />
   <div class="flexbox">
     <div class="manga">
       <textarea placeholder="独自のMarkDownを入力" v-model="dataMd" > {{ dataMd }} </textarea>
