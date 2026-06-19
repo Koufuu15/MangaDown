@@ -3,15 +3,17 @@
   <input id="url" type="url" placeholder="URLを入力" v-model="url"/>
   <input type="button" value="読み込む" @click="parseUrl"/>
 
-  <div class="manga">
-    <p v-if="isLoading">Thinking...</p>
-    <p v-else-if="!url">URLを入力してください</p>
-    <p v-else-if="resMd">{{ resMd }}</p>
-    <p v-else-if="!res">データの取得に失敗しました</p>
-  </div>
-  <div class="manga">
-    <p v-if="resImg" v-html="resImg"></p>
-    <p v-else>プレビュー</p>
+  <div class="flexbox">
+    <div class="manga">
+      <p v-if="isLoading">Thinking...</p>
+      <p v-else-if="!url">URLを入力してください</p>
+      <p v-else-if="resMd">{{ resMd }}</p>
+      <p v-else-if="!res">データの取得に失敗しました</p>
+    </div>
+    <div class="manga">
+      <p v-if="resImg" v-html="resImg"></p>
+      <p v-else>プレビュー</p>
+    </div>
   </div>
 
   <input type="button" value="エディタで編集" @click="$router.push('/write-md')"/>
@@ -51,3 +53,11 @@ function parseUrl() {
 }
 
 </script>
+
+<style scoped>
+.flexbox div {
+  display: inline-block;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+</style>
