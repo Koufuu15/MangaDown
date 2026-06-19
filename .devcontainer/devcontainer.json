@@ -1,19 +1,19 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/alpine
 {
-	"name": "Alpine",
-	"dockerComposeFile": "docker-compose.yml",
-	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.22",
-	"service": "app",
-	"workspaceFolder": "/workspace",
+	"name": "MangaDown",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 	"customizations" : {
 		"vscode": {
 			"extensions" : [
-
+				"Vue.volar",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
 			]
 		}
 	},
-	"forwardPorts": [8080],
-	"remoteUser": "root",
-	"shutdownAction": "stopCompose"
+	"forwardPorts": [5173],
+	"postCreateCommand" : "npm install"
 }
