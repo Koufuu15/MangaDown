@@ -9,11 +9,18 @@ import { languages } from '@codemirror/language-data'
 
 const router = useRouter()
 const editor = ref(null)
+let content = ""
+
+if (localStorage.getItem('content')) {
+  content = localStorage.getItem('content')
+} else {
+  content = "// ここにMarkDownを記載してください。"
+}
 
 onMounted(() => {
   new EditorView({
     // TODO: what's doc?
-    doc: "console.log('Hello, world!')",
+    doc: content,
     extensions: [
         basicSetup, 
         markdown({ codeLanguages: languages })
@@ -25,16 +32,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <input type="button" value="このまま公開" @click="router.push('/save')" />
   <div class="flexbox">
     <div class="manga">
-      <div ref="editor">{{ dataMd || "独自Markdownを入力してください。" }}</div>
+      <div ref="editor"></div>
     </div>
     <div class="manga">
       <p v-if="dataMd" v-html="dataMd"></p>
       <p v-else>プレビュー</p>
     </div>
   </div>
+  <input type="button" value="このまま公開" @click="router.push('/save')" />
+  <input type="button" value="ホームに戻る" @click="$router.push('/')"/>
 </template>
 
 <style scoped>

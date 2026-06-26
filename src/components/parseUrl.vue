@@ -16,8 +16,9 @@
     </div>
   </div>
 
-  <input type="button" value="エディタで編集" @click="$router.push('/write-md')"/>
+  <input type="button" value="エディタで編集" @click="gotoEditor(resMd)"/>
   <input type="button" value="このまま公開" @click="$router.push('/save')"/>
+  <input type="button" value="ホームに戻る" @click="$router.push('/')"/>
 </template>
 
 <script setup>
@@ -31,6 +32,12 @@ const url = ref('')
 const resMd = ref('')
 const resImg = ref('')
 const isLoading = ref(false)
+
+function gotoEditor(md) {
+  localStorage.setItem('content', md)
+  router.push('/write-md')
+}
+
 function parseUrl() {
   /*
   ここでURLを解析して、生成したMDをresに格納する処理を書く
