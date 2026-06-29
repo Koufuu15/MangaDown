@@ -1,5 +1,5 @@
 <script setup>
-import Bubble from "./Bubble"
+import Bubble from "./Bubble.vue"
 
 defineProps({
   panel: {

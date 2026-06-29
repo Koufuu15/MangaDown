@@ -1,0 +1,139 @@
+{
+  "panels": [
+    {
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      },
+      "layers": [
+        {
+          "type": "background",
+          "color": "#eeeeee",
+          "layer": 100
+        },
+        {
+          "type": "image",
+          "src": "/images/test.png",
+          "layer": 90
+        },
+        {
+          "type": "character",
+          "src": "/images/girl.png",
+          "position": {
+            "x": 45,
+            "y": 25
+          },
+          "size": {
+            "width": 40,
+            "height": 70
+          },
+          "layer": 60
+        },
+        {
+          "type": "bubble",
+          "shape": "square",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 30,
+            "height": 20
+          },
+          "text": {
+            "content": "Hello, world!",
+            "font": "Arial",
+            "size": 18,
+            "color": "#333333"
+          },
+          "layer": 10
+        },
+        {
+          "type": "effect",
+          "name": "speedline",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "width": 100,
+            "height": 100
+          },
+          "layer": 80
+        }
+      ]
+    },
+    {
+      "position": {
+        "x": 450,
+        "y": 20
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      },
+      "layers": [
+        {
+          "type": "background",
+          "color": "#ffffff",
+          "layer": 100
+        },
+        {
+          "type": "image",
+          "src": "/images/test2.png",
+          "layer": 90
+        },
+        {
+          "type": "bubble",
+          "shape": "round",
+          "position": {
+            "x": 55,
+            "y": 15
+          },
+          "size": {
+            "width": 30,
+            "height": 20
+          },
+          "text": {
+            "content": "Nice to meet you!",
+            "font": "Arial",
+            "size": 16,
+            "color": "#000000"
+          },
+          "layer": 5
+        },
+        {
+          "type": "stamp",
+          "src": "/images/heart.png",
+          "position": {
+            "x": 75,
+            "y": 70
+          },
+          "size": {
+            "width": 15,
+            "height": 15
+          },
+          "layer": 20
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "color": "#ff4444",
+          "position": {
+            "x": 10,
+            "y": 75
+          },
+          "size": {
+            "width": 10,
+            "height": 10
+          },
+          "layer": 30
+        }
+      ]
+    }
+  ]
+}
