@@ -4,8 +4,9 @@ import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
 import { EditorView, basicSetup } from 'codemirror'
-import { markdown } from '@codemirror/lang-markdown'
-import { languages } from '@codemirror/language-data'
+import { json } from '@codemirror/lang-json'
+import { indentWithTab } from "@codemirror/commands"
+import { keymap } from "@codemirror/view"
 
 const router = useRouter()
 const editor = ref(null)
@@ -14,17 +15,17 @@ let content = ""
 if (localStorage.getItem('content')) {
   content = localStorage.getItem('content')
 } else {
-  content = "// ここにMarkDownを記載してください。"
+  content = "// ここにjson形式で記載してください。"
 }
 
 onMounted(() => {
   new EditorView({
-    // TODO: what's doc?
     doc: content,
     extensions: [
-        basicSetup, 
-        markdown({ codeLanguages: languages })
-      ],
+      basicSetup,
+      keymap.of([indentWithTab]),
+      json()
+    ],
     parent: editor.value,
   })
 })
