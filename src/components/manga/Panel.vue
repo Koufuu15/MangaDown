@@ -1,6 +1,4 @@
 <script setup>
-import Bubble from "./Bubble"
-
 defineProps({
   panel: {
     type: Object,
@@ -9,39 +7,53 @@ defineProps({
 </script>
 
 <template>
-  <div
+  <div class="panel"
     :style="{
-      left: (panel.position?.x ?? 0) + 'px',
-      top: (panel.position?.y ?? 0) + 'px',
-      width: (panel.size?.width ?? 300) + 'px',
-      height: (panel.size?.height ?? 300) + 'px',
-      backgroundColor: panel.backgroundColor || '#eee'
+      left: panel.position.x,
+      top: panel.position?.y,
+      width: panel.size?.width,
+      height: panel.size?.height,
+      backgroundImage: panel.backgroundImg,
+      backgroundColor: panel.backgroundColor
     }"
-  />
+  ></div>
   <div
-    v-for="(layer, index) in panel.layers"
+    v-for="(component, index) in panel.components"
     :key="index"
   >
     <!-- Character -->
     <img
-      v-if="layer.type === 'character'"
-      :src="characterAssets[`${layer.name}_${layer.pose}`]"
-      :alt="layer.name"
+      v-if="component.character"
+      v-for="component in component.character"
+      :src="`$src\data\images{component.name}`"
+      :alt="component.name"
       :style="{
         position: 'absolute',
-        left: `${layer.position.x}%`,
-        top: `${layer.position.y}%`,
-        width: `${layer.size?.w || 80}px`,
-        height: `${layer.size?.h || 120}px`,
+        left: `${character.position.x}%`,
+        top: `${character.position.y}%`,
+        width: `${character.size?.w || 80}px`,
+        height: `${character.size?.h || 120}px`,
         objectFit: 'contain'
       }"
     />
 
     <!-- Bubble -->
-    <Bubble
-      v-else-if="layer.type === 'bubble'"
-      :layer="layer"
-    />
+    <div
+      v-else-if="component.bubble"
+      v-for="bubble in component.bubble"
+      :style="{
+        left: bubble.position.x,
+        top: bubble.position?.y,
+        width: bubble.size?.width,
+        height: bubble.size?.height,
+        border: '1px solid black',
+        backgroundColor: bubble.backgroundColor,
+        padding: '8px',
+        fontSize: bubble.text.fontSize
+      }"
+    >
+    {{ bubble.text.content }}
+    </div>
   </div>
 </template>
 

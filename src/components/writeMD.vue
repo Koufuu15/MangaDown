@@ -9,6 +9,7 @@ import { indentWithTab } from "@codemirror/commands"
 import { keymap } from "@codemirror/view"
 
 import Viewer from "./manga/Viewer.vue"
+import parseManga from "../parser/parser"
 
 const router = useRouter()
 const editor = ref(null)
@@ -17,7 +18,7 @@ const content = ref("")
 if (localStorage.getItem('content')) {
   content.value = localStorage.getItem('content')
 } else {
-  content.value = "// ここにjson形式で記載してください。"
+  content.value = ""
 }
 
 onMounted(() => {
@@ -38,11 +39,19 @@ onMounted(() => {
   })
 })
 
-const panles = computed(() => {
+
+
+const manga = computed(() => {
+  console.log("parseManga"+ parseManga)
+  console.log("changed")
   try {
-    return JSON.parse(content.value)
+    console.log("result" + parseManga(content.value))
+    return parseManga(content.value)
   } catch {
-    return null
+    return {
+      panels: [],
+      errMsg: null
+    }
   }
 })
 
@@ -56,12 +65,13 @@ const panles = computed(() => {
     </div>
     <div class="manga">
       <Viewer 
-        v-if="panels"
-        :panels="panels" 
+        v-if="manga.panels"
+        :panels="manga.panels" 
       />
       <p v-else>プレビュー</p>
     </div>
   </div>
+  <p v-if="errMsg">{{ manga.errMsg }}</p>
   <input type="button" value="このまま公開" @click="router.push('/save')" />
   <input type="button" value="ホームに戻る" @click="router.push('/')"/>
 </template>

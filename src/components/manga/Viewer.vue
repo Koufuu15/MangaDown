@@ -1,13 +1,13 @@
 <script setup>
 import Panel from "./Panel.vue"
 
-defineProps({
+const props = defineProps({
   panels: {
     type: Array,
     default: () => []
   }
 })
-
+console.log(props.panels)
 </script>
 
 <template>
@@ -27,8 +27,8 @@ defineProps({
   gap:0; 
   align-items:center;
   position: relative;
-  width: 1000px;
-  height: 1500px;
+  width: 80px;
+  height: 80px;
   border: 1px solid #ccc;
 }
 </style>

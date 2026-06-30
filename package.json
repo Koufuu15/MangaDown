@@ -15,6 +15,7 @@
     "@codemirror/language-data": "^6.5.2",
     "@codemirror/view": "^6.43.4",
     "codemirror": "^6.0.2",
+    "json5": "^2.2.3",
     "marked": "^18.0.5",
     "vue": "^3.5.32",
     "vue-router": "^4.2.2"
