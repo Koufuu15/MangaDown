@@ -39,7 +39,7 @@ function parsePanel(panel){
 function parseComponent(component){
   if (component.bubble) {
     return {
-      bubble: parseBubble(component.bubble)
+      bubble: component.bubble.map(parseBubble)
     }
   }
 }
