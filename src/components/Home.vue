@@ -6,7 +6,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-200 py-10">
+  <div class="min-h-screen bg-[#efe8d8] py-12">
     <div class="max-w-6xl mx-auto">
       <header class="text-center mb-10">
         <img
@@ -38,7 +38,23 @@ const router = useRouter()
           </p>
 
           <button
-            class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold border-2 border-black transition"
+            class="
+w-full
+py-4
+bg-blue-500
+hover:bg-blue-600
+border-[3px]
+border-black
+rounded-lg
+font-black
+text-lg
+text-white
+shadow-[6px_6px_0px_black]
+active:translate-x-1
+active:translate-y-1
+active:shadow-none
+transition
+"
             @click="router.push('/parse-url')"
           >
             記事を読み込む
@@ -59,7 +75,23 @@ const router = useRouter()
           </p>
 
           <button
-            class="w-full py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold border-2 border-black transition"
+            class="
+w-full
+py-4
+bg-blue-500
+hover:bg-blue-600
+border-[3px]
+border-black
+rounded-lg
+font-black
+text-lg
+text-white
+shadow-[6px_6px_0px_black]
+active:translate-x-1
+active:translate-y-1
+active:shadow-none
+transition
+"
             @click="router.push('/write-md')"
           >
             漫画を作る

@@ -37,7 +37,7 @@ const manga = computed(() => parseManga(content.value))
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-300 py-8">
+  <div class="min-h-screen bg-[#efe8d8] py-10">
     <div class="max-w-7xl mx-auto bg-white border-[6px] border-black rounded-2xl shadow-2xl p-6">
 
       <div class="grid grid-cols-2 gap-6">
@@ -68,16 +68,46 @@ const manga = computed(() => parseManga(content.value))
         {{ manga.errMsg }}
       </div>
 
-      <div class="flex justify-end gap-3 mt-6">
+      <div class="flex justify-end gap-4 mt-8">
         <button
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg border-2 border-black hover:bg-blue-700"
+          class="
+px-8
+py-3
+rounded-xl
+bg-blue-500
+hover:bg-blue-600
+text-white
+font-bold
+border-[3px]
+border-black
+shadow-[5px_5px_0_black]
+active:translate-x-1
+active:translate-y-1
+active:shadow-none
+transition
+"
           @click="router.push('/save')"
         >
           このまま公開
         </button>
 
         <button
-          class="px-6 py-3 bg-gray-700 text-white rounded-lg border-2 border-black hover:bg-gray-800"
+          class="
+px-8
+py-3
+rounded-xl
+bg-blue-500
+hover:bg-blue-600
+text-white
+font-bold
+border-[3px]
+border-black
+shadow-[5px_5px_0_black]
+active:translate-x-1
+active:translate-y-1
+active:shadow-none
+transition
+"
           @click="router.push('/')"
         >
           ホームへ戻る
