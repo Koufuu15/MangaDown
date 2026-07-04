@@ -6,31 +6,82 @@ const router = useRouter()
 </script>
 
 <template>
-  <header class="manga">
-    <img alt="Vue logo" class="logo" src="../public/favicon.ico"/>
+  <div class="min-h-screen bg-gray-200 py-10">
+    <div class="max-w-6xl mx-auto">
+      <header class="text-center mb-10">
+        <img
+          alt="logo"
+          src="/favicon.ico"
+          class="w-24 h-24 mx-auto mb-4"
+        >
 
-    <div class="wrapper">
-      <h1>MangaDown</h1>
-      <p>Visualize your articles with manga</p>
-    </div>
-  </header>
+        <h1 class="text-5xl font-black">MangaDown</h1>
 
-  <main>
-    <div class="manga">
-      <p>01</p>
-      <h3>既存の技術記事をAIで漫画化</h3>
-      <input type="button" value="記事を読み込む" @click="router.push('/parse-url')" />
+        <p class="text-gray-600 mt-2">
+          Visualize your articles with manga
+        </p>
+      </header>
+
+      <main class="grid grid-cols-2 gap-6">
+
+        <section class="bg-white border-[5px] border-black rounded-xl p-6 shadow-xl">
+          <div class="inline-block bg-black text-white px-3 py-1 rounded mb-4">
+            01
+          </div>
+
+          <h2 class="text-2xl font-bold mb-4">
+            既存の技術記事をAIで漫画化
+          </h2>
+
+          <p class="mb-8 text-gray-700">
+            URLを入力するだけでAIが漫画形式へ変換します。
+          </p>
+
+          <button
+            class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold border-2 border-black transition"
+            @click="router.push('/parse-url')"
+          >
+            記事を読み込む
+          </button>
+        </section>
+
+        <section class="bg-white border-[5px] border-black rounded-xl p-6 shadow-xl">
+          <div class="inline-block bg-black text-white px-3 py-1 rounded mb-4">
+            02
+          </div>
+
+          <h2 class="text-2xl font-bold mb-4">
+            独自Markdownで漫画を作成
+          </h2>
+
+          <p class="mb-8 text-gray-700">
+            Markdownを書くだけで漫画を作れます。
+          </p>
+
+          <button
+            class="w-full py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold border-2 border-black transition"
+            @click="router.push('/write-md')"
+          >
+            漫画を作る
+          </button>
+        </section>
+
+        <section class="col-span-2 bg-white border-[5px] border-black rounded-xl p-6 shadow-xl">
+          <h2 class="text-xl font-bold mb-2">
+            使い方
+          </h2>
+
+          <a
+            href=""
+            class="text-blue-600 underline"
+          >
+            チュートリアルはこちら
+          </a>
+        </section>
+
+      </main>
     </div>
-    <div class="manga">
-      <p>02</p>
-      <h3>独自MarkDownを用いて、一から漫画を作成</h3>
-      <input type="button" value="漫画を作る" @click="router.push('/write-md')" />
-    </div>
-    <div class="manga">
-      <p>使い方は</p>
-      <a href="">こちら</a>
-    </div>
-  </main>
+  </div>
 </template>
 
 <style scoped>
