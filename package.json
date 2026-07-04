@@ -16,6 +16,7 @@
     "@codemirror/view": "^6.43.4",
     "@tailwindcss/vite": "^4.3.2",
     "codemirror": "^6.0.2",
+    "html-to-image": "^1.11.13",
     "json5": "^2.2.3",
     "marked": "^18.0.5",
     "tailwindcss": "^4.3.2",

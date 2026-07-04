@@ -20,15 +20,13 @@ defineProps({
 </template>
 
 <style scoped>
-.viewer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  min-height: 100%;
-  padding: 24px;
-  background: #f3f4f6;
-  overflow-y: auto;
+.viewer{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:24px;
+    position:relative;
+    width:100%;
+    min-height:800px;
 }
 </style>

@@ -9,7 +9,7 @@ defineProps({
 
 <template>
   <div
-    class="relative border-4 border-black rounded-xl shadow-xl overflow-hidden bg-white"
+    class="relative border-2 border-zinc-900 rounded-md shadow-sm overflow-hidden bg-white"
     :style="{
       width: panel.size.width + 'px',
       height: panel.size.height + 'px',
@@ -24,12 +24,13 @@ defineProps({
         v-if="component.bubble"
         v-for="(bubble, bubbleIndex) in component.bubble"
         :key="bubbleIndex"
-        class="absolute bg-white border-4 border-black rounded-2xl px-3 py-2 shadow-md"
+        class="absolute bg-white border border-zinc-900 rounded-xl px-3 py-2 shadow-sm"
         :style="{
           left: bubble.position.x + '%',
           top: bubble.position.y + '%',
-          width: bubble.size.width + 'px',
-          height: bubble.size.height + 'px',
+          minWidth: bubble.size.width + 'px',
+          minHeight: bubble.size.height + 'px',
+          maxWidth: '260px',
           zIndex: bubble.layer
         }"
       >
