@@ -1,85 +1,97 @@
 <script setup>
-import '../assets/main.css'
-import { useRouter } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
+import "../assets/main.css"
+import { ref, computed, onMounted } from "vue"
+import { useRouter } from "vue-router"
 
-import { EditorView, basicSetup } from 'codemirror'
-import { json } from '@codemirror/lang-json'
-import { indentWithTab } from "@codemirror/commands"
+import { EditorView, basicSetup } from "codemirror"
+import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
 
 import Viewer from "./manga/Viewer.vue"
 import parseManga from "../parser/parser"
 
 const router = useRouter()
-const editor = ref(null)
-const content = ref("")
 
-if (localStorage.getItem('content')) {
-  content.value = localStorage.getItem('content')
-} else {
-  content.value = ""
-}
+const editor = ref(null)
+const content = ref(localStorage.getItem("content") || "")
 
 onMounted(() => {
   new EditorView({
     doc: content.value,
     extensions: [
       basicSetup,
+      markdown(),
       keymap.of([indentWithTab]),
-      json(),
       EditorView.updateListener.of((update) => {
-        if (update.docChanged) {
-          content.value = update.state.doc.toString()
-          localStorage.setItem("content", content.value)
-        }
+        if (!update.docChanged) return
+        content.value = update.state.doc.toString()
+        localStorage.setItem("content", content.value)
       })
     ],
-    parent: editor.value,
+    parent: editor.value
   })
 })
 
-
-
-const manga = computed(() => {
-  console.log("parseManga"+ parseManga)
-  console.log("changed")
-  try {
-    console.log("result" + parseManga(content.value))
-    return parseManga(content.value)
-  } catch {
-    return {
-      panels: [],
-      errMsg: null
-    }
-  }
-})
-
-
+const manga = computed(() => parseManga(content.value))
 </script>
 
 <template>
-  <div class="flexbox">
-    <div class="manga">
+  <div class="flex h-screen">
+    <div class="w-1/2 border-r border-gray-300 overflow-auto">
       <div ref="editor"></div>
     </div>
-    <div class="manga">
-      <Viewer 
-        v-if="manga.panels"
-        :panels="manga.panels" 
+
+    <div class="w-1/2 bg-gray-100 overflow-auto">
+      <Viewer
+        v-if="manga.panels.length"
+        :panels="manga.panels"
       />
-      <p v-else>プレビュー</p>
+      <div
+        v-else
+        class="flex items-center justify-center h-full text-gray-500"
+      >
+        プレビュー
+      </div>
     </div>
   </div>
-  <p v-if="errMsg">{{ manga.errMsg }}</p>
-  <input type="button" value="このまま公開" @click="router.push('/save')" />
-  <input type="button" value="ホームに戻る" @click="router.push('/')"/>
+
+  <div
+    v-if="manga.errMsg"
+    class="bg-red-100 text-red-700 p-2 border-t"
+  >
+    {{ manga.errMsg }}
+  </div>
+
+  <div class="flex gap-2 p-4 border-t bg-white">
+    <button
+      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      @click="router.push('/save')"
+    >
+      このまま公開
+    </button>
+
+    <button
+      class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+      @click="router.push('/')"
+    >
+      ホームに戻る
+    </button>
+  </div>
 </template>
 
 <style scoped>
-.flexbox div {
-  display: inline-block;
-  padding: 1rem;
-  margin-bottom: 1rem;
+:deep(.cm-editor) {
+  height: 100%;
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+:deep(.cm-scroller) {
+  overflow: auto;
+}
+
+:deep(.cm-focused) {
+  outline: none;
 }
 </style>

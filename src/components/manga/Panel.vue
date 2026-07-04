@@ -2,66 +2,55 @@
 defineProps({
   panel: {
     type: Object,
+    required: true
   }
 })
 </script>
 
 <template>
-  <div class="panel"
+  <div
+    class="relative border-4 border-black rounded-xl shadow-xl overflow-hidden bg-white"
     :style="{
-      left: panel.position.x,
-      top: panel.position?.y,
-      width: panel.size?.width,
-      height: panel.size?.height,
-      backgroundImage: panel.backgroundImg,
+      width: panel.size.width + 'px',
+      height: panel.size.height + 'px',
       backgroundColor: panel.backgroundColor
     }"
-  ></div>
-  <div
-    v-for="(component, index) in panel.components"
-    :key="index"
   >
-    <!-- Character -->
-    <img
-      v-if="component.character"
-      v-for="component in component.character"
-      :src="`$src\data\images{component.name}`"
-      :alt="component.name"
-      :style="{
-        position: 'absolute',
-        left: `${character.position.x}%`,
-        top: `${character.position.y}%`,
-        width: `${character.size?.w || 80}px`,
-        height: `${character.size?.h || 120}px`,
-        objectFit: 'contain'
-      }"
-    />
-
-    <!-- Bubble -->
-    <div
-      v-else-if="component.bubble"
-      v-for="bubble in component.bubble"
-      :style="{
-        left: bubble.position.x,
-        top: bubble.position?.y,
-        width: bubble.size?.width,
-        height: bubble.size?.height,
-        border: '1px solid black',
-        backgroundColor: bubble.backgroundColor,
-        padding: '8px',
-        fontSize: bubble.text.fontSize
-      }"
+    <template
+      v-for="(component, index) in panel.components"
+      :key="index"
     >
-    {{ bubble.text.content }}
-    </div>
+      <div
+        v-if="component.bubble"
+        v-for="(bubble, bubbleIndex) in component.bubble"
+        :key="bubbleIndex"
+        class="absolute bg-white border-4 border-black rounded-2xl px-3 py-2 shadow-md"
+        :style="{
+          left: bubble.position.x + '%',
+          top: bubble.position.y + '%',
+          width: bubble.size.width + 'px',
+          height: bubble.size.height + 'px',
+          zIndex: bubble.layer
+        }"
+      >
+        <p
+          :style="{
+            fontSize: bubble.text.fontSize,
+            color: bubble.text.color,
+            fontFamily: bubble.text.font
+          }"
+        >
+          {{ bubble.text.content }}
+        </p>
+      </div>
+    </template>
   </div>
 </template>
 
 <style scoped>
-.panel {
-  position: absolute;
-  border: 1px solid black;
-  background: white;
-  overflow: hidden;
+p {
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 </style>
