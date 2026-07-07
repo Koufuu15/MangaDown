@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router"
-import "./Home.css"
+import "../assets/Home.css"
 
 const router = useRouter()
 </script>

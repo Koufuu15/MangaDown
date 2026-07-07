@@ -1,29 +1,20 @@
 <script setup>
 import "../assets/main.css"
 
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { marked } from "marked"
 import * as htmlToImage from "html-to-image"
 
-import Viewer from "./manga/Viewer.vue"
-import parseManga from "../parser/parser"
+import Renderer from "./renderer/Renderer.vue"
 
 const router = useRouter()
 
-const markdown = ref(localStorage.getItem("content") || "")
-const previewRef = ref(null)
+const markdown = ref(
+  localStorage.getItem("content") || ""
+)
 
-const manga = computed(() => {
-  try {
-    return parseManga(markdown.value)
-  } catch {
-    return {
-      panels: [],
-      errMsg: ""
-    }
-  }
-})
+const previewRef = ref(null)
 
 async function copyText(text) {
   await navigator.clipboard.writeText(text)
@@ -92,9 +83,13 @@ async function downloadPNG() {
       <div class="card-header">
         <span>📄 Markdown</span>
 
-        <button class="icon-btn" @click="copyText(markdown)">
+        <button
+          class="icon-btn"
+          @click="copyText(markdown)"
+        >
           📋
         </button>
+
       </div>
 
       <textarea
@@ -107,18 +102,27 @@ async function downloadPNG() {
     <div class="manga card">
 
       <div class="card-header">
+
         <span>🖼 Preview</span>
 
-        <button class="icon-btn" @click="copyImage">
+        <button
+          class="icon-btn"
+          @click="copyImage"
+        >
           📋
         </button>
+
       </div>
 
       <div
         class="preview"
         ref="previewRef"
       >
-        <Viewer :panels="manga.panels"/>
+
+        <Renderer
+          :content="markdown"
+        />
+
       </div>
 
     </div>
@@ -130,6 +134,7 @@ async function downloadPNG() {
     <h2>📦 Export</h2>
 
     <div class="button-grid">
+
       <button @click="downloadMarkdown">
         Markdown
       </button>
@@ -145,6 +150,7 @@ async function downloadPNG() {
       <button @click="downloadPNG">
         PNG
       </button>
+
     </div>
 
   </div>
@@ -154,9 +160,11 @@ async function downloadPNG() {
     <h2>🌎 Share</h2>
 
     <div class="button-grid">
+
       <button>X</button>
       <button>Facebook</button>
       <button>Instagram</button>
+
     </div>
 
   </div>
@@ -186,7 +194,6 @@ async function downloadPNG() {
   gap:2rem;
 }
 
-/* 共通カード */
 .manga{
   background:#fff;
   border:4px solid #111;
@@ -194,7 +201,6 @@ async function downloadPNG() {
   box-shadow:8px 8px 0 #111;
 }
 
-/* タイトル */
 .title-card{
   padding:2rem;
   text-align:center;
@@ -210,7 +216,6 @@ async function downloadPNG() {
   gap:2rem;
 }
 
-/* Markdown・Previewカード */
 .card{
   overflow:hidden;
   border:4px solid #111;
@@ -219,32 +224,24 @@ async function downloadPNG() {
   background:white;
 }
 
-/* ヘッダー */
 .card-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:1rem 1.2rem;
-
   background:#111;
   color:white;
-
   border-bottom:4px solid #111;
 }
 
-/* コピーボタン */
 .icon-btn{
   width:42px;
   height:42px;
-
   border:3px solid white;
   border-radius:10px;
-
   background:none;
   color:white;
-
   cursor:pointer;
-
   transition:.15s;
 }
 
@@ -253,21 +250,16 @@ async function downloadPNG() {
   color:#111;
 }
 
-/* Markdown */
 textarea{
   width:100%;
   height:600px;
-
   padding:1rem;
-
   border:none;
   resize:none;
   outline:none;
-
   font-family:monospace;
 }
 
-/* Preview */
 .preview{
   height:600px;
   overflow:auto;
@@ -275,7 +267,6 @@ textarea{
   background:#fafafa;
 }
 
-/* Export・Share */
 .section{
   padding:1.5rem;
   border:4px solid #111;
@@ -289,7 +280,6 @@ textarea{
   border-bottom:3px dashed #111;
 }
 
-/* ボタン */
 .button-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -298,15 +288,11 @@ textarea{
 
 .button-grid button{
   padding:1rem;
-
   border:3px solid #111;
   border-radius:12px;
-
   background:white;
-
   font-weight:bold;
   cursor:pointer;
-
   transition:.15s;
 }
 
@@ -315,7 +301,6 @@ textarea{
   box-shadow:4px 4px 0 #111;
 }
 
-/* 一番下 */
 .bottom-buttons{
   display:flex;
   justify-content:space-between;
@@ -323,16 +308,11 @@ textarea{
 
 .bottom-buttons button{
   padding:1rem 2rem;
-
   border:4px solid #111;
   border-radius:999px;
-
   background:white;
-
   font-weight:bold;
-
   cursor:pointer;
-
   transition:.15s;
 }
 

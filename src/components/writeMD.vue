@@ -1,7 +1,7 @@
 <script setup>
-import "./WriteMD.css"
+import "../assets/writeMD.css"
 
-import { ref, computed, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 
 import { EditorView, basicSetup } from "codemirror"
@@ -9,8 +9,7 @@ import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
-import Viewer from "@/components/manga/Viewer.vue"
-import parseManga from "@/parser/parser"
+import Renderer from "./renderer/Renderer.vue"
 
 const router = useRouter()
 
@@ -46,9 +45,6 @@ onMounted(() => {
   })
 })
 
-const manga = computed(() =>
-  parseManga(content.value)
-)
 </script>
 
 <template>
@@ -88,32 +84,15 @@ const manga = computed(() =>
 
       <div class="preview">
 
-        <Viewer
-          v-if="manga.panels.length"
-          :panels="manga.panels"
+        <Renderer
+          :content="content"
         />
-
-        <div
-          v-else
-          class="empty-preview"
-        >
-          プレビュー
-        </div>
 
       </div>
 
     </section>
 
   </main>
-
-  <footer
-    v-if="manga.errMsg"
-    class="error-panel"
-  >
-
-    {{ manga.errMsg }}
-
-  </footer>
 
   <footer class="button-panel">
 
