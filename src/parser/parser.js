@@ -1,9 +1,8 @@
-const DEFAULT_PANEL = {
-  position: { x: 0, y: 0 },
-  size: { width: 500, height: 500 },
-  backgroundColor: "#eee",
-  components: []
-}
+import createParserState from "./parserState"
+
+import parseBackground from "./parsers/backgroundParser"
+import parseBubble from "./parsers/bubbleParser"
+import parseText from "./parsers/textParser"
 
 export default function parseManga(md) {
   if (!md || md.trim() === "") {
@@ -13,10 +12,11 @@ export default function parseManga(md) {
     }
   }
 
-  const panel = structuredClone(DEFAULT_PANEL)
-  let currentBubble = null
-  let errMsg = ""
-  let section = ""
+  const panel = {
+    components: []
+  }
+
+  const state = createParserState()
 
   const lines = md.split(/\r?\n/)
 
@@ -28,46 +28,28 @@ export default function parseManga(md) {
     if (line.startsWith("# panel")) continue
 
     if (line.startsWith("## background")) {
-      section = "background"
+      state.section = "background"
       continue
     }
 
     if (line.startsWith("## components")) {
-      section = "components"
+      state.section = "components"
       continue
     }
 
     if (line.startsWith("### bubble")) {
-      currentBubble = {
-        layer: 1,
-        shape: "square",
-        position: {
-          x: 0,
-          y: 0
-        },
-        size: {
-          width: 120,
-          height: 80
-        },
-        backgroundColor: "white",
-        text: {
-          content: "",
-          font: "UTF-8",
-          fontSize: "16px",
-          color: "#333"
-        }
-      }
+      state.currentBubble = {}
 
       panel.components.push({
-        bubble: [currentBubble]
+        bubble: [state.currentBubble]
       })
 
-      section = "bubble"
+      state.section = "bubble"
       continue
     }
 
     if (line.startsWith("#### text")) {
-      section = "text"
+      state.section = "text"
       continue
     }
 
@@ -79,109 +61,27 @@ export default function parseManga(md) {
     const key = line.substring(1, idx).trim()
     const value = line.substring(idx + 1).trim()
 
-    if (section === "background") {
-      switch (key) {
-        case "color":
-          panel.backgroundColor = value
-          break
+    switch (state.section) {
+      case "background":
+        parseBackground(panel, key, value)
+        break
 
-        case "position": {
-          const pos = parseObject(value)
-          panel.position = {
-            x: pos.x ?? 0,
-            y: pos.y ?? 0
-          }
-          break
-        }
+      case "bubble":
+        parseBubble(state.currentBubble, key, value, state)
+        break
 
-        case "size": {
-          const size = parseObject(value)
-          panel.size = {
-            width: size.w ?? 500,
-            height: size.h ?? 500
-          }
-          break
-        }
-      }
-      continue
-    }
-
-    if (section === "bubble") {
-      switch (key) {
-        case "layer":
-          if (isNaN(Number(value))) {
-            errMsg = "layerは数値で入力してください"
-          } else {
-            currentBubble.layer = Number(value)
-          }
-          break
-
-        case "shape":
-          currentBubble.shape = value
-          break
-
-        case "position": {
-          const pos = parseObject(value)
-          currentBubble.position = {
-            x: pos.x ?? 0,
-            y: pos.y ?? 0
-          }
-          break
-        }
-
-        case "size": {
-          const size = parseObject(value)
-          currentBubble.size = {
-            width: size.w ?? 100,
-            height: size.h ?? 60
-          }
-          break
-        }
-      }
-      continue
-    }
-
-    if (section === "text") {
-      switch (key) {
-        case "content":
-          currentBubble.text.content = value.replace(/^"/, "").replace(/"$/, "")
-          break
-
-        case "font":
-          currentBubble.text.font = value
-          break
-
-        case "size":
-          currentBubble.text.fontSize = value + "px"
-          break
-
-        case "color":
-          currentBubble.text.color = value
-          break
-      }
+      case "text":
+        parseText(state.currentBubble, key, value)
+        break
     }
   }
 
-  panel.components.sort((a, b) => a.bubble[0].layer - b.bubble[0].layer)
+  panel.components.sort(
+    (a, b) => (a.bubble[0].layer ?? 0) - (b.bubble[0].layer ?? 0)
+  )
 
   return {
     panels: [panel],
-    errMsg
+    errMsg: state.errMsg
   }
-}
-
-function parseObject(str) {
-  const result = {}
-
-  const body = str
-    .replace("{", "")
-    .replace("}", "")
-
-  body.split(",").forEach(item => {
-    const [k, v] = item.split(":")
-    if (!k || !v) return
-    result[k.trim()] = Number(v.trim())
-  })
-
-  return result
 }
