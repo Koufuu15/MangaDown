@@ -1,85 +1,117 @@
 <script setup>
-import '../assets/main.css'
-import { useRouter } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
+import "../assets/writeMD.css"
 
-import { EditorView, basicSetup } from 'codemirror'
-import { json } from '@codemirror/lang-json'
-import { indentWithTab } from "@codemirror/commands"
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+
+import { EditorView, basicSetup } from "codemirror"
+import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
 
-import Viewer from "./manga/Viewer.vue"
-import parseManga from "../parser/parser"
+import Renderer from "./renderer/Renderer.vue"
 
 const router = useRouter()
-const editor = ref(null)
-const content = ref("")
 
-if (localStorage.getItem('content')) {
-  content.value = localStorage.getItem('content')
-} else {
-  content.value = ""
-}
+const editor = ref()
+
+const content = ref(
+  localStorage.getItem("content") ?? ""
+)
 
 onMounted(() => {
   new EditorView({
     doc: content.value,
     extensions: [
       basicSetup,
+      markdown(),
       keymap.of([indentWithTab]),
-      json(),
+
       EditorView.updateListener.of((update) => {
-        if (update.docChanged) {
-          content.value = update.state.doc.toString()
-          localStorage.setItem("content", content.value)
-        }
+
+        if (!update.docChanged) return
+
+        content.value = update.state.doc.toString()
+
+        localStorage.setItem(
+          "content",
+          content.value
+        )
+
       })
+
     ],
-    parent: editor.value,
+    parent: editor.value
   })
 })
-
-
-
-const manga = computed(() => {
-  console.log("parseManga"+ parseManga)
-  console.log("changed")
-  try {
-    console.log("result" + parseManga(content.value))
-    return parseManga(content.value)
-  } catch {
-    return {
-      panels: [],
-      errMsg: null
-    }
-  }
-})
-
 
 </script>
 
 <template>
-  <div class="flexbox">
-    <div class="manga">
-      <div ref="editor"></div>
-    </div>
-    <div class="manga">
-      <Viewer 
-        v-if="manga.panels"
-        :panels="manga.panels" 
-      />
-      <p v-else>プレビュー</p>
-    </div>
-  </div>
-  <p v-if="errMsg">{{ manga.errMsg }}</p>
-  <input type="button" value="このまま公開" @click="router.push('/save')" />
-  <input type="button" value="ホームに戻る" @click="router.push('/')"/>
-</template>
 
-<style scoped>
-.flexbox div {
-  display: inline-block;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-</style>
+<div class="write-page">
+
+  <header class="write-header">
+
+    <h1>Manga Editor</h1>
+
+    <p>
+      Write Markdown and preview your manga.
+    </p>
+
+  </header>
+
+  <main class="workspace">
+
+    <section class="editor-panel">
+
+      <div class="panel-title">
+        Markdown
+      </div>
+
+      <div
+        ref="editor"
+        class="editor"
+      />
+
+    </section>
+
+    <section class="preview-panel">
+
+      <div class="panel-title">
+        Preview
+      </div>
+
+      <div class="preview">
+
+        <Renderer
+          :content="content"
+        />
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="button-panel">
+
+    <button
+      class="primary-button"
+      @click="router.push('/save')"
+    >
+      公開する
+    </button>
+
+    <button
+      class="secondary-button"
+      @click="router.push('/')"
+    >
+      ホームへ戻る
+    </button>
+
+  </footer>
+
+</div>
+
+</template>

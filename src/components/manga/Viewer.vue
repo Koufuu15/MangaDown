@@ -1,13 +1,12 @@
 <script setup>
 import Panel from "./Panel.vue"
 
-const props = defineProps({
+defineProps({
   panels: {
     type: Array,
     default: () => []
   }
 })
-console.log(props.panels)
 </script>
 
 <template>
@@ -21,14 +20,13 @@ console.log(props.panels)
 </template>
 
 <style scoped>
-.viewer {
-  display:flex; 
-  flex-direction:column; 
-  gap:0; 
-  align-items:center;
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border: 1px solid #ccc;
+.viewer{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:24px;
+    position:relative;
+    width:100%;
+    min-height:800px;
 }
 </style>
