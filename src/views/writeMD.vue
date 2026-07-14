@@ -9,7 +9,7 @@ import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
-import Renderer from "./renderer/Renderer.vue"
+import Renderer from "@/components/renderer/Renderer.vue"
 
 const router = useRouter()
 

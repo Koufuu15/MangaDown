@@ -1,9 +1,13 @@
+# Sample Code
+This is a sample code.
+
+:::manga
 # panel
 
 ## background
 - color: #eee
 - position: { x: 50, y:50 }
-- size: { w:50, h: 50 }
+- size: { w:300, h: 300 }
 
 ## components
 
@@ -18,3 +22,4 @@
 - font: UTF-8
 - size: 12
 - color: grey
+:::
