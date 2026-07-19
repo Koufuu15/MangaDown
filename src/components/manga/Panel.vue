@@ -1,4 +1,6 @@
 <script setup>
+import { resolveAsset } from "@/utils/assetResolver"
+
 defineProps({
   panel: {
     type: Object,
@@ -44,6 +46,20 @@ defineProps({
           {{ bubble.text.content }}
         </p>
       </div>
+
+      <img
+        v-if="component.image"
+        v-for="image in component.image"
+        :src="resolveAsset(image.name)"
+        class="absolute"
+        :style="{
+            left: image.position.x + '%',
+            top: image.position.y + '%',
+            width: image.size.width + 'px',
+            height: image.size.height + 'px',
+            zIndex: image.layer
+        }"
+      />
     </template>
   </div>
 </template>

@@ -1,6 +1,7 @@
 import createParserState from "./parserState"
 
 import parseBackground from "./parsers/backgroundParser"
+import parseImage from "./parsers/imageParser"
 import parseBubble from "./parsers/bubbleParser"
 import parseText from "./parsers/textParser"
 
@@ -39,17 +40,24 @@ export default function parseManga(md) {
 
     if (line.startsWith("### bubble")) {
       state.currentBubble = {}
-
       panel.components.push({
         bubble: [state.currentBubble]
       })
-
       state.section = "bubble"
       continue
     }
 
     if (line.startsWith("#### text")) {
       state.section = "text"
+      continue
+    }
+
+    if (line.startsWith("### image")) {
+      state.currentImage = {}
+      panel.components.push({
+        image: [state.currentImage]
+      })
+      state.section = "image"
       continue
     }
 
@@ -70,15 +78,24 @@ export default function parseManga(md) {
         parseBubble(state.currentBubble, key, value, state)
         break
 
+      case "image":
+        parseImage(state.currentImage, key, value, state)
+        break
+
       case "text":
         parseText(state.currentBubble, key, value)
         break
     }
   }
 
-  panel.components.sort(
-    (a, b) => (a.bubble[0].layer ?? 0) - (b.bubble[0].layer ?? 0)
-  )
+  panel.components.sort((a, b) => {
+    const layerA =
+        a.bubble?.[0]?.layer ?? a.image?.[0]?.layer ?? 0
+    const layerB =
+        b.bubble?.[0]?.layer ?? b.image?.[0]?.layer ?? 0
+
+    return layerA - layerB
+  })
 
   return {
     panels: [panel],
