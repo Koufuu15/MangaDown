@@ -107,8 +107,8 @@ body{
 }
 
 .editor-panel{
-  display:grid;
-  grid-template-rows:56px 1fr;
+  display:flex;
+  flex-direction: column;
 
   background:white;
 
@@ -116,8 +116,8 @@ body{
 }
 
 .preview-panel{
-  display:grid;
-  grid-template-rows:56px 1fr;
+  display:flex;
+  flex-direction: column;
 
   background:#fafaf9;
 
@@ -151,8 +151,8 @@ body{
 
 .editor,
 .preview{
+  flex:1;
   overflow:auto;
-
   min-height:0;
 }
 
