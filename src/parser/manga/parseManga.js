@@ -13,11 +13,10 @@ export default function parseManga(md) {
     }
   }
 
-  const panel = {
-    components: []
-  }
-
   const state = createParserState()
+
+  const panels = []
+  let currentPanel = null
 
   const lines = md.split(/\r?\n/)
 
@@ -26,7 +25,14 @@ export default function parseManga(md) {
 
     if (!line) continue
 
+    // Panel開始
     if (line.startsWith("# panel")) {
+      currentPanel = {
+        components: []
+      }
+
+      panels.push(currentPanel)
+
       state.section = "panel"
       continue
     }
@@ -37,10 +43,14 @@ export default function parseManga(md) {
     }
 
     if (line.startsWith("### bubble")) {
+      if (!currentPanel) continue
+
       state.currentBubble = {}
-      panel.components.push({
+
+      currentPanel.components.push({
         bubble: [state.currentBubble]
       })
+
       state.section = "bubble"
       continue
     }
@@ -51,10 +61,14 @@ export default function parseManga(md) {
     }
 
     if (line.startsWith("### image")) {
+      if (!currentPanel) continue
+
       state.currentImage = {}
-      panel.components.push({
+
+      currentPanel.components.push({
         image: [state.currentImage]
       })
+
       state.section = "image"
       continue
     }
@@ -69,7 +83,9 @@ export default function parseManga(md) {
 
     switch (state.section) {
       case "panel":
-        parsePanel(panel, key, value)
+        if (currentPanel) {
+          parsePanel(currentPanel, key, value)
+        }
         break
 
       case "bubble":
@@ -86,17 +102,24 @@ export default function parseManga(md) {
     }
   }
 
-  panel.components.sort((a, b) => {
-    const layerA =
-        a.bubble?.[0]?.layer ?? a.image?.[0]?.layer ?? 0
-    const layerB =
-        b.bubble?.[0]?.layer ?? b.image?.[0]?.layer ?? 0
+  panels.forEach(panel => {
+    panel.components.sort((a, b) => {
+      const layerA =
+        a.bubble?.[0]?.layer ??
+        a.image?.[0]?.layer ??
+        0
 
-    return layerA - layerB
+      const layerB =
+        b.bubble?.[0]?.layer ??
+        b.image?.[0]?.layer ??
+        0
+
+      return layerA - layerB
+    })
   })
 
   return {
-    panels: [panel],
+    panels,
     errMsg: state.errMsg
   }
 }
