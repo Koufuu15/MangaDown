@@ -1,6 +1,6 @@
 import createParserState from "./parserState"
 
-import parseBackground from "./parsers/backgroundParser"
+import parsePanel from "./parsers/panelParser"
 import parseImage from "./parsers/imageParser"
 import parseBubble from "./parsers/bubbleParser"
 import parseText from "./parsers/textParser"
@@ -26,10 +26,8 @@ export default function parseManga(md) {
 
     if (!line) continue
 
-    if (line.startsWith("# panel")) continue
-
-    if (line.startsWith("## background")) {
-      state.section = "background"
+    if (line.startsWith("# panel")) {
+      state.section = "panel"
       continue
     }
 
@@ -70,8 +68,8 @@ export default function parseManga(md) {
     const value = line.substring(idx + 1).trim()
 
     switch (state.section) {
-      case "background":
-        parseBackground(panel, key, value)
+      case "panel":
+        parsePanel(panel, key, value)
         break
 
       case "bubble":
