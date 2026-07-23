@@ -270,6 +270,228 @@ button{
   padding:clamp(20px,2vw,36px);
 }
 
+/* =========================
+   Image Drawer
+========================= */
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 900;
+}
+
+.image-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 340px;
+  height: 100vh;
+
+  background: white;
+
+  box-shadow: 4px 0 16px rgba(0,0,0,.15);
+
+  transform: translateX(-100%);
+  transition: transform .25s ease;
+
+  z-index: 901;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.image-drawer.open {
+  transform: translateX(0);
+}
+
+/* =========================
+   Header
+========================= */
+
+.drawer-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px;
+
+  border-bottom: 1px solid #ddd;
+
+}
+
+.drawer-header h2 {
+
+  margin: 0;
+
+  font-size: 18px;
+
+}
+
+.close-button {
+
+  border: none;
+
+  background: none;
+
+  cursor: pointer;
+
+  font-size: 22px;
+
+  color: #666;
+
+}
+
+.close-button:hover {
+
+  color: #111;
+
+}
+
+/* =========================
+   Search
+========================= */
+
+.drawer-search {
+
+  padding: 14px;
+
+  border-bottom: 1px solid #eee;
+
+}
+
+.drawer-search input {
+
+  width: 100%;
+
+  padding: 8px 10px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  box-sizing: border-box;
+
+}
+
+.drawer-search input:focus {
+
+  border-color: #4b82ff;
+
+}
+
+/* =========================
+   Content
+========================= */
+
+.drawer-content {
+
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 14px;
+
+}
+
+/* =========================
+   Grid
+========================= */
+
+.asset-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+
+}
+
+.asset-card {
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  background: white;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition: .15s;
+
+  padding: 0;
+
+}
+
+.asset-card:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.asset-card img {
+
+  width: 100%;
+
+  aspect-ratio: 1;
+
+  object-fit: contain;
+
+  display: block;
+
+  background: #f5f5f5;
+
+}
+
+.asset-name {
+
+  padding: 8px 10px 2px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #222;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+}
+
+.asset-category {
+
+  padding: 0 10px 10px;
+
+  font-size: 12px;
+
+  color: #777;
+
+}
+
+.empty-assets {
+
+  color: #888;
+
+  text-align: center;
+
+  margin-top: 40px;
+
+}
+
 @media (max-width:900px){
 
   .write-page{

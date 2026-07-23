@@ -10,7 +10,8 @@ import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import Renderer from "@/components/renderer/Renderer.vue"
-import { getAllAssetNames } from "@/utils/assetResolver"
+import ImageDrawer from "@/components/ImageDrawer.vue"
+
 import { validateImageName } from "@/utils/imageValidator"
 import { saveUserAsset } from "@/utils/userAssets"
 
@@ -21,10 +22,20 @@ const editorView = ref(null)
 
 const fileInput = ref(null)
 
+const drawerOpen = ref(false)
+
 const content = ref(localStorage.getItem("content") ?? "")
 
 function openImagePicker() {
   fileInput.value?.click()
+}
+
+function openDrawer() {
+  drawerOpen.value = true
+}
+
+function closeDrawer() {
+  drawerOpen.value = false
 }
 
 function onImageSelected(event) {
@@ -33,6 +44,7 @@ function onImageSelected(event) {
   if (!file) return
 
   const name = prompt("画像名を入力してください")
+
   if (!name) {
     event.target.value = ""
     return
@@ -50,9 +62,12 @@ function onImageSelected(event) {
 
   reader.onload = () => {
     saveUserAsset(name, reader.result)
+
     insertImageMarkdown(name)
+
     event.target.value = ""
   }
+
   reader.readAsDataURL(file)
 }
 
@@ -69,7 +84,8 @@ function insertImageMarkdown(name) {
 
 `
 
-  const selection = editorView.value.state.selection.main
+  const selection =
+    editorView.value.state.selection.main
 
   editorView.value.dispatch({
     changes: {
@@ -78,19 +94,25 @@ function insertImageMarkdown(name) {
       insert: insertText
     }
   })
+
+  drawerOpen.value = false
 }
 
 onMounted(() => {
+
   editorView.value = new EditorView({
     doc: content.value,
     extensions: [
       basicSetup,
       markdown(),
-      keymap.of([indentWithTab]),
+      keymap.of([
+        indentWithTab
+      ]),
+
       EditorView.updateListener.of((update) => {
         if (!update.docChanged) return
-
-        content.value = update.state.doc.toString()
+        content.value =
+          update.state.doc.toString()
 
         localStorage.setItem(
           "content",
@@ -100,11 +122,11 @@ onMounted(() => {
     ],
     parent: editor.value
   })
-
 })
 </script>
 <template>
   <div class="write-page">
+
     <header class="write-header">
       <h1>Manga Editor</h1>
       <p>
@@ -119,13 +141,23 @@ onMounted(() => {
         <div class="panel-title">
           Markdown
         </div>
+
         <div class="editor-toolbar">
+
           <button
             class="secondary-button"
             @click="openImagePicker"
           >
             画像をアップロード
           </button>
+
+          <button
+            class="secondary-button"
+            @click="openDrawer"
+          >
+            📁 画像一覧
+          </button>
+
           <input
             ref="fileInput"
             type="file"
@@ -133,11 +165,14 @@ onMounted(() => {
             hidden
             @change="onImageSelected"
           />
+
         </div>
+
         <div
           ref="editor"
           class="editor"
         />
+
       </section>
 
       <section class="preview-panel">
@@ -145,15 +180,19 @@ onMounted(() => {
         <div class="panel-title">
           Preview
         </div>
+
         <div class="preview">
           <Renderer
             :content="content"
           />
         </div>
+
       </section>
+
     </main>
 
     <footer class="button-panel">
+
       <button
         class="primary-button"
         @click="router.push('/save')"
@@ -167,7 +206,14 @@ onMounted(() => {
       >
         ホームへ戻る
       </button>
+
     </footer>
+
+    <ImageDrawer
+      :open="drawerOpen"
+      @close="closeDrawer"
+      @insert="insertImageMarkdown"
+    />
 
   </div>
 </template>
