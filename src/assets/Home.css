@@ -4,49 +4,62 @@
   --panel:#ffffff;
   --text:#27272a;
   --sub:#71717a;
-  --blue:#38bdf8;
-  --green:#34d399;
+  --blue:#3b82f6;
+  --green:#10b981;
 }
 
 *{
   box-sizing:border-box;
 }
 
+body{
+  margin:0;
+  font-family:
+    Inter,
+    "Noto Sans JP",
+    sans-serif;
+  color:var(--text);
+  background:var(--paper);
+}
+
 .home-page{
   min-height:100vh;
-  background:var(--paper);
   display:flex;
   justify-content:center;
   align-items:center;
   padding:48px;
+  background:
+    radial-gradient(circle at top,#faf8f2,transparent 60%),
+    var(--paper);
 }
 
 .manga-page{
-  width:min(1200px,100%);
-  background:white;
-  border:2px solid var(--line);
-  border-radius:22px;
-  overflow:hidden;
+  width:min(1180px,100%);
   display:grid;
   grid-template-columns:2fr 1fr;
-  grid-template-rows:170px 260px 180px;
-  gap:2px;
+  grid-template-rows:170px 430px;
+  gap:3px;
   background:var(--line);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.12);
+  border:2px solid var(--line);
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.12);
 }
 
 .panel{
+  position:relative;
+  overflow:hidden;
   background:var(--panel);
-  color:var(--text);
-  padding:34px;
-  transition:.25s;
+  padding:40px;
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
 }
 
 .panel:hover{
-  z-index:5;
-  transform:translateY(-3px);
-  box-shadow:0 10px 25px rgba(0,0,0,.12);
+  transform:translateY(-6px) rotate(-.4deg);
+  box-shadow:0 18px 40px rgba(0,0,0,.14);
+  z-index:2;
 }
 
 /* ---------- タイトル ---------- */
@@ -55,27 +68,50 @@
   grid-column:1/3;
   display:flex;
   align-items:center;
-  gap:24px;
+  gap:28px;
+  background:
+    linear-gradient(to right,#fff,#fafafa);
 }
 
 .logo{
-  width:74px;
-  height:74px;
+  width:76px;
+  height:76px;
+  flex-shrink:0;
 }
 
-.title-panel h1{
+.title-content{
+  display:flex;
+  flex-direction:column;
+}
+
+.title-content h1{
   margin:0;
-  font-size:48px;
+  font-size:54px;
   font-weight:900;
   letter-spacing:-2px;
+  line-height:1;
 }
 
-.title-panel p{
-  margin-top:8px;
+.title-content p{
+  margin-top:10px;
   color:var(--sub);
+  font-size:18px;
 }
 
-/* ---------- Markdown ---------- */
+.sound{
+  position:absolute;
+  right:28px;
+  top:18px;
+  font-size:64px;
+  font-weight:900;
+  color:#000;
+  opacity:.05;
+  transform:rotate(-12deg);
+  user-select:none;
+  pointer-events:none;
+}
+
+/* ---------- Hero ---------- */
 
 .markdown-panel{
   display:flex;
@@ -83,72 +119,47 @@
   justify-content:space-between;
 }
 
-.markdown-panel h2{
-  margin:22px 0 12px;
-  font-size:34px;
-}
-
-.markdown-panel p{
-  line-height:1.9;
-  color:var(--sub);
-}
-
-/* ---------- Article ---------- */
-
-.article-panel{
-  position:relative;
+.hero-text{
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  clip-path:polygon(
-    8% 0,
-    100% 0,
-    92% 100%,
-    0 100%
-  );
+  gap:22px;
 }
 
-.article-panel h2{
-  margin:20px 0 12px;
-  font-size:26px;
-}
-
-.article-panel p{
-  color:var(--sub);
-  line-height:1.8;
-}
-
-/* ---------- Guide ---------- */
-
-.guide-panel{
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  background:#fafaf9;
-}
-
-.guide-panel h3{
+.hero-text h2{
   margin:0;
-  font-size:24px;
+  font-size:48px;
+  line-height:1.15;
+  font-weight:900;
+  letter-spacing:-1px;
 }
 
-.guide-panel p{
-  margin-top:16px;
+.hero-text p{
+  max-width:620px;
+  margin:0;
   color:var(--sub);
-  line-height:1.8;
+  font-size:17px;
+  line-height:1.9;
 }
 
-/* ---------- 番号 ---------- */
+.button-group{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+/* ---------- Number ---------- */
 
 .number{
-  width:42px;
-  height:42px;
-  border-radius:50%;
+  width:52px;
+  height:52px;
   display:flex;
   justify-content:center;
   align-items:center;
-  color:white;
-  font-weight:800;
+  border-radius:14px;
+  margin-bottom:26px;
+  font-size:18px;
+  font-weight:900;
+  color:#fff;
 }
 
 .blue{
@@ -159,86 +170,150 @@
   background:var(--green);
 }
 
-/* ---------- ボタン ---------- */
+/* ---------- Buttons ---------- */
 
 button{
   cursor:pointer;
   border:none;
-  font-size:15px;
-  font-weight:700;
+  font-size:16px;
+  font-weight:800;
   transition:.2s;
 }
 
-.primary-button {
-  display: inline-block;
-  align-self: flex-start;
-
-  padding: 1rem 2rem;
-
-  background: #3b82f6;
-  color: white;
-
-  border: 3px solid black;
-  border-radius: 0.5rem;
-
-  font-size: 1.125rem;
-  font-weight: 900;
-
-  box-shadow: 6px 6px 0 black;
-  transition: all 0.2s ease;
-  cursor: pointer;
+.primary-button,
+.secondary-button{
+  padding:16px 30px;
+  border:3px solid #000;
+  border-radius:12px;
+  font-size:17px;
+  font-weight:900;
+  box-shadow:6px 6px 0 #000;
 }
 
-.primary-button:hover {
-  background: #2563eb;
+.primary-button{
+  background:var(--blue);
+  color:#fff;
 }
 
-.primary-button:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+.primary-button:hover{
+  background:#2563eb;
 }
 
-.secondary-button {
-  display: inline-block;
-  align-self: flex-start;
-
-  padding: 1rem 2rem;
-
-  background: #d1d5db;
-  color: #222;
-
-  border: 3px solid black;
-  border-radius: 0.5rem;
-
-  font-size: 1.125rem;
-  font-weight: 900;
-
-  box-shadow: 6px 6px 0 black;
-  transition: all 0.2s ease;
-  cursor: pointer;
+.secondary-button{
+  background:#ececec;
+  color:#222;
 }
 
-.secondary-button:hover {
-  background: #9ca3af;
+.secondary-button:hover{
+  background:#d4d4d4;
 }
 
-.secondary-button:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
-}
-.guide-button{
-  align-self:flex-start;
-  background:white;
-  border:1.5px solid #d4d4d8;
-  padding:12px 22px;
-  border-radius:999px;
+.primary-button:active,
+.secondary-button:active{
+  transform:translate(5px,5px);
+  box-shadow:none;
 }
 
-.guide-button:hover{
-  background:#f4f4f5;
+/* ---------- Guide ---------- */
+
+.guide-panel{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  background:
+    radial-gradient(#e5e5e5 1px,transparent 1px),
+    #fafafa;
+  background-size:12px 12px;
 }
 
-/* ---------- レスポンシブ ---------- */
+.guide-panel:hover{
+  background:
+    radial-gradient(#dddddd 1px,transparent 1px),
+    #f7f7f7;
+}
+
+.guide-header{
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+
+.guide-header h3{
+  margin:0;
+  font-size:28px;
+  font-weight:900;
+}
+
+.guide-header p{
+  margin:8px 0 0;
+  color:var(--sub);
+  line-height:1.7;
+}
+
+.guide-steps{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin:32px 0;
+}
+
+.step{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 18px;
+  background:#fff;
+  border:2px solid #ececec;
+  border-radius:14px;
+  transition:
+    transform .2s,
+    border-color .2s,
+    box-shadow .2s;
+}
+
+.guide-panel:hover .step{
+  border-color:#d6d6d6;
+}
+
+.step:hover{
+  transform:translateX(6px);
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+
+.step span{
+  width:34px;
+  height:34px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:10px;
+  background:var(--green);
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  flex-shrink:0;
+}
+
+.step p{
+  margin:0;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.guide-footer{
+  margin-top:auto;
+  font-weight:800;
+  color:var(--blue);
+  transition:transform .2s;
+}
+
+.guide-panel:hover .guide-footer{
+  transform:translateX(8px);
+}
+
+/* ---------- Responsive ---------- */
 
 @media (max-width:900px){
 
@@ -253,10 +328,94 @@ button{
 
   .title-panel{
     grid-column:auto;
+    padding:32px;
   }
 
-  .article-panel{
-    clip-path:none;
+  .title-content h1{
+    font-size:40px;
   }
 
+  .title-content p{
+    font-size:16px;
+  }
+
+  .logo{
+    width:60px;
+    height:60px;
+  }
+
+  .sound{
+    display:none;
+  }
+
+  .panel{
+    padding:30px;
+  }
+
+  .hero-text h2{
+    font-size:36px;
+  }
+
+  .hero-text p{
+    font-size:16px;
+  }
+
+  .button-group{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .primary-button,
+  .secondary-button{
+    width:100%;
+    justify-content:center;
+  }
+
+  .guide-header{
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .guide-steps{
+    margin:24px 0;
+  }
+}
+
+@media (max-width:600px){
+
+  .home-page{
+    padding:16px;
+  }
+
+  .title-panel{
+    gap:18px;
+  }
+
+  .title-content h1{
+    font-size:34px;
+  }
+
+  .hero-text h2{
+    font-size:30px;
+  }
+
+  .hero-text p{
+    line-height:1.8;
+  }
+
+  .number{
+    width:46px;
+    height:46px;
+    font-size:16px;
+  }
+
+  .step{
+    padding:12px 14px;
+  }
+
+  .step span{
+    width:30px;
+    height:30px;
+    font-size:12px;
+  }
 }

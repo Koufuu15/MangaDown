@@ -1,11 +1,13 @@
 import parseObject from "../utils/parseObject"
 
-export default function parseBackground(panel,key,value){
-
+export default function parsePanel(panel,key,value){
     switch(key){
-
-        case "color":
+        case "backgroundColor":
             panel.backgroundColor=value
+            break
+
+        case "backgroundImage":
+            panel.backgroundImage=value
             break
 
         case "position":

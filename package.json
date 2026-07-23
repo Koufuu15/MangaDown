@@ -20,6 +20,7 @@
     "codemirror": "^6.0.2",
     "html-to-image": "^1.11.13",
     "json5": "^2.2.3",
+    "jspdf": "^4.2.1",
     "marked": "^18.0.5",
     "tailwindcss": "^4.3.2",
     "vue": "^3.5.32",
