@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import parseUrl from '../components/parseUrl.vue'
-import resMd from '../components/parseUrl.vue'
-import writeMD from '../components/writeMD.vue'
-import Home from '../components/Home.vue'
-import save from '../components/save.vue'
+import parseUrl from '../views/parseUrl.vue'
+import resMd from '../views/parseUrl.vue'
+import writeMD from '../views/writeMD.vue'
+import Home from '../views/Home.vue'
+import guide from '../views/guide.vue'
+import save from '../views/save.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
       props: {
         dataMd: resMd.value
       }
+    },
+    {
+      path: '/guide',
+      name: 'Guide',
+      component: guide,
     },
     {
       path: '/save',
