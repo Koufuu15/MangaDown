@@ -160,13 +160,7 @@ const {
     >
       ← エディタへ戻る
     </button>
-
-    <button
-      class="publish"
-    >
-      🚀 公開
-    </button>
-
+    
   </div>
 
 </div>
