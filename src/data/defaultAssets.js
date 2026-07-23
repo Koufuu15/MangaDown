@@ -11,7 +11,7 @@
 */
 
 const modules = import.meta.glob(
-  "@/src/data/images/**/*.{png,jpg,jpeg,webp,svg}",
+  "/src/data/images/**/*.{png,jpg,jpeg,webp,svg}",
   {
     eager: true,
     import: "default"

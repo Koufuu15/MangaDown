@@ -1,24 +1,30 @@
-import { getUserAsset, getUserAssets, getUserAssetNames } from "./userAssets"
+import defaultAssets from "@/data/defaultAssets"
+import {
+  getUserAsset,
+  getUserAssets,
+  getUserAssetNames
+} from "./userAssets"
 
-const builtinAssets = {
-  detective: "/assets/builtin/characters/detective.png",
-  girl: "/assets/builtin/characters/girl.png",
-  boy: "/assets/builtin/characters/boy.png",
-  office: "/assets/builtin/backgrounds/office.png",
-  school: "/assets/builtin/backgrounds/school.png",
-  smoke: "/assets/builtin/effects/smoke.png",
-  sparkle: "/assets/builtin/effects/sparkle.png"
-}
+const builtinAssets = Object.fromEntries(
+  defaultAssets.map(asset => [
+    asset.name,
+    asset.src
+  ])
+)
 
 /**
  * asset名から画像URLを返す
- * @param {string} assetName
- * @returns {string|null}
  */
 export function resolveAsset(assetName) {
+
   if (!assetName) return null
-  if (builtinAssets[assetName]) return builtinAssets[assetName]
+
+  if (builtinAssets[assetName]) {
+    return builtinAssets[assetName]
+  }
+
   return getUserAsset(assetName)
+
 }
 
 /**
