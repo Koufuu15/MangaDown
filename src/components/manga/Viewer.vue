@@ -27,6 +27,6 @@ defineProps({
     gap:24px;
     position:relative;
     width:100%;
-    min-height:800px;
+    min-width: 500px;
 }
 </style>

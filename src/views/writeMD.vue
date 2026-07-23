@@ -21,7 +21,6 @@ const editor = ref()
 const editorView = ref(null)
 
 const fileInput = ref(null)
-
 const drawerOpen = ref(false)
 
 const content = ref(localStorage.getItem("content") ?? "")
@@ -62,9 +61,7 @@ function onImageSelected(event) {
 
   reader.onload = () => {
     saveUserAsset(name, reader.result)
-
     insertImageMarkdown(name)
-
     event.target.value = ""
   }
 
@@ -84,14 +81,13 @@ function insertImageMarkdown(name) {
 
 `
 
-  const selection =
-    editorView.value.state.selection.main
+  const selection = editorView.value.state.selection.main
 
   editorView.value.dispatch({
-    changes: {
-      from: selection.from,
-      to: selection.to,
-      insert: insertText
+    changes:{
+      from:selection.from,
+      to:selection.to,
+      insert:insertText
     }
   })
 
@@ -101,18 +97,18 @@ function insertImageMarkdown(name) {
 onMounted(() => {
 
   editorView.value = new EditorView({
-    doc: content.value,
-    extensions: [
+    doc:content.value,
+    extensions:[
       basicSetup,
       markdown(),
+      EditorView.lineWrapping,
       keymap.of([
         indentWithTab
       ]),
+      EditorView.updateListener.of((update)=>{
+        if(!update.docChanged) return
 
-      EditorView.updateListener.of((update) => {
-        if (!update.docChanged) return
-        content.value =
-          update.state.doc.toString()
+        content.value = update.state.doc.toString()
 
         localStorage.setItem(
           "content",
@@ -120,42 +116,55 @@ onMounted(() => {
         )
       })
     ],
-    parent: editor.value
+    parent:editor.value
   })
+
 })
 </script>
+
 <template>
-  <div class="write-page">
 
-    <header class="write-header">
+<div class="write-page">
+
+  <header class="write-header">
+
+    <div class="header-left">
       <h1>Manga Editor</h1>
-      <p>
-        Write Markdown and preview your manga.
-      </p>
-    </header>
+      <p>Write Markdown and preview your manga.</p>
+    </div>
 
-    <main class="workspace">
+    <div class="header-right">
+      <span class="save-status">
+        ● Auto Saved
+      </span>
+    </div>
 
-      <section class="editor-panel">
+  </header>
 
-        <div class="panel-title">
+  <main class="workspace">
+
+    <section class="editor-panel">
+
+      <div class="panel-title">
+
+        <span>
           Markdown
-        </div>
+        </span>
 
         <div class="editor-toolbar">
 
           <button
-            class="secondary-button"
+            class="toolbar-button"
             @click="openImagePicker"
           >
-            画像をアップロード
+            🖼 Upload
           </button>
 
           <button
-            class="secondary-button"
+            class="toolbar-button"
             @click="openDrawer"
           >
-            📁 画像一覧
+            📁 Assets
           </button>
 
           <input
@@ -168,52 +177,61 @@ onMounted(() => {
 
         </div>
 
-        <div
-          ref="editor"
-          class="editor"
+      </div>
+
+      <div
+        ref="editor"
+        class="editor"
+      />
+
+    </section>
+
+    <section class="preview-panel">
+
+      <div class="panel-title">
+
+        <span>
+          Preview
+        </span>
+
+      </div>
+
+      <div class="preview">
+
+        <Renderer
+          :content="content"
         />
 
-      </section>
+      </div>
 
-      <section class="preview-panel">
+    </section>
 
-        <div class="panel-title">
-          Preview
-        </div>
+  </main>
 
-        <div class="preview">
-          <Renderer
-            :content="content"
-          />
-        </div>
+  <footer class="button-panel">
 
-      </section>
+    <button
+      class="secondary-button"
+      @click="router.push('/')"
+    >
+      ← Home
+    </button>
 
-    </main>
+    <button
+      class="primary-button"
+      @click="router.push('/save')"
+    >
+      Publish →
+    </button>
 
-    <footer class="button-panel">
+  </footer>
 
-      <button
-        class="primary-button"
-        @click="router.push('/save')"
-      >
-        公開する
-      </button>
+  <ImageDrawer
+    :open="drawerOpen"
+    @close="closeDrawer"
+    @insert="insertImageMarkdown"
+  />
 
-      <button
-        class="secondary-button"
-        @click="router.push('/')"
-      >
-        ホームへ戻る
-      </button>
+</div>
 
-    </footer>
-
-    <ImageDrawer
-      :open="drawerOpen"
-      @close="closeDrawer"
-      @insert="insertImageMarkdown"
-    />
-
-  </div>
 </template>

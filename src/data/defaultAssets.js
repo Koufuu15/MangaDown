@@ -11,7 +11,7 @@
 */
 
 const modules = import.meta.glob(
-  "@/assets/manga/**/*.{png,jpg,jpeg,webp,svg}",
+  "@/src/data/images/**/*.{png,jpg,jpeg,webp,svg}",
   {
     eager: true,
     import: "default"
@@ -22,7 +22,7 @@ const defaultAssets = Object.entries(modules).map(
   ([path, src]) => {
 
     // 例:
-    // /src/assets/manga/characters/girl.png
+// /src/data/images/characters/girl.png
 
     const filename =
       path.split("/").pop()

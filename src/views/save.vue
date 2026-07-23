@@ -19,51 +19,63 @@ const markdown = ref(
 
 const previewRef = ref(null)
 
-const {
+const{
   copyMarkdown,
   copyImage
-} = useClipboard(
+}=useClipboard(
   previewRef,
   markdown
 )
 
-const {
+const{
   exportMarkdown,
   exportHTML,
   exportPNG,
   exportPDF
-} = useExport(
+}=useExport(
   previewRef,
   markdown
 )
 
-const {
+const{
   shareX,
   shareFacebook,
   shareNative
-} = useShare()
+}=useShare()
 </script>
 
 <template>
+
 <div class="save-page">
 
-  <div class="manga title-card">
-    <h1>🎉 Manga Completed!</h1>
-    <p>公開前に最終確認してください</p>
-  </div>
+  <header class="save-header">
 
-  <div class="editor-area">
+    <div class="header-left">
+      <h1>Publish Manga</h1>
+      <p>Review your manga before publishing.</p>
+    </div>
 
-    <div class="manga card">
+    <div class="header-right">
+      <span class="publish-status">
+        ● Ready
+      </span>
+    </div>
 
-      <div class="card-header">
-        <span>📄 Markdown</span>
+  </header>
+
+  <main class="save-workspace">
+
+    <section class="markdown-panel">
+
+      <div class="panel-title">
+
+        <span>Markdown</span>
 
         <button
-          class="icon-btn"
+          class="toolbar-button"
           @click="copyMarkdown"
         >
-          📋
+          📋 Copy
         </button>
 
       </div>
@@ -73,26 +85,26 @@ const {
         readonly
       />
 
-    </div>
+    </section>
 
-    <div class="manga card">
+    <section class="preview-panel">
 
-      <div class="card-header">
+      <div class="panel-title">
 
-        <span>🖼 Preview</span>
+        <span>Preview</span>
 
         <button
-          class="icon-btn"
+          class="toolbar-button"
           @click="copyImage"
         >
-          📋
+          🖼 Copy
         </button>
 
       </div>
 
       <div
-        class="preview"
         ref="previewRef"
+        class="preview"
       >
 
         <Renderer
@@ -101,67 +113,94 @@ const {
 
       </div>
 
-    </div>
+    </section>
 
-  </div>
+  </main>
 
-  <div class="manga section">
+  <section class="action-panel">
 
-    <h2>📦 Export</h2>
+    <div class="action-card">
 
-    <div class="button-grid">
+      <h3>Export</h3>
 
-      <button @click="exportMarkdown">
-        Markdown
-      </button>
+      <div class="button-grid">
 
-      <button @click="exportHTML">
-        HTML
-      </button>
+        <button
+          class="secondary-button"
+          @click="exportMarkdown"
+        >
+          Markdown
+        </button>
 
-      <button @click="exportPDF">
-        PDF
-      </button>
+        <button
+          class="secondary-button"
+          @click="exportHTML"
+        >
+          HTML
+        </button>
 
-      <button @click="exportPNG">
-        PNG
-      </button>
+        <button
+          class="secondary-button"
+          @click="exportPNG"
+        >
+          PNG
+        </button>
 
-    </div>
+        <button
+          class="secondary-button"
+          @click="exportPDF"
+        >
+          PDF
+        </button>
 
-  </div>
-
-  <div class="manga section">
-
-    <h2>🌎 Share</h2>
-
-    <div class="button-grid">
-
-      <button @click="shareX()">
-        X
-      </button>
-
-      <button @click="shareFacebook()">
-        Facebook
-      </button>
-
-      <button @click="shareNative()">
-        Share
-      </button>
+      </div>
 
     </div>
 
-  </div>
+    <div class="action-card">
 
-  <div class="bottom-buttons">
+      <h3>Share</h3>
+
+      <div class="button-grid">
+
+        <button
+          class="secondary-button"
+          @click="shareX()"
+        >
+          X
+        </button>
+
+        <button
+          class="secondary-button"
+          @click="shareFacebook()"
+        >
+          Facebook
+        </button>
+
+        <button
+          class="secondary-button"
+          @click="shareNative()"
+        >
+          Share
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer class="button-panel">
 
     <button
+      class="secondary-button"
       @click="router.push('/write-md')"
     >
-      ← エディタへ戻る
+      ← Back
     </button>
-    
-  </div>
+
+  </footer>
 
 </div>
+
 </template>

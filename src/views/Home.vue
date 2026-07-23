@@ -3,109 +3,98 @@ import { useRouter } from "vue-router"
 import "../assets/Home.css"
 
 const router = useRouter()
+
+const openTutorial = () => {
+  // TODO
+}
+
+const openSample = () => {
+  // TODO
+}
 </script>
 
 <template>
   <div class="home-page">
-
     <main class="manga-page">
-
-      <!-- タイトル -->
       <header class="panel title-panel">
+        <span class="sound">ゴゴゴ</span>
 
         <img
           src="/favicon.ico"
           class="logo"
+          alt="MangaDown Logo"
         >
 
-        <div>
+        <div class="title-content">
           <h1>MangaDown</h1>
-          <p>Visualize your articles with manga</p>
+          <p>Turn Markdown into Manga.</p>
         </div>
-
       </header>
 
-      <!-- 左下（大きいコマ） -->
       <section class="panel markdown-panel">
+        <div class="number blue">01</div>
 
-        <div>
-
-          <div class="number blue">
-            01
-          </div>
-
-          <h2>
-            独自Markdownで漫画を作成
-          </h2>
+        <div class="hero-text">
+          <h2>Markdownから<br>漫画を作ろう。</h2>
 
           <p>
-            独自Markdownを書くだけで、
-            漫画のコマ・吹き出し・画像などを自由に配置できます。
+            独自Markdownを書くだけで漫画をレイアウト。
+            吹き出し・画像・背景・コマ割りを自由に配置し、
             リアルタイムプレビューを見ながら編集できます。
           </p>
-
         </div>
 
-        <button
-          class="primary-button"
-          @click="router.push('/write-md')"
-        >
-          漫画を作る →
-        </button>
+        <div class="button-group">
+          <button
+            class="primary-button"
+            @click="router.push('/write-md')"
+          >
+            漫画を作る →
+          </button>
 
+          <button
+            class="secondary-button"
+            @click="openSample"
+          >
+            サンプルを見る
+          </button>
+        </div>
       </section>
 
-      <!-- 右上（斜めコマ予定） -->
-      <section class="panel article-panel">
+      <section
+        class="panel guide-panel"
+        @click="openTutorial"
+      >
+        <div class="guide-header">
+          <span class="number green">02</span>
 
-        <div>
+          <div>
+            <h3>Quick Start</h3>
+            <p>3ステップで漫画を作成できます。</p>
+          </div>
+        </div>
 
-          <div class="number green">
-            02
+        <div class="guide-steps">
+          <div class="step">
+            <span>01</span>
+            <p>Markdownを書く</p>
           </div>
 
-          <h2>
-            技術記事をAIで漫画化
-          </h2>
+          <div class="step">
+            <span>02</span>
+            <p>リアルタイムで編集</p>
+          </div>
 
-          <p>
-            URLを入力するだけで、
-            AIが記事を漫画形式へ変換します。
-          </p>
-
+          <div class="step">
+            <span>03</span>
+            <p>PNG・PDFで出力</p>
+          </div>
         </div>
 
-        <button
-          class="secondary-button"
-          @click="router.push('/parse-url')"
-        >
-          記事を読み込む →
-        </button>
-
-      </section>
-
-      <!-- ガイド -->
-      <section class="panel guide-panel">
-
-        <div>
-
-          <h3>
-            Guide
-          </h3>
-
-          <p>
-            Markdownの書き方やサンプルはこちら。
-          </p>
-
+        <div class="guide-footer">
+          チュートリアルを見る →
         </div>
-
-        <button class="guide-button">
-          チュートリアル →
-        </button>
-
       </section>
-
     </main>
-
   </div>
 </template>
