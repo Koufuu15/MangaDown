@@ -34,8 +34,7 @@ export default [
 - color: black
 - position: { x:0, y:0 }
 
-###
-images
+### images
 - name: tarou
 - layer: 0
 - position: { x:180, y:20 }
