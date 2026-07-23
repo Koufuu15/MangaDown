@@ -3,6 +3,7 @@ import parseUrl from '../views/parseUrl.vue'
 import resMd from '../views/parseUrl.vue'
 import writeMD from '../views/writeMD.vue'
 import Home from '../views/Home.vue'
+import guide from '../views/guide.vue'
 import save from '../views/save.vue'
 
 const router = createRouter({
@@ -25,6 +26,11 @@ const router = createRouter({
       props: {
         dataMd: resMd.value
       }
+    },
+    {
+      path: '/guide',
+      name: 'Guide',
+      component: guide,
     },
     {
       path: '/save',

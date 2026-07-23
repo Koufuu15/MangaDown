@@ -54,9 +54,9 @@ const openSample = () => {
 
           <button
             class="secondary-button"
-            @click="openSample"
+            @click="router.push('/guide')"
           >
-            サンプルを見る
+            ガイドを見る
           </button>
         </div>
       </section>
