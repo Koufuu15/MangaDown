@@ -5,74 +5,117 @@
         <h3>フォルダ管理</h3>
         <button class="close-button" @click="close">×</button>
       </header>
+
       <div class="folder-list">
         <div v-for="folder in folders" :key="folder.id" class="folder-item">
           <div class="folder-info">
             <span>{{ folder.icon }}</span>
             <span>{{ folder.name }}</span>
           </div>
+
           <div class="folder-actions">
-            <button @click="rename(folder)">✏</button>
-            <button @click="remove(folder)">🗑</button>
+            <button @click="openRename(folder)">✏</button>
+            <button @click="openDelete(folder)">🗑</button>
           </div>
         </div>
       </div>
-      <button class="add-button" @click="create">＋ フォルダ追加</button>
+
+      <button class="add-button" @click="openCreate">
+        ＋ フォルダ追加
+      </button>
+
+      <FolderEditModal
+        v-if="modalOpen"
+        :mode="modalMode"
+        :folder="selectedFolder"
+        @submit="submit"
+        @close="modalOpen=false"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue"
-import { getUserFolders, addUserFolder, renameUserFolder, deleteUserFolder } from "@/utils/userFolders"
+import FolderEditModal from "./FolderEditModal.vue"
 
-const emit = defineEmits(["update","close"])
+import {
+  getUserFolders,
+  addUserFolder,
+  renameUserFolder,
+  deleteUserFolder
+} from "@/utils/userFolders"
+
+const emit = defineEmits([
+  "update",
+  "close"
+])
+
 const folders = ref([])
+
+const modalOpen = ref(false)
+const modalMode = ref("")
+const selectedFolder = ref(null)
 
 function refresh(){
   folders.value = getUserFolders()
   emit("update")
 }
 
-function create(){
-  const name = prompt("フォルダ名を入力してください")
-  if(!name) return
-  if(addUserFolder(name)) refresh()
+function openCreate(){
+  modalMode.value = "create"
+  selectedFolder.value = null
+  modalOpen.value = true
 }
 
-function rename(folder){
-  const name = prompt("新しいフォルダ名", folder.name)
-  if(!name) return
-  if(renameUserFolder(folder.id,name)) refresh()
+function openRename(folder){
+  modalMode.value = "rename"
+  selectedFolder.value = folder
+  modalOpen.value = true
 }
 
-function remove(folder){
-  const mode = prompt(
-    "削除方法を選択してください\n1:画像も削除\n2:未分類へ移動"
-  )
+function openDelete(folder){
+  modalMode.value = "delete"
+  selectedFolder.value = folder
+  modalOpen.value = true
+}
 
-  if(mode==="1"){
-    deleteUserFolder(
-      folder.id,
-      "delete"
-    )
-  }else if(mode==="2"){
-    deleteUserFolder(
-      folder.id,
-      "move"
-    )
-  }else{
-    return
+function submit(data){
+
+  if(data.mode === "create"){
+    if(addUserFolder(data.name)){
+      refresh()
+    }
   }
 
-  refresh()
+  if(data.mode === "rename"){
+    if(renameUserFolder(
+      data.folder.id,
+      data.name
+    )){
+      refresh()
+    }
+  }
+
+  if(data.mode === "delete"){
+    deleteUserFolder(
+      data.folder.id,
+      data.deleteMode
+    )
+
+    refresh()
+  }
+
+  modalOpen.value = false
 }
 
 function close(){
   emit("close")
 }
 
-onMounted(refresh)
+onMounted(()=>{
+  refresh()
+})
 </script>
 
 <style scoped>
