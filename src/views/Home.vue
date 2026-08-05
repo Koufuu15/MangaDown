@@ -90,10 +90,6 @@ const openSample = () => {
             <p>PNG・PDFで出力</p>
           </div>
         </div>
-
-        <div class="guide-footer">
-          チュートリアルを見る →
-        </div>
       </section>
     </main>
   </div>

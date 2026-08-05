@@ -2,21 +2,25 @@ const STORAGE_KEY = "userAssets"
 
 /**
  * ユーザー画像一覧を取得
- * @returns {Object}
+ * @returns {Array}
  */
 export function getUserAssets() {
   try {
-    return JSON.parse(
-      localStorage.getItem(STORAGE_KEY) ?? "{}"
+    const assets = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) ?? "[]"
     )
+
+    return Array.isArray(assets)
+      ? assets
+      : []
   } catch {
-    return {}
+    return []
   }
 }
 
 /**
  * ユーザー画像一覧を保存
- * @param {Object} assets
+ * @param {Array} assets
  */
 export function setUserAssets(assets) {
   localStorage.setItem(
@@ -27,26 +31,46 @@ export function setUserAssets(assets) {
 
 /**
  * 画像を追加
- * @param {string} name
- * @param {string} dataUrl
+ * @param {Object} asset
  */
-export function saveUserAsset(name, dataUrl) {
+export function saveUserAsset(asset) {
   const assets = getUserAssets()
 
-  assets[name] = dataUrl
+  assets.push({
+    id: asset.id ?? crypto.randomUUID(),
+    name: asset.name,
+    src: asset.src,
+    folderId: asset.folderId ?? "",
+    tags: asset.tags ?? [],
+    createdAt: asset.createdAt ?? Date.now(),
+    updatedAt: Date.now()
+  })
 
   setUserAssets(assets)
 }
 
 /**
- * 画像を取得
+ * 名前から画像取得
+ * @param {string} name
+ * @returns {Object|null}
+ */
+export function getUserAsset(name) {
+  return (
+    getUserAssets().find(
+      asset => asset.name === name
+    ) ?? null
+  )
+}
+
+/**
+ * 名前から画像URL取得
  * @param {string} name
  * @returns {string|null}
  */
-export function getUserAsset(name) {
-  const assets = getUserAssets()
-
-  return assets[name] ?? null
+export function getUserAssetSrc(name) {
+  return (
+    getUserAsset(name)?.src ?? null
+  )
 }
 
 /**
@@ -55,41 +79,55 @@ export function getUserAsset(name) {
  * @returns {boolean}
  */
 export function existsUserAsset(name) {
-  const assets = getUserAssets()
-
-  return name in assets
+  return getUserAssets().some(
+    asset => asset.name === name
+  )
 }
 
 /**
- * 画像を削除
- * @param {string} name
+ * 画像削除
+ * @param {string} id
  */
-export function deleteUserAsset(name) {
+export function deleteUserAsset(id) {
   const assets = getUserAssets()
 
-  delete assets[name]
-
-  setUserAssets(assets)
+  setUserAssets(
+    assets.filter(
+      asset => asset.id !== id
+    )
+  )
 }
 
 /**
  * 名前変更
- * @param {string} oldName
+ * @param {string} id
  * @param {string} newName
+ * @returns {boolean}
  */
 export function renameUserAsset(
-  oldName,
+  id,
   newName
 ) {
   const assets = getUserAssets()
 
-  if (!(oldName in assets)) return false
+  if (
+    assets.some(
+      asset =>
+        asset.name === newName &&
+        asset.id !== id
+    )
+  ) {
+    return false
+  }
 
-  if (newName in assets) return false
+  const asset = assets.find(
+    asset => asset.id === id
+  )
 
-  assets[newName] = assets[oldName]
+  if (!asset) return false
 
-  delete assets[oldName]
+  asset.name = newName
+  asset.updatedAt = Date.now()
 
   setUserAssets(assets)
 
@@ -97,12 +135,83 @@ export function renameUserAsset(
 }
 
 /**
- * 画像一覧の名前だけ取得
+ * フォルダ移動
+ * @param {string} id
+ * @param {string} folderId
+ */
+export function moveUserAsset(
+  id,
+  folderId
+) {
+  const assets = getUserAssets()
+
+  const asset = assets.find(
+    asset => asset.id === id
+  )
+
+  if (!asset) return
+
+  asset.folderId = folderId
+  asset.updatedAt = Date.now()
+
+  setUserAssets(assets)
+}
+
+/**
+ * タグ更新
+ * @param {string} id
+ * @param {string[]} tags
+ */
+export function updateUserAssetTags(
+  id,
+  tags
+) {
+  const assets = getUserAssets()
+
+  const asset = assets.find(
+    asset => asset.id === id
+  )
+
+  if (!asset) return
+
+  asset.tags = tags
+  asset.updatedAt = Date.now()
+
+  setUserAssets(assets)
+}
+
+/**
+ * 名前一覧取得
  * @returns {string[]}
  */
 export function getUserAssetNames() {
-  return Object.keys(
-    getUserAssets()
+  return getUserAssets().map(
+    asset => asset.name
+  )
+}
+
+/**
+ * 名前順ソート
+ * @returns {Array}
+ */
+export function getUserAssetsByName() {
+  return [...getUserAssets()].sort(
+    (a, b) =>
+      a.name.localeCompare(
+        b.name,
+        "ja"
+      )
+  )
+}
+
+/**
+ * 更新日時順ソート
+ * @returns {Array}
+ */
+export function getUserAssetsByUpdated() {
+  return [...getUserAssets()].sort(
+    (a, b) =>
+      b.updatedAt - a.updatedAt
   )
 }
 

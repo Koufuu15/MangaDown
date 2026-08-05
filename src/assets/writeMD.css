@@ -406,6 +406,16 @@ body{
   color:#9ca3af;
 }
 
+/* ================= Upload Dialog ================= */
+
+.upload-dialog{
+  z-index:1001;
+}
+
+.upload-overlay{
+  z-index:1000;
+}
+
 /* ================= Responsive ================= */
 
 @media (max-width:900px){

@@ -17,74 +17,36 @@ const emit = defineEmits([
 ])
 
 const keyword = ref("")
-
 const userAssets = ref([])
 
-/**
- * Drawerを開くたびに
- * LocalStorageを読み込み直す
- */
 watch(
   () => props.open,
-  (open) => {
-
+  open => {
     if (!open) return
 
-    const assets = getUserAssets()
-
-    userAssets.value = Object.entries(
-      assets
-    ).map(([name, src]) => ({
-
-      id: name,
-
-      name,
-
-      src,
-
-      category: "user",
-
-      tags: [],
-
+    userAssets.value = getUserAssets().map(asset => ({
+      ...asset,
       type: "user"
-
     }))
-
   },
   {
     immediate: true
   }
 )
 
-/**
- * デフォルト画像 + ユーザー画像
- */
-const assets = computed(() => {
+const assets = computed(() => [
+  ...defaultAssets,
+  ...userAssets.value
+])
 
-  return [
-
-    ...defaultAssets,
-
-    ...userAssets.value
-
-  ]
-
-})
-
-/**
- * 検索
- */
 const filteredAssets = computed(() => {
-
   const text =
     keyword.value
       .trim()
       .toLowerCase()
 
   if (!text) {
-
     return assets.value
-
   }
 
   return assets.value.filter(asset => {
@@ -94,50 +56,38 @@ const filteredAssets = computed(() => {
         .toLowerCase()
         .includes(text)
     ) {
-
       return true
-
     }
 
     if (
-      asset.category
+      asset.folderId
         ?.toLowerCase()
         .includes(text)
     ) {
-
       return true
-
     }
 
-    return asset.tags.some(tag =>
-
+    return (asset.tags ?? []).some(tag =>
       tag
         .toLowerCase()
         .includes(text)
-
     )
-
   })
-
 })
 
 function closeDrawer() {
-
   emit("close")
-
 }
 
 function insert(asset) {
-
   emit(
     "insert",
     asset.name
   )
-
 }
 </script>
-<template>
 
+<template>
   <Teleport to="body">
 
     <div
@@ -147,10 +97,9 @@ function insert(asset) {
     />
 
     <aside
+      v-if="open"
       class="image-drawer"
-      :class="{
-        open: open
-      }"
+      :class="{ open }"
     >
 
       <div class="drawer-header">
@@ -173,7 +122,7 @@ function insert(asset) {
         <input
           v-model="keyword"
           type="text"
-          placeholder="画像を検索..."
+          placeholder="画像・タグ・フォルダを検索..."
         />
 
       </div>
@@ -206,15 +155,11 @@ function insert(asset) {
             />
 
             <div class="asset-name">
-
               {{ asset.name }}
-
             </div>
 
             <div class="asset-category">
-
-              {{ asset.category }}
-
+              {{ asset.folderId || "未分類" }}
             </div>
 
           </button>
@@ -226,5 +171,4 @@ function insert(asset) {
     </aside>
 
   </Teleport>
-
 </template>

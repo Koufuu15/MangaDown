@@ -11,6 +11,7 @@ import { indentWithTab } from "@codemirror/commands"
 
 import Renderer from "@/components/renderer/Renderer.vue"
 import ImageDrawer from "@/components/ImageDrawer.vue"
+import UploadDialog from "@/components/UploadDialog.vue"
 
 import { validateImageName } from "@/utils/imageValidator"
 import { saveUserAsset } from "@/utils/userAssets"
@@ -22,11 +23,25 @@ const editorView = ref(null)
 
 const fileInput = ref(null)
 const drawerOpen = ref(false)
+const uploadOpen = ref(false)
 
-const content = ref(localStorage.getItem("content") ?? "")
+const selectedFile = ref(null)
+
+const content = ref(
+  localStorage.getItem("content") ?? ""
+)
 
 function openImagePicker() {
   fileInput.value?.click()
+}
+
+function openUploadDialog() {
+  uploadOpen.value = true
+}
+
+function closeUploadDialog() {
+  uploadOpen.value = false
+  selectedFile.value = null
 }
 
 function openDrawer() {
@@ -42,34 +57,46 @@ function onImageSelected(event) {
 
   if (!file) return
 
-  const name = prompt("画像名を入力してください")
+  selectedFile.value = file
+  openUploadDialog()
 
-  if (!name) {
-    event.target.value = ""
-    return
-  }
+  event.target.value = ""
+}
 
-  const result = validateImageName(name)
+function saveImage(data) {
+  if (!selectedFile.value) return
+
+  const result = validateImageName(
+    data.name
+  )
 
   if (!result.valid) {
     alert(result.message)
-    event.target.value = ""
     return
   }
 
   const reader = new FileReader()
 
   reader.onload = () => {
-    saveUserAsset(name, reader.result)
-    insertImageMarkdown(name)
-    event.target.value = ""
+    saveUserAsset({
+      name: data.name,
+      src: reader.result,
+      folderId: data.folderId,
+      tags: data.tags,
+      createdAt: Date.now()
+    })
+
+    insertImageMarkdown(data.name)
+
+    closeUploadDialog()
   }
 
-  reader.readAsDataURL(file)
+  reader.readAsDataURL(
+    selectedFile.value
+  )
 }
 
 function insertImageMarkdown(name) {
-
   if (!editorView.value) return
 
   const insertText =
@@ -81,13 +108,14 @@ function insertImageMarkdown(name) {
 
 `
 
-  const selection = editorView.value.state.selection.main
+  const selection =
+    editorView.value.state.selection.main
 
   editorView.value.dispatch({
-    changes:{
-      from:selection.from,
-      to:selection.to,
-      insert:insertText
+    changes: {
+      from: selection.from,
+      to: selection.to,
+      insert: insertText
     }
   })
 
@@ -95,20 +123,20 @@ function insertImageMarkdown(name) {
 }
 
 onMounted(() => {
-
   editorView.value = new EditorView({
-    doc:content.value,
-    extensions:[
+    doc: content.value,
+    extensions: [
       basicSetup,
       markdown(),
       EditorView.lineWrapping,
       keymap.of([
         indentWithTab
       ]),
-      EditorView.updateListener.of((update)=>{
-        if(!update.docChanged) return
+      EditorView.updateListener.of(update => {
+        if (!update.docChanged) return
 
-        content.value = update.state.doc.toString()
+        content.value =
+          update.state.doc.toString()
 
         localStorage.setItem(
           "content",
@@ -116,18 +144,15 @@ onMounted(() => {
         )
       })
     ],
-    parent:editor.value
+    parent: editor.value
   })
-
 })
 </script>
 
 <template>
-
 <div class="write-page">
 
   <header class="write-header">
-
     <div class="header-left">
       <h1>Manga Editor</h1>
       <p>Write Markdown and preview your manga.</p>
@@ -138,7 +163,6 @@ onMounted(() => {
         ● Auto Saved
       </span>
     </div>
-
   </header>
 
   <main class="workspace">
@@ -189,11 +213,9 @@ onMounted(() => {
     <section class="preview-panel">
 
       <div class="panel-title">
-
         <span>
           Preview
         </span>
-
       </div>
 
       <div class="preview">
@@ -232,6 +254,11 @@ onMounted(() => {
     @insert="insertImageMarkdown"
   />
 
-</div>
+  <UploadDialog
+    :open="uploadOpen"
+    @close="closeUploadDialog"
+    @save="saveImage"
+  />
 
+</div>
 </template>

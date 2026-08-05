@@ -1,6 +1,6 @@
 import defaultAssets from "@/data/defaultAssets"
 import {
-  getUserAsset,
+  getUserAssetSrc,
   getUserAssets,
   getUserAssetNames
 } from "./userAssets"
@@ -16,15 +16,13 @@ const builtinAssets = Object.fromEntries(
  * asset名から画像URLを返す
  */
 export function resolveAsset(assetName) {
-
   if (!assetName) return null
 
   if (builtinAssets[assetName]) {
     return builtinAssets[assetName]
   }
 
-  return getUserAsset(assetName)
-
+  return getUserAssetSrc(assetName)
 }
 
 /**
@@ -38,7 +36,9 @@ export function isBuiltinAsset(assetName) {
  * ユーザー素材かどうか
  */
 export function isUserAsset(assetName) {
-  return assetName in getUserAssets()
+  return getUserAssets().some(
+    asset => asset.name === assetName
+  )
 }
 
 /**

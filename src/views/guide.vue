@@ -83,6 +83,13 @@ function jump(id) {
 
         <div>
 
+            <button
+                class="secondary-button"
+                @click="router.push('/')"
+            >
+                ← Home
+            </button>
+            
             <h1>Writing Guide</h1>
 
             <p>
@@ -90,13 +97,6 @@ function jump(id) {
             </p>
 
         </div>
-
-        <button
-            class="secondary-button"
-            @click="router.push('/')"
-        >
-            ← Home
-        </button>
 
     </header>
 
