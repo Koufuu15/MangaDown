@@ -35,6 +35,7 @@ const selectedFolder = ref("")
 const sortType = ref("updated")
 const userAssets = ref([])
 const userFolders = ref([])
+const folderOpen = ref(true)
 
 watch(() => props.open, open => {
   if(!open) return
@@ -246,7 +247,19 @@ function getFolderName(folderId){
         />
       </div>
 
-      <div class="drawer-folders">
+      <div class="drawer-folder-header">
+        <button
+          class="folder-toggle"
+          @click="folderOpen = !folderOpen"
+        >
+          Folders {{ folderOpen ? "▼" : "▶" }}
+        </button>
+      </div>
+
+      <div
+        v-if="folderOpen"
+        class="drawer-folders"
+      >
         <div
           v-for="folder in folders"
           :key="folder.id"

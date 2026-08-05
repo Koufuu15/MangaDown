@@ -49,3 +49,59 @@
   cursor:pointer;
   font-size:12px;
 }
+
+.drawer-folder-header{
+  padding:10px 16px;
+  border-bottom:1px solid #eee;
+}
+
+.drawer-folders{
+  max-height:220px;
+  overflow-y:auto;
+}
+
+.folder-toggle{
+  width:100%;
+  text-align:left;
+  border:none;
+  background:none;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.folder-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+}
+
+.folder-button{
+  flex:1;
+  text-align:left;
+  padding:8px 10px;
+  border:none;
+  background:#fff;
+  cursor:pointer;
+}
+
+.folder-button:hover{
+  background:#f5f5f5;
+}
+
+.folder-actions{
+  display:flex;
+  gap:4px;
+}
+
+.folder-actions button{
+  width:28px;
+  height:28px;
+  border:1px solid #ddd;
+  background:#fff;
+  cursor:pointer;
+}
+
+.folder-actions button:hover{
+  background:#f5f5f5;
+}
