@@ -1,9 +1,5 @@
 const STORAGE_KEY = "userAssets"
 
-/**
- * ユーザー画像一覧を取得
- * @returns {Array}
- */
 export function getUserAssets() {
   try {
     const assets = JSON.parse(
@@ -11,17 +7,16 @@ export function getUserAssets() {
     )
 
     return Array.isArray(assets)
-      ? assets
+      ? assets.map(asset => ({
+          ...asset,
+          folder: asset.folder ?? asset.folderId ?? ""
+        }))
       : []
   } catch {
     return []
   }
 }
 
-/**
- * ユーザー画像一覧を保存
- * @param {Array} assets
- */
 export function setUserAssets(assets) {
   localStorage.setItem(
     STORAGE_KEY,
@@ -29,10 +24,6 @@ export function setUserAssets(assets) {
   )
 }
 
-/**
- * 画像を追加
- * @param {Object} asset
- */
 export function saveUserAsset(asset) {
   const assets = getUserAssets()
 
@@ -49,11 +40,6 @@ export function saveUserAsset(asset) {
   setUserAssets(assets)
 }
 
-/**
- * 名前から画像取得
- * @param {string} name
- * @returns {Object|null}
- */
 export function getUserAsset(name) {
   return (
     getUserAssets().find(
@@ -62,32 +48,18 @@ export function getUserAsset(name) {
   )
 }
 
-/**
- * 名前から画像URL取得
- * @param {string} name
- * @returns {string|null}
- */
 export function getUserAssetSrc(name) {
   return (
     getUserAsset(name)?.src ?? null
   )
 }
 
-/**
- * 画像が存在するか
- * @param {string} name
- * @returns {boolean}
- */
 export function existsUserAsset(name) {
   return getUserAssets().some(
     asset => asset.name === name
   )
 }
 
-/**
- * 画像削除
- * @param {string} id
- */
 export function deleteUserAsset(id) {
   const assets = getUserAssets()
 
@@ -98,16 +70,7 @@ export function deleteUserAsset(id) {
   )
 }
 
-/**
- * 名前変更
- * @param {string} id
- * @param {string} newName
- * @returns {boolean}
- */
-export function renameUserAsset(
-  id,
-  newName
-) {
+export function renameUserAsset(id, newName) {
   const assets = getUserAssets()
 
   if (
@@ -134,15 +97,7 @@ export function renameUserAsset(
   return true
 }
 
-/**
- * フォルダ移動
- * @param {string} id
- * @param {string} folderId
- */
-export function moveUserAsset(
-  id,
-  folderId
-) {
+export function moveUserAsset(id, folderId) {
   const assets = getUserAssets()
 
   const asset = assets.find(
@@ -157,15 +112,7 @@ export function moveUserAsset(
   setUserAssets(assets)
 }
 
-/**
- * タグ更新
- * @param {string} id
- * @param {string[]} tags
- */
-export function updateUserAssetTags(
-  id,
-  tags
-) {
+export function updateUserAssetTags(id, tags) {
   const assets = getUserAssets()
 
   const asset = assets.find(
@@ -180,20 +127,12 @@ export function updateUserAssetTags(
   setUserAssets(assets)
 }
 
-/**
- * 名前一覧取得
- * @returns {string[]}
- */
 export function getUserAssetNames() {
   return getUserAssets().map(
     asset => asset.name
   )
 }
 
-/**
- * 名前順ソート
- * @returns {Array}
- */
 export function getUserAssetsByName() {
   return [...getUserAssets()].sort(
     (a, b) =>
@@ -204,10 +143,6 @@ export function getUserAssetsByName() {
   )
 }
 
-/**
- * 更新日時順ソート
- * @returns {Array}
- */
 export function getUserAssetsByUpdated() {
   return [...getUserAssets()].sort(
     (a, b) =>
@@ -215,9 +150,6 @@ export function getUserAssetsByUpdated() {
   )
 }
 
-/**
- * 全削除
- */
 export function clearUserAssets() {
   localStorage.removeItem(STORAGE_KEY)
 }

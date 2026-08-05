@@ -29,7 +29,9 @@ export function resolveAsset(assetName) {
  * 運営素材かどうか
  */
 export function isBuiltinAsset(assetName) {
-  return assetName in builtinAssets
+  return defaultAssets.some(
+    asset => asset.name === assetName
+  )
 }
 
 /**
@@ -46,7 +48,28 @@ export function isUserAsset(assetName) {
  */
 export function getAllAssetNames() {
   return [
-    ...Object.keys(builtinAssets),
+    ...defaultAssets.map(
+      asset => asset.name
+    ),
     ...getUserAssetNames()
+  ]
+}
+
+/**
+ * AssetPicker用
+ * すべての画像素材を取得
+ */
+export function getAllAssets() {
+  return [
+    ...defaultAssets.map(asset => ({
+      ...asset,
+      type:"builtin"
+    })),
+
+    ...getUserAssets().map(asset => ({
+      ...asset,
+      folderId:asset.folderId ?? "",
+      type:"user"
+    }))
   ]
 }

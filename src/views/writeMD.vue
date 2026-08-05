@@ -10,11 +10,12 @@ import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import Renderer from "@/components/renderer/Renderer.vue"
-import ImageDrawer from "@/components/ImageDrawer.vue"
+import AssetPicker from "@/components/library/AssetPicker.vue"
 import UploadDialog from "@/components/UploadDialog.vue"
 
 import { validateImageName } from "@/utils/imageValidator"
 import { saveUserAsset } from "@/utils/userAssets"
+import { getAllAssets } from "@/utils/assetResolver"
 
 const router = useRouter()
 
@@ -22,10 +23,13 @@ const editor = ref()
 const editorView = ref(null)
 
 const fileInput = ref(null)
-const drawerOpen = ref(false)
+
+const pickerOpen = ref(false)
 const uploadOpen = ref(false)
 
 const selectedFile = ref(null)
+
+const assets = ref([])
 
 const content = ref(
   localStorage.getItem("content") ?? ""
@@ -35,21 +39,18 @@ function openImagePicker() {
   fileInput.value?.click()
 }
 
-function openUploadDialog() {
-  uploadOpen.value = true
+function openAssetPicker() {
+  assets.value = getAllAssets()
+  pickerOpen.value = true
+}
+
+function closeAssetPicker() {
+  pickerOpen.value = false
 }
 
 function closeUploadDialog() {
   uploadOpen.value = false
   selectedFile.value = null
-}
-
-function openDrawer() {
-  drawerOpen.value = true
-}
-
-function closeDrawer() {
-  drawerOpen.value = false
 }
 
 function onImageSelected(event) {
@@ -58,7 +59,7 @@ function onImageSelected(event) {
   if (!file) return
 
   selectedFile.value = file
-  openUploadDialog()
+  uploadOpen.value = true
 
   event.target.value = ""
 }
@@ -66,9 +67,7 @@ function onImageSelected(event) {
 function saveImage(data) {
   if (!selectedFile.value) return
 
-  const result = validateImageName(
-    data.name
-  )
+  const result = validateImageName(data.name)
 
   if (!result.valid) {
     alert(result.message)
@@ -79,11 +78,11 @@ function saveImage(data) {
 
   reader.onload = () => {
     saveUserAsset({
-      name: data.name,
-      src: reader.result,
-      folderId: data.folderId,
-      tags: data.tags,
-      createdAt: Date.now()
+      name:data.name,
+      src:reader.result,
+      folderId:data.folderId,
+      tags:data.tags,
+      createdAt:Date.now()
     })
 
     insertImageMarkdown(data.name)
@@ -91,9 +90,11 @@ function saveImage(data) {
     closeUploadDialog()
   }
 
-  reader.readAsDataURL(
-    selectedFile.value
-  )
+  reader.readAsDataURL(selectedFile.value)
+}
+
+function selectAsset(asset) {
+  insertImageMarkdown(asset.name)
 }
 
 function insertImageMarkdown(name) {
@@ -112,27 +113,27 @@ function insertImageMarkdown(name) {
     editorView.value.state.selection.main
 
   editorView.value.dispatch({
-    changes: {
-      from: selection.from,
-      to: selection.to,
-      insert: insertText
+    changes:{
+      from:selection.from,
+      to:selection.to,
+      insert:insertText
     }
   })
 
-  drawerOpen.value = false
+  pickerOpen.value = false
 }
 
 onMounted(() => {
   editorView.value = new EditorView({
-    doc: content.value,
-    extensions: [
+    doc:content.value,
+    extensions:[
       basicSetup,
       markdown(),
       EditorView.lineWrapping,
       keymap.of([
         indentWithTab
       ]),
-      EditorView.updateListener.of(update => {
+      EditorView.updateListener.of(update=>{
         if (!update.docChanged) return
 
         content.value =
@@ -144,7 +145,7 @@ onMounted(() => {
         )
       })
     ],
-    parent: editor.value
+    parent:editor.value
   })
 })
 </script>
@@ -186,7 +187,7 @@ onMounted(() => {
 
           <button
             class="toolbar-button"
-            @click="openDrawer"
+            @click="openAssetPicker"
           >
             📁 Assets
           </button>
@@ -210,6 +211,7 @@ onMounted(() => {
 
     </section>
 
+
     <section class="preview-panel">
 
       <div class="panel-title">
@@ -219,16 +221,13 @@ onMounted(() => {
       </div>
 
       <div class="preview">
-
-        <Renderer
-          :content="content"
-        />
-
+        <Renderer :content="content" />
       </div>
 
     </section>
 
   </main>
+
 
   <footer class="button-panel">
 
@@ -248,11 +247,13 @@ onMounted(() => {
 
   </footer>
 
-  <ImageDrawer
-    :open="drawerOpen"
-    @close="closeDrawer"
-    @insert="insertImageMarkdown"
+
+  <AssetPicker
+    v-model="pickerOpen"
+    :assets="assets"
+    @select="selectAsset"
   />
+
 
   <UploadDialog
     :open="uploadOpen"
