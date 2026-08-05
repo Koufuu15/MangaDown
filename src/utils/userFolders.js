@@ -1,56 +1,42 @@
 const STORAGE_KEY = "userFolders"
 
-/**
- * フォルダ一覧取得
- * @returns {Array}
- */
 export function getUserFolders() {
   try {
-    const folders = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) ?? "[]"
-    )
-
-    return Array.isArray(folders)
-      ? folders
-      : []
+    const folders = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]")
+    return Array.isArray(folders) ? folders : []
   } catch {
     return []
   }
 }
 
-/**
- * フォルダ一覧保存
- * @param {Array} folders
- */
 export function setUserFolders(folders) {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(folders)
-  )
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(folders))
 }
 
 /**
  * フォルダ追加
  * @param {string} name
+ * @param {string} icon
  * @returns {Object|null}
  */
-export function addUserFolder(name) {
+export function addUserFolder(name, icon = "📁") {
   const folders = getUserFolders()
 
-  if (
-    folders.some(folder => folder.name === name)
-  ) {
+  if (!name.trim()) return null
+
+  if (folders.some(folder => folder.name === name)) {
     return null
   }
 
   const folder = {
     id: crypto.randomUUID(),
     name,
-    icon
+    icon,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
   }
 
   folders.push(folder)
-
   setUserFolders(folders)
 
   return folder
@@ -59,15 +45,24 @@ export function addUserFolder(name) {
 /**
  * フォルダ削除
  * @param {string} id
+ * @returns {boolean}
  */
 export function deleteUserFolder(id) {
   const folders = getUserFolders()
+
+  const exists = folders.some(
+    folder => folder.id === id
+  )
+
+  if (!exists) return false
 
   setUserFolders(
     folders.filter(
       folder => folder.id !== id
     )
   )
+
+  return true
 }
 
 /**
@@ -76,11 +71,10 @@ export function deleteUserFolder(id) {
  * @param {string} newName
  * @returns {boolean}
  */
-export function renameUserFolder(
-  id,
-  newName
-) {
+export function renameUserFolder(id, newName) {
   const folders = getUserFolders()
+
+  if (!newName.trim()) return false
 
   if (
     folders.some(
@@ -99,6 +93,30 @@ export function renameUserFolder(
   if (!folder) return false
 
   folder.name = newName
+  folder.updatedAt = Date.now()
+
+  setUserFolders(folders)
+
+  return true
+}
+
+/**
+ * フォルダアイコン変更
+ * @param {string} id
+ * @param {string} icon
+ * @returns {boolean}
+ */
+export function updateUserFolderIcon(id, icon) {
+  const folders = getUserFolders()
+
+  const folder = folders.find(
+    folder => folder.id === id
+  )
+
+  if (!folder) return false
+
+  folder.icon = icon
+  folder.updatedAt = Date.now()
 
   setUserFolders(folders)
 

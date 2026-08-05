@@ -7,10 +7,16 @@ import {
   getUserAssets,
   deleteUserAsset,
   renameUserAsset,
+  getUserAsset,
   getUserAssetsByName,
-  getUserAssetsByUpdated
+  getUserAssetsByUpdated,
+  moveUserAsset
 } from "@/utils/userAssets"
-import { getUserFolders } from "@/utils/userFolders"
+import {
+  getUserFolders,
+  renameUserFolder,
+  deleteUserFolder
+} from "@/utils/userFolders"
 
 const props = defineProps({
   open:{
@@ -40,6 +46,7 @@ function reloadAssets(){
     ...asset,
     type:"user"
   }))
+
   userFolders.value = getUserFolders()
 }
 
@@ -72,8 +79,11 @@ const assets = computed(() => {
       if(asset.name.toLowerCase().includes(text)) return true
 
       const folderName = getFolderName(asset.folderId)
-      if(folderName.toLowerCase().includes(text)) return true
-      
+
+      if(folderName.toLowerCase().includes(text)){
+        return true
+      }
+
       return (asset.tags ?? []).some(tag =>
         tag.toLowerCase().includes(text)
       )
@@ -88,7 +98,7 @@ const assets = computed(() => {
 
   if(sortType.value === "updated"){
     result.sort((a,b) =>
-      b.updatedAt - a.updatedAt
+      (b.updatedAt ?? 0) - (a.updatedAt ?? 0)
     )
   }
 
@@ -111,6 +121,7 @@ function removeAsset(asset){
   if(asset.type === "default") return
 
   const ok = confirm(`${asset.name}を削除しますか？`)
+
   if(!ok) return
 
   deleteUserAsset(asset.id)
@@ -120,7 +131,11 @@ function removeAsset(asset){
 function rename(asset){
   if(asset.type === "default") return
 
-  const newName = prompt("新しい名前",asset.name)
+  const newName = prompt(
+    "新しい名前",
+    asset.name
+  )
+
   if(!newName) return
 
   const success = renameUserAsset(
@@ -131,6 +146,57 @@ function rename(asset){
   if(!success){
     alert("同じ名前の画像があります")
   }
+
+  reloadAssets()
+}
+
+function renameFolder(folder){
+  if(folder.type === "default") return
+
+  const newName = prompt(
+    "新しいフォルダ名",
+    folder.name
+  )
+
+  if(!newName) return
+
+  const success = renameUserFolder(
+    folder.id,
+    newName
+  )
+
+  if(!success){
+    alert("同じ名前のフォルダがあります")
+  }
+
+  reloadAssets()
+}
+
+function removeFolder(folder){
+  if(folder.type === "default") return
+
+  const ok = confirm(
+    `${folder.name}を削除しますか？\n中の画像は未分類になります。`
+  )
+
+  if(!ok) return
+
+  const success = deleteUserFolder(
+    folder.id
+  )
+
+  if(!success) return
+
+  const assets = getUserAssets()
+
+  assets.forEach(asset => {
+    if(asset.folderId === folder.id){
+      moveUserAsset(
+        asset.id,
+        ""
+      )
+    }
+  })
 
   reloadAssets()
 }
@@ -147,9 +213,9 @@ function getFolderName(folderId){
   return folder?.name ?? folderId
 }
 </script>
+
 <template>
   <Teleport to="body">
-
     <div
       v-if="open"
       class="drawer-overlay"
@@ -161,7 +227,6 @@ function getFolderName(folderId){
       class="image-drawer"
       :class="{ open }"
     >
-
       <div class="drawer-header">
         <h2>Assets</h2>
 
@@ -182,25 +247,42 @@ function getFolderName(folderId){
       </div>
 
       <div class="drawer-folders">
-
-        <button
+        <div
           v-for="folder in folders"
           :key="folder.id"
-          class="folder-button"
-          :class="{
-            active: selectedFolder === folder.id
-          }"
-          @click="selectFolder(folder.id)"
+          class="folder-row"
         >
-          {{ folder.icon }} {{ folder.name }}
-        </button>
+          <button
+            class="folder-button"
+            :class="{
+              active:selectedFolder === folder.id
+            }"
+            @click="selectFolder(folder.id)"
+          >
+            {{ folder.icon }} {{ folder.name }}
+          </button>
 
+          <div
+            v-if="folder.type !== 'default' && folder.id"
+            class="folder-actions"
+          >
+            <button
+              @click="renameFolder(folder)"
+            >
+              ✏️
+            </button>
+
+            <button
+              @click="removeFolder(folder)"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="drawer-sort">
-
         <select v-model="sortType">
-
           <option value="updated">
             更新日時順
           </option>
@@ -208,13 +290,10 @@ function getFolderName(folderId){
           <option value="name">
             名前順
           </option>
-
         </select>
-
       </div>
 
       <div class="drawer-content">
-
         <div
           v-if="assets.length === 0"
           class="empty-assets"
@@ -226,18 +305,15 @@ function getFolderName(folderId){
           v-else
           class="asset-grid"
         >
-
           <div
             v-for="asset in assets"
             :key="asset.id"
             class="asset-card-wrapper"
           >
-
             <button
               class="asset-card"
               @click="insert(asset)"
             >
-
               <img
                 :src="asset.src"
                 :alt="asset.name"
@@ -251,14 +327,12 @@ function getFolderName(folderId){
               <div class="asset-category">
                 {{ getFolderName(asset.folderId) }}
               </div>
-
             </button>
 
             <div
               v-if="asset.type === 'user'"
               class="asset-actions"
             >
-
               <button
                 @click.stop="rename(asset)"
               >
@@ -270,16 +344,10 @@ function getFolderName(folderId){
               >
                 Delete
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </aside>
-
   </Teleport>
 </template>
