@@ -17,6 +17,10 @@
       class="menu"
       @click.stop
     >
+      <button @click="move">
+        移動
+      </button>
+
       <button @click="rename">
         名前変更
       </button>
@@ -41,7 +45,8 @@ const props = defineProps({
 const emit = defineEmits([
   "select",
   "rename",
-  "delete"
+  "delete",
+  "move"
 ])
 
 const menuOpen = ref(false)
@@ -67,6 +72,14 @@ function remove(){
 
   emit(
     "delete",
+    props.asset
+  )
+}
+
+function move(){
+  menuOpen.value=false
+  emit(
+    "move",
     props.asset
   )
 }

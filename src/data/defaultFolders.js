@@ -23,5 +23,11 @@ export default [
     id: "speech",
     name: "Speech",
     icon: "💬"
+  },
+  {
+    id:"",
+    name:"未分類",
+    icon:"📦",
+    type:"system"
   }
 ]

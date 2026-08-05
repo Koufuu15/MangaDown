@@ -47,8 +47,24 @@ function rename(folder){
 }
 
 function remove(folder){
-  if(!confirm(`「${folder.name}」を削除しますか？`)) return
-  deleteUserFolder(folder.id)
+  const mode = prompt(
+    "削除方法を選択してください\n1:画像も削除\n2:未分類へ移動"
+  )
+
+  if(mode==="1"){
+    deleteUserFolder(
+      folder.id,
+      "delete"
+    )
+  }else if(mode==="2"){
+    deleteUserFolder(
+      folder.id,
+      "move"
+    )
+  }else{
+    return
+  }
+
   refresh()
 }
 

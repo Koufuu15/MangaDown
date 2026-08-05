@@ -97,6 +97,29 @@ export function renameUserAsset(id, newName) {
   return true
 }
 
+export function deleteUserAssetsByFolder(folderId){
+  const assets = getUserAssets()
+
+  setUserAssets(
+    assets.filter(
+      asset => asset.folderId !== folderId
+    )
+  )
+}
+
+export function moveUserAssetsToUncategorized(folderId){
+  const assets = getUserAssets()
+
+  assets.forEach(asset=>{
+    if(asset.folderId === folderId){
+      asset.folderId = ""
+      asset.updatedAt = Date.now()
+    }
+  })
+
+  setUserAssets(assets)
+}
+
 export function moveUserAsset(id, folderId) {
   const assets = getUserAssets()
 

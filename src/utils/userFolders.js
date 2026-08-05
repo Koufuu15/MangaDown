@@ -47,14 +47,21 @@ export function addUserFolder(name, icon = "📁") {
  * @param {string} id
  * @returns {boolean}
  */
-export function deleteUserFolder(id) {
+import {
+  deleteUserAssetsByFolder,
+  moveUserAssetsToUncategorized
+} from "./userAssets"
+
+export function deleteUserFolder(id, mode="move") {
   const folders = getUserFolders()
 
-  const exists = folders.some(
-    folder => folder.id === id
-  )
+  if(mode==="delete"){
+    deleteUserAssetsByFolder(id)
+  }
 
-  if (!exists) return false
+  if(mode==="move"){
+    moveUserAssetsToUncategorized(id)
+  }
 
   setUserFolders(
     folders.filter(
