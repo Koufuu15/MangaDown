@@ -45,7 +45,8 @@ export function addUserFolder(name) {
 
   const folder = {
     id: crypto.randomUUID(),
-    name
+    name,
+    icon
   }
 
   folders.push(folder)

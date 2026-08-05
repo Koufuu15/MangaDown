@@ -1,13 +1,21 @@
 <script setup>
+import "@/assets/imageDrawer.css"
 import { computed, ref, watch } from "vue"
-
 import defaultAssets from "@/data/defaultAssets"
-import { getUserAssets } from "@/utils/userAssets"
+import defaultFolders from "@/data/defaultFolders"
+import {
+  getUserAssets,
+  deleteUserAsset,
+  renameUserAsset,
+  getUserAssetsByName,
+  getUserAssetsByUpdated
+} from "@/utils/userAssets"
+import { getUserFolders } from "@/utils/userFolders"
 
 const props = defineProps({
-  open: {
-    type: Boolean,
-    required: true
+  open:{
+    type:Boolean,
+    required:true
   }
 })
 
@@ -17,76 +25,128 @@ const emit = defineEmits([
 ])
 
 const keyword = ref("")
+const selectedFolder = ref("")
+const sortType = ref("updated")
 const userAssets = ref([])
+const userFolders = ref([])
 
-watch(
-  () => props.open,
-  open => {
-    if (!open) return
+watch(() => props.open, open => {
+  if(!open) return
+  reloadAssets()
+}, { immediate:true })
 
-    userAssets.value = getUserAssets().map(asset => ({
-      ...asset,
-      type: "user"
-    }))
-  },
+function reloadAssets(){
+  userAssets.value = getUserAssets().map(asset => ({
+    ...asset,
+    type:"user"
+  }))
+  userFolders.value = getUserFolders()
+}
+
+const folders = computed(() => [
   {
-    immediate: true
-  }
-)
-
-const assets = computed(() => [
-  ...defaultAssets,
-  ...userAssets.value
+    id:"",
+    name:"All",
+    icon:"📁"
+  },
+  ...defaultFolders,
+  ...userFolders.value
 ])
 
-const filteredAssets = computed(() => {
-  const text =
-    keyword.value
-      .trim()
-      .toLowerCase()
+const assets = computed(() => {
+  let result = [
+    ...defaultAssets,
+    ...userAssets.value
+  ]
 
-  if (!text) {
-    return assets.value
+  if(selectedFolder.value){
+    result = result.filter(
+      asset => asset.folderId === selectedFolder.value
+    )
   }
 
-  return assets.value.filter(asset => {
+  const text = keyword.value.trim().toLowerCase()
 
-    if (
-      asset.name
-        .toLowerCase()
-        .includes(text)
-    ) {
-      return true
-    }
+  if(text){
+    result = result.filter(asset => {
+      if(asset.name.toLowerCase().includes(text)) return true
 
-    if (
-      asset.folderId
-        ?.toLowerCase()
-        .includes(text)
-    ) {
-      return true
-    }
+      const folderName = getFolderName(asset.folderId)
+      if(folderName.toLowerCase().includes(text)) return true
+      
+      return (asset.tags ?? []).some(tag =>
+        tag.toLowerCase().includes(text)
+      )
+    })
+  }
 
-    return (asset.tags ?? []).some(tag =>
-      tag
-        .toLowerCase()
-        .includes(text)
+  if(sortType.value === "name"){
+    result.sort((a,b) =>
+      a.name.localeCompare(b.name,"ja")
     )
-  })
+  }
+
+  if(sortType.value === "updated"){
+    result.sort((a,b) =>
+      b.updatedAt - a.updatedAt
+    )
+  }
+
+  return result
 })
 
-function closeDrawer() {
+function closeDrawer(){
   emit("close")
 }
 
-function insert(asset) {
-  emit(
-    "insert",
-    asset.name
+function insert(asset){
+  emit("insert",asset.name)
+}
+
+function selectFolder(id){
+  selectedFolder.value = id
+}
+
+function removeAsset(asset){
+  if(asset.type === "default") return
+
+  const ok = confirm(`${asset.name}を削除しますか？`)
+  if(!ok) return
+
+  deleteUserAsset(asset.id)
+  reloadAssets()
+}
+
+function rename(asset){
+  if(asset.type === "default") return
+
+  const newName = prompt("新しい名前",asset.name)
+  if(!newName) return
+
+  const success = renameUserAsset(
+    asset.id,
+    newName
   )
+
+  if(!success){
+    alert("同じ名前の画像があります")
+  }
+
+  reloadAssets()
+}
+
+function getFolderName(folderId){
+  if(!folderId){
+    return "未分類"
+  }
+
+  const folder = folders.value.find(
+    folder => folder.id === folderId
+  )
+
+  return folder?.name ?? folderId
 }
 </script>
-
 <template>
   <Teleport to="body">
 
@@ -103,10 +163,7 @@ function insert(asset) {
     >
 
       <div class="drawer-header">
-
-        <h2>
-          Assets
-        </h2>
+        <h2>Assets</h2>
 
         <button
           class="close-button"
@@ -114,23 +171,52 @@ function insert(asset) {
         >
           ✕
         </button>
-
       </div>
 
       <div class="drawer-search">
-
         <input
           v-model="keyword"
           type="text"
           placeholder="画像・タグ・フォルダを検索..."
         />
+      </div>
+
+      <div class="drawer-folders">
+
+        <button
+          v-for="folder in folders"
+          :key="folder.id"
+          class="folder-button"
+          :class="{
+            active: selectedFolder === folder.id
+          }"
+          @click="selectFolder(folder.id)"
+        >
+          {{ folder.icon }} {{ folder.name }}
+        </button>
+
+      </div>
+
+      <div class="drawer-sort">
+
+        <select v-model="sortType">
+
+          <option value="updated">
+            更新日時順
+          </option>
+
+          <option value="name">
+            名前順
+          </option>
+
+        </select>
 
       </div>
 
       <div class="drawer-content">
 
         <div
-          v-if="filteredAssets.length === 0"
+          v-if="assets.length === 0"
           class="empty-assets"
         >
           画像がありません
@@ -141,28 +227,53 @@ function insert(asset) {
           class="asset-grid"
         >
 
-          <button
-            v-for="asset in filteredAssets"
+          <div
+            v-for="asset in assets"
             :key="asset.id"
-            class="asset-card"
-            @click="insert(asset)"
+            class="asset-card-wrapper"
           >
 
-            <img
-              :src="asset.src"
-              :alt="asset.name"
-              loading="lazy"
-            />
+            <button
+              class="asset-card"
+              @click="insert(asset)"
+            >
 
-            <div class="asset-name">
-              {{ asset.name }}
+              <img
+                :src="asset.src"
+                :alt="asset.name"
+                loading="lazy"
+              />
+
+              <div class="asset-name">
+                {{ asset.name }}
+              </div>
+
+              <div class="asset-category">
+                {{ getFolderName(asset.folderId) }}
+              </div>
+
+            </button>
+
+            <div
+              v-if="asset.type === 'user'"
+              class="asset-actions"
+            >
+
+              <button
+                @click.stop="rename(asset)"
+              >
+                Rename
+              </button>
+
+              <button
+                @click.stop="removeAsset(asset)"
+              >
+                Delete
+              </button>
+
             </div>
 
-            <div class="asset-category">
-              {{ asset.folderId || "未分類" }}
-            </div>
-
-          </button>
+          </div>
 
         </div>
 
