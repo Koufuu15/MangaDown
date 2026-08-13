@@ -42,8 +42,35 @@ export default function parseBubble(
       break
     }
 
-    case "backgroundColor":
-      bubble.backgroundColor = value
+    case "background":
+      bubble.background = value
       break
+
+    case "border":
+      bubble.border = value === true || value === "true"
+      break
+
+    case "borderWidth":
+      if (isNaN(Number(value))) {
+        state.errMsg = "borderWidthは数値で入力してください"
+      } else {
+        bubble.borderWidth = Number(value)
+      }
+      break
+
+    case "borderColor":
+      bubble.borderColor = value
+      break
+
+    case "tail": {
+      const tail = parseObject(value)
+
+      bubble.tail = {
+        direction: tail.direction,
+        position: tail.position
+      }
+
+      break
+    }
   }
 }
