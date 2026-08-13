@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue"
+import Tail from "./Tail.vue"
 
 const props = defineProps({
   bubble: {
@@ -16,20 +17,6 @@ const borderColor = computed(() => props.bubble.borderColor ?? "#111111")
 
 const tail = computed(() => {
   return props.bubble.tail ?? null
-})
-
-const tailShape = computed(() => {
-  return tail.value?.shape ?? "none"
-})
-
-const tailPosition = computed(() => {
-  const position = Number(tail.value?.position)
-
-  if (isNaN(position)) {
-    return 0
-  }
-
-  return Math.max(0, Math.min(360, position))
 })
 
 const bubbleStyle = computed(() => ({
@@ -49,148 +36,6 @@ const stroke = computed(() =>
 const strokeWidth = computed(() =>
   borderEnabled.value ? borderWidth.value : 0
 )
-
-/*
- * 角度をラジアンに変換
- *
- * 0°   = 右
- * 90°  = 上
- * 180° = 左
- * 270° = 下
- *
- * SVGはY軸が下向きなので、
- * sinの部分をマイナスにする。
- */
-const angle = computed(() => {
-  return tailPosition.value * Math.PI / 180
-})
-
-/*
- * 中心から指定角度方向の座標
- */
-function pointFromCenter(radius) {
-  return {
-    x: 50 + radius * Math.cos(angle.value),
-    y: 50 - radius * Math.sin(angle.value)
-  }
-}
-
-/*
- * 本体の外周位置
- *
- * square:
- * 正方形の外周と角度の線が交わる位置を計算
- *
- * round:
- * 円周上の位置
- *
- * その他:
- * おおよその外周位置
- */
-const tailBase = computed(() => {
-  const cos = Math.cos(angle.value)
-  const sin = Math.sin(angle.value)
-
-  if (shape.value === "square") {
-    const radius = 47 / Math.max(Math.abs(cos), Math.abs(sin))
-
-    return pointFromCenter(radius)
-  }
-
-  if (shape.value === "round") {
-    return pointFromCenter(44)
-  }
-
-  return pointFromCenter(44)
-})
-
-/*
- * triangle tail
- *
- * 本体に接する2点と、
- * 外側に伸びる先端の3点から三角形を作る。
- */
-const triangleTail = computed(() => {
-  if (tailShape.value !== "triangle") {
-    return null
-  }
-
-  const base = tailBase.value
-
-  const cos = Math.cos(angle.value)
-  const sin = Math.sin(angle.value)
-
-  /*
-   * 角度方向に対して垂直なベクトル
-   */
-  const perpendicular = {
-    x: -sin,
-    y: -cos
-  }
-
-  const baseWidth = 6
-  const length = 20
-
-  const p1 = {
-    x: base.x + perpendicular.x * baseWidth,
-    y: base.y + perpendicular.y * baseWidth
-  }
-
-  const p2 = {
-    x: base.x - perpendicular.x * baseWidth,
-    y: base.y - perpendicular.y * baseWidth
-  }
-
-  const tip = {
-    x: base.x + cos * length,
-    y: base.y - sin * length
-  }
-
-  return {
-    p1,
-    p2,
-    tip
-  }
-})
-
-/*
- * circle tail
- *
- * 本体から離れた場所に3個の円を配置。
- *
- * position方向に向かって
- * 小 → 中 → 大
- * の順に配置する。
- */
-const circleTail = computed(() => {
-  if (tailShape.value !== "circle") {
-    return []
-  }
-
-  const cos = Math.cos(angle.value)
-  const sin = Math.sin(angle.value)
-
-  return [
-    {
-      ...pointFromCenter(55),
-      radius: 5.5
-    },
-    {
-      ...pointFromCenter(67),
-      radius: 4
-    },
-    {
-      ...pointFromCenter(78),
-      radius: 2.5
-    }
-  ]
-})
-
-function pointsToString(points) {
-  return points
-    .map(point => `${point.x},${point.y}`)
-    .join(" ")
-}
 </script>
 
 <template>
@@ -333,43 +178,22 @@ function pointsToString(points) {
         stroke-linejoin="round"
       />
 
-
-      <!-- =========================
-           Triangle Tail
-           ========================= -->
-
-      <polygon
-        v-if="triangleTail"
-        :points="
-          pointsToString([
-            triangleTail.p1,
-            triangleTail.tip,
-            triangleTail.p2
-          ])
-        "
-        :fill="background"
-        :stroke="stroke"
-        :stroke-width="strokeWidth"
-        stroke-linejoin="round"
-      />
-
-
-      <!-- =========================
-           Circle Tail
-           ========================= -->
-
-      <circle
-        v-for="(circle, index) in circleTail"
-        :key="index"
-        :cx="circle.x"
-        :cy="circle.y"
-        :r="circle.radius"
-        :fill="background"
-        :stroke="stroke"
-        :stroke-width="strokeWidth > 0 ? Math.max(1, strokeWidth * 0.7) : 0"
-      />
-
     </svg>
+
+
+    <!-- =========================
+         Tail
+         ========================= -->
+
+    <Tail
+      v-if="tail"
+      :tail="tail"
+      :bubble-shape="shape"
+      :background="background"
+      :border-color="borderColor"
+      :border-width="borderWidth"
+      :border-enabled="borderEnabled"
+    />
 
 
     <!-- =========================

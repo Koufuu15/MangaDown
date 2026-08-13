@@ -4,6 +4,7 @@ import parsePanel from "./parsers/panelParser"
 import parseImage from "./parsers/imageParser"
 import parseBubble from "./parsers/bubbleParser"
 import parseText from "./parsers/textParser"
+import parseTail from "./parsers/tailParser"
 
 export default function parseManga(md) {
   if (!md || md.trim() === "") {
@@ -42,6 +43,7 @@ export default function parseManga(md) {
       continue
     }
 
+    // Bubble開始
     if (line.startsWith("### bubble")) {
       if (!currentPanel) continue
 
@@ -55,11 +57,19 @@ export default function parseManga(md) {
       continue
     }
 
+    // Bubble内 Tail
+    if (line.startsWith("#### tail")) {
+      state.section = "tail"
+      continue
+    }
+
+    // Bubble内 Text
     if (line.startsWith("#### text")) {
       state.section = "text"
       continue
     }
 
+    // Image開始
     if (line.startsWith("### image")) {
       if (!currentPanel) continue
 
@@ -89,15 +99,38 @@ export default function parseManga(md) {
         break
 
       case "bubble":
-        parseBubble(state.currentBubble, key, value, state)
+        parseBubble(
+          state.currentBubble,
+          key,
+          value,
+          state
+        )
         break
 
-      case "image":
-        parseImage(state.currentImage, key, value, state)
+      case "tail":
+        parseTail(
+          state.currentBubble,
+          key,
+          value,
+          state
+        )
         break
 
       case "text":
-        parseText(state.currentBubble, key, value)
+        parseText(
+          state.currentBubble,
+          key,
+          value
+        )
+        break
+
+      case "image":
+        parseImage(
+          state.currentImage,
+          key,
+          value,
+          state
+        )
         break
     }
   }

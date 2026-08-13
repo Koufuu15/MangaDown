@@ -61,36 +61,5 @@ export default function parseBubble(
     case "borderColor":
       bubble.borderColor = value
       break
-
-    case "tail": {
-      const tail = parseObject(value)
-
-      const tailShape = tail.shape
-      const tailPosition = Number(tail.position)
-
-      if (
-        tailShape !== "triangle" &&
-        tailShape !== "circle"
-      ) {
-        state.errMsg = "tailのshapeはtriangleまたはcircleで指定してください"
-        break
-      }
-
-      if (
-        isNaN(tailPosition) ||
-        tailPosition < 0 ||
-        tailPosition > 360
-      ) {
-        state.errMsg = "tailのpositionは0〜360の数値で指定してください"
-        break
-      }
-
-      bubble.tail = {
-        shape: tailShape,
-        position: tailPosition
-      }
-
-      break
-    }
   }
 }
