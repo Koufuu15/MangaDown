@@ -33,6 +33,12 @@ const props = defineProps({
   }
 })
 
+/*
+ * =========================
+ * Tail設定
+ * =========================
+ */
+
 const tailShape = computed(() => {
   return props.tail?.shape ?? "triangle"
 })
@@ -47,18 +53,30 @@ const tailPosition = computed(() => {
   return Math.max(0, Math.min(360, position))
 })
 
-const angle = computed(() => {
-  return tailPosition.value * Math.PI / 180
-})
-
 /*
- * 中心から指定した距離の位置
+ * =========================
+ * Angle
+ * =========================
  *
  * 0°   = 右
  * 90°  = 上
  * 180° = 左
  * 270° = 下
+ *
+ * positionは
+ * 0〜360°で指定する。
  */
+
+const angle = computed(() => {
+  return tailPosition.value * Math.PI / 180
+})
+
+/*
+ * =========================
+ * 中心から指定距離の座標
+ * =========================
+ */
+
 function pointFromCenter(radius) {
   return {
     x: 50 + radius * Math.cos(angle.value),
@@ -67,8 +85,11 @@ function pointFromCenter(radius) {
 }
 
 /*
- * Bubble本体の外周位置
+ * =========================
+ * Bubble外周
+ * =========================
  */
+
 const tailBase = computed(() => {
   const cos = Math.cos(angle.value)
   const sin = Math.sin(angle.value)
@@ -78,7 +99,10 @@ const tailBase = computed(() => {
    */
   if (props.bubbleShape === "square") {
     const radius =
-      47 / Math.max(Math.abs(cos), Math.abs(sin))
+      47 / Math.max(
+        Math.abs(cos),
+        Math.abs(sin)
+      )
 
     return pointFromCenter(radius)
   }
@@ -132,11 +156,17 @@ const triangleTail = computed(() => {
    */
   const length = 20
 
+  /*
+   * 根元の左側
+   */
   const p1 = {
     x: base.x + perpendicular.x * baseWidth,
     y: base.y + perpendicular.y * baseWidth
   }
 
+  /*
+   * 根元の右側
+   */
   const p2 = {
     x: base.x - perpendicular.x * baseWidth,
     y: base.y - perpendicular.y * baseWidth
@@ -189,6 +219,12 @@ const circleTail = computed(() => {
   ]
 })
 
+/*
+ * =========================
+ * Border
+ * =========================
+ */
+
 const tailStroke = computed(() => {
   return props.borderEnabled
     ? props.borderColor
@@ -211,6 +247,12 @@ const circleStrokeWidth = computed(() => {
     props.borderWidth * 0.7
   )
 })
+
+/*
+ * =========================
+ * SVG polygon helper
+ * =========================
+ */
 
 function pointsToString(points) {
   return points

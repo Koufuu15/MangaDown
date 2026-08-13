@@ -15,8 +15,29 @@ const borderEnabled = computed(() => props.bubble.border ?? true)
 const borderWidth = computed(() => props.bubble.borderWidth ?? 3)
 const borderColor = computed(() => props.bubble.borderColor ?? "#111111")
 
-const tail = computed(() => {
-  return props.bubble.tail ?? null
+/*
+ * Tail
+ *
+ * bubble.tailは配列として扱う。
+ *
+ * 例:
+ * tail: [
+ *   {
+ *     shape: "triangle",
+ *     position: 90
+ *   },
+ *   {
+ *     shape: "circle",
+ *     position: 180
+ *   }
+ * ]
+ */
+const tails = computed(() => {
+  if (!Array.isArray(props.bubble.tail)) {
+    return []
+  }
+
+  return props.bubble.tail
 })
 
 const bubbleStyle = computed(() => ({
@@ -186,7 +207,8 @@ const strokeWidth = computed(() =>
          ========================= -->
 
     <Tail
-      v-if="tail"
+      v-for="(tail, index) in tails"
+      :key="index"
       :tail="tail"
       :bubble-shape="shape"
       :background="background"

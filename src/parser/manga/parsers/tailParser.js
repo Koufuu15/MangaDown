@@ -1,13 +1,9 @@
 export default function parseTail(
-  bubble,
+  tail,
   key,
   value,
   state
 ) {
-  if (!bubble.tail) {
-    bubble.tail = {}
-  }
-
   switch (key) {
 
     case "shape":
@@ -18,7 +14,7 @@ export default function parseTail(
         state.errMsg =
           "tailのshapeはtriangleまたはcircleで指定してください"
       } else {
-        bubble.tail.shape = value
+        tail.shape = value
       }
       break
 
@@ -33,7 +29,7 @@ export default function parseTail(
         state.errMsg =
           "tailのpositionは0〜360の数値で指定してください"
       } else {
-        bubble.tail.position = position
+        tail.position = position
       }
 
       break

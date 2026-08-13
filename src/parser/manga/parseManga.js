@@ -47,7 +47,9 @@ export default function parseManga(md) {
     if (line.startsWith("### bubble")) {
       if (!currentPanel) continue
 
-      state.currentBubble = {}
+      state.currentBubble = {
+        tail: []
+      }
 
       currentPanel.components.push({
         bubble: [state.currentBubble]
@@ -57,14 +59,24 @@ export default function parseManga(md) {
       continue
     }
 
-    // Bubble内 Tail
+    // Bubble内 Tail開始
     if (line.startsWith("#### tail")) {
+      if (!state.currentBubble) continue
+
+      state.currentTail = {}
+
+      state.currentBubble.tail.push(
+        state.currentTail
+      )
+
       state.section = "tail"
       continue
     }
 
     // Bubble内 Text
     if (line.startsWith("#### text")) {
+      if (!state.currentBubble) continue
+
       state.section = "text"
       continue
     }
@@ -94,7 +106,11 @@ export default function parseManga(md) {
     switch (state.section) {
       case "panel":
         if (currentPanel) {
-          parsePanel(currentPanel, key, value)
+          parsePanel(
+            currentPanel,
+            key,
+            value
+          )
         }
         break
 
@@ -109,7 +125,7 @@ export default function parseManga(md) {
 
       case "tail":
         parseTail(
-          state.currentBubble,
+          state.currentTail,
           key,
           value,
           state
