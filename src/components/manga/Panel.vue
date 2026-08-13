@@ -12,13 +12,16 @@ defineProps({
 
 <template>
   <div
-    class="relative border-2 border-zinc-900 shadow-sm overflow-hidden bg-white"
+    class="relative shadow-sm overflow-hidden bg-white"
     :style="{
       left: panel.position.x + 'px',
       top: panel.position.y + 'px',
       width: panel.size.width + 'px',
       height: panel.size.height + 'px',
-      backgroundColor: panel.backgroundColor
+      backgroundColor: panel.backgroundColor,
+      borderStyle: panel.border ?? 'solid',
+      borderWidth: (panel.borderWidth ?? 2) + 'px',
+      borderColor: panel.borderColor ?? '#18181b'
     }"
   >
     <template
