@@ -10,19 +10,9 @@ export default [
     icon: "🏞️"
   },
   {
-    id: "effects",
-    name: "Effects",
-    icon: "✨"
-  },
-  {
     id: "items",
     name: "Items",
-    icon: "📦"
-  },
-  {
-    id: "speech",
-    name: "Speech",
-    icon: "💬"
+    icon: "🧰"
   },
   {
     id:"",
