@@ -19,23 +19,20 @@ export default [
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
 
-## components
-
-### bubble
+## bubble
 - layer: 1
 - shape: square
 - position: { x:30, y:30 }
 - size: { w:40, h:30 }
 
-#### text
+### text
 - content: "こんにちは！"
 - font: UTF-8
 - size: 18
 - color: black
 - position: { x:0, y:0 }
 
-###
-images
+## images
 - name: tarou
 - layer: 0
 - position: { x:180, y:20 }
@@ -64,7 +61,6 @@ images
 - backgroundColor: #eeeeee
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
-## components
 
 :::
 `,
@@ -107,15 +103,13 @@ images
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
 
-## components
-
-### bubble
+## bubble
 - layer: 1
 - shape: square
 - position: { x:35, y:30 }
 - size: { w:100, h:100 }
 
-#### text
+### text
 - content: ""
 - font: UTF-8
 - size: 18
@@ -169,15 +163,13 @@ images
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
 
-## components
-
-### bubble
+## bubble
 - layer: 1
 - shape: square
 - position: { x:40, y:40 }
 - size: { w:40, h:30 }
 
-#### text
+### text
 - content: "こんにちは！"
 - font: UTF-8
 - size: 20
@@ -237,9 +229,7 @@ images
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
 
-## components
-
-### image
+## image
 - name: tarou
 - layer: 1
 - position: { x:20, y:20 }
@@ -292,14 +282,10 @@ images
 - position: { x:-80, y:0 }
 - size: { w:150, h:300 }
 
-## components
-
 # panel
 - backgroundColor: yellow
 - position: { x:80, y:-324 }
 - size: { w:150, h:300 }
-
-## components
 
 :::
 `
@@ -320,8 +306,6 @@ images
 - position: { x:0, y:0 }
 - size: { w:100, h:200 }
 
-## components
-
 :::
 `
 },
@@ -341,28 +325,26 @@ images
 - position: { x:0, y:0 }
 - size: { w:300, h:300 }
 
-## components
-
-### bubble
+## bubble
 - layer: 1
 - shape: square
 - position: { x:20, y:20 }
 - size: { w:80, h:80 }
 
-#### text
+### text
 - content: "後面に表示"
 - font: UTF-8
 - size: 18
 - color: black
 - position: { x:0, y:0 }
 
-### bubble
+## bubble
 - layer: 2
 - shape: square
 - position: { x:40, y:35 }
 - size: { w:80, h:80 }
 
-#### text
+### text
 - content: "前面に表示"
 - font: UTF-8
 - size: 18

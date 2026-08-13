@@ -16,6 +16,18 @@ const borderWidth = computed(() => props.bubble.borderWidth ?? 3)
 const borderColor = computed(() => props.bubble.borderColor ?? "#111111")
 
 /*
+ * Text direction
+ *
+ * tb = 縦書き
+ * rl = 横書き
+ */
+const textDirection = computed(() => {
+  return props.bubble.text?.direction === "tb"
+    ? "vertical-rl"
+    : "horizontal-tb"
+})
+
+/*
  * Tail
  *
  * bubble.tailは配列として扱う。
@@ -228,7 +240,8 @@ const strokeWidth = computed(() =>
       :style="{
         fontSize: bubble.text.fontSize,
         color: bubble.text.color,
-        fontFamily: bubble.text.font
+        fontFamily: bubble.text.font,
+        writingMode: textDirection
       }"
     >
       {{ bubble.text.content }}
@@ -255,6 +268,7 @@ const strokeWidth = computed(() =>
 
 .bubble-text {
   position: absolute;
+  white-space: pre-wrap;
   inset: 0;
 
   display: flex;
@@ -264,6 +278,8 @@ const strokeWidth = computed(() =>
   padding: 8px;
 
   text-align: center;
+
+  text-orientation: mixed;
 
   font-size: 14px;
 

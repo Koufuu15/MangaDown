@@ -36,15 +36,10 @@ export default function parseManga(md) {
 
       state.section = "panel"
       continue
-    }
-
-    if (line.startsWith("## components")) {
-      state.section = "components"
-      continue
-    }
+    } 
 
     // Bubble開始
-    if (line.startsWith("### bubble")) {
+    if (line.startsWith("## bubble")) {
       if (!currentPanel) continue
 
       state.currentBubble = {
@@ -60,7 +55,7 @@ export default function parseManga(md) {
     }
 
     // Bubble内 Tail開始
-    if (line.startsWith("#### tail")) {
+    if (line.startsWith("### tail")) {
       if (!state.currentBubble) continue
 
       state.currentTail = {}
@@ -74,7 +69,7 @@ export default function parseManga(md) {
     }
 
     // Bubble内 Text
-    if (line.startsWith("#### text")) {
+    if (line.startsWith("### text")) {
       if (!state.currentBubble) continue
 
       state.section = "text"
@@ -82,7 +77,7 @@ export default function parseManga(md) {
     }
 
     // Image開始
-    if (line.startsWith("### image")) {
+    if (line.startsWith("## image")) {
       if (!currentPanel) continue
 
       state.currentImage = {}
