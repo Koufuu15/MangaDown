@@ -37,24 +37,23 @@ const tailPosition = computed(() => {
   return 50
 })
 
-const border = computed(() => {
-  if (!borderEnabled.value) {
-    return "none"
-  }
-
-  return `${borderWidth.value}px solid ${borderColor.value}`
-})
-
 const bubbleStyle = computed(() => ({
   position: "absolute",
   left: `${props.bubble.position?.x ?? 0}%`,
   top: `${props.bubble.position?.y ?? 0}%`,
   width: `${props.bubble.size?.width ?? 100}px`,
   height: `${props.bubble.size?.height ?? 60}px`,
-  background: background.value,
-  border: border.value,
-  boxSizing: "border-box"
+  boxSizing: "border-box",
+  overflow: "visible"
 }))
+
+const stroke = computed(() =>
+  borderEnabled.value ? borderColor.value : "none"
+)
+
+const strokeWidth = computed(() =>
+  borderEnabled.value ? borderWidth.value : 0
+)
 </script>
 
 <template>
@@ -63,53 +62,141 @@ const bubbleStyle = computed(() => ({
     :class="`bubble-${shape}`"
     :style="bubbleStyle"
   >
-    <!-- square -->
+
     <svg
-      v-if="shape === 'square'"
       class="bubble-svg"
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
     >
+
+      <!-- =========================
+           Square
+           ========================= -->
+
       <path
-        d="
-          M 3 3
-          H 97
-          V 97
-          H 3
-          Z
+        v-if="shape === 'square'"
+        :d="
+          tailDirection === 'bottom'
+            ? `
+              M 3 3
+              H 97
+              V 97
+              H ${tailPosition + 6}
+              L ${tailPosition} 115
+              L ${tailPosition - 6} 97
+              H 3
+              Z
+            `
+            : tailDirection === 'top'
+              ? `
+                M 3 3
+                H ${tailPosition - 6}
+                L ${tailPosition} -15
+                L ${tailPosition + 6} 3
+                H 97
+                V 97
+                H 3
+                Z
+              `
+              : tailDirection === 'right'
+                ? `
+                  M 3 3
+                  H 97
+                  V ${tailPosition - 6}
+                  L 115 ${tailPosition}
+                  L 97 ${tailPosition + 6}
+                  V 97
+                  H 3
+                  Z
+                `
+                : tailDirection === 'left'
+                  ? `
+                    M 3 3
+                    H 97
+                    V 97
+                    H 3
+                    V ${tailPosition + 6}
+                    L -15 ${tailPosition}
+                    L 3 ${tailPosition - 6}
+                    Z
+                  `
+                  : `
+                    M 3 3
+                    H 97
+                    V 97
+                    H 3
+                    Z
+                  `
         "
         :fill="background"
-        :stroke="borderEnabled ? borderColor : 'none'"
-        :stroke-width="borderWidth"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
+        stroke-linejoin="round"
       />
-    </svg>
 
-    <!-- round -->
-    <svg
-      v-else-if="shape === 'round'"
-      class="bubble-svg"
-      viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-    >
+
+      <!-- =========================
+           Round
+           ========================= -->
+
       <ellipse
+        v-else-if="shape === 'round' && tailDirection === 'none'"
         cx="50"
         cy="50"
         rx="47"
         ry="47"
         :fill="background"
-        :stroke="borderEnabled ? borderColor : 'none'"
-        :stroke-width="borderWidth"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
       />
-    </svg>
 
-    <!-- thought -->
-    <svg
-      v-else-if="shape === 'thought'"
-      class="bubble-svg"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-    >
       <path
+        v-else-if="shape === 'round'"
+        :d="
+          tailDirection === 'bottom'
+            ? `
+              M 8 50
+              C 8 24 27 5 50 5
+              C 73 5 92 24 92 50
+              C 92 73 73 92 50 92
+              C 45 92 40 91 36 90
+              L ${tailPosition + 5} 110
+              L ${tailPosition - 2} 90
+              C 20 84 8 69 8 50
+              Z
+            `
+            : tailDirection === 'top'
+              ? `
+                M 8 50
+                C 8 27 27 8 50 8
+                C 54 8 58 9 62 10
+                L ${tailPosition + 5} -10
+                L ${tailPosition - 2} 10
+                C 17 16 8 31 8 50
+                Z
+              `
+              : `
+                M 8 50
+                C 8 25 27 5 50 5
+                C 75 5 95 25 95 50
+                C 95 75 75 95 50 95
+                C 25 95 8 75 8 50
+                Z
+              `
+        "
+        :fill="background"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
+        stroke-linejoin="round"
+      />
+
+
+      <!-- =========================
+           Thought
+           ========================= -->
+
+      <path
+        v-else-if="shape === 'thought'"
         d="
           M 10 30
           C 5 22, 12 15, 20 18
@@ -128,20 +215,18 @@ const bubbleStyle = computed(() => ({
           Z
         "
         :fill="background"
-        :stroke="borderEnabled ? borderColor : 'none'"
-        :stroke-width="borderWidth"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
         stroke-linejoin="round"
       />
-    </svg>
 
-    <!-- shout -->
-    <svg
-      v-else-if="shape === 'shout'"
-      class="bubble-svg"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-    >
+
+      <!-- =========================
+           Shout
+           ========================= -->
+
       <path
+        v-else-if="shape === 'shout'"
         d="
           M 50 2
           C 54 12, 57 14, 64 7
@@ -164,20 +249,18 @@ const bubbleStyle = computed(() => ({
           Z
         "
         :fill="background"
-        :stroke="borderEnabled ? borderColor : 'none'"
-        :stroke-width="borderWidth"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
         stroke-linejoin="round"
       />
-    </svg>
 
-    <!-- star -->
-    <svg
-      v-else-if="shape === 'star'"
-      class="bubble-svg"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-    >
+
+      <!-- =========================
+           Star
+           ========================= -->
+
       <path
+        v-else-if="shape === 'star'"
         d="
           M 50 2
           L 61 35
@@ -194,24 +277,17 @@ const bubbleStyle = computed(() => ({
           Z
         "
         :fill="background"
-        :stroke="borderEnabled ? borderColor : 'none'"
-        :stroke-width="borderWidth"
+        :stroke="stroke"
+        :stroke-width="strokeWidth"
         stroke-linejoin="round"
       />
+
     </svg>
 
-    <!-- tail -->
-    <div
-      v-if="tailDirection !== 'none'"
-      class="bubble-tail"
-      :class="`tail-${tailDirection}`"
-      :style="{
-        '--tail-position': `${tailPosition}%`,
-        '--tail-background': background,
-        '--tail-border-color': borderColor,
-        '--tail-border-width': `${borderWidth}px`
-      }"
-    />
+
+    <!-- =========================
+         Text
+         ========================= -->
 
     <div
       v-if="bubble.text"
@@ -224,6 +300,7 @@ const bubbleStyle = computed(() => ({
     >
       {{ bubble.text.content }}
     </div>
+
   </div>
 </template>
 
@@ -258,127 +335,7 @@ const bubbleStyle = computed(() => ({
   font-size: 14px;
 
   z-index: 2;
-}
 
-
-/* =========================
-   Tail
-   ========================= */
-
-.bubble-tail {
-  position: absolute;
-
-  width: 0;
-  height: 0;
-
-  z-index: 3;
-}
-
-
-/* bottom */
-
-.tail-bottom {
-  left: var(--tail-position);
-  bottom: -25px;
-
-  transform: translateX(-50%);
-
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 25px solid var(--tail-border-color);
-}
-
-.tail-bottom::after {
-  content: "";
-
-  position: absolute;
-
-  left: -11px;
-  top: -24px;
-
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-top: 20px solid var(--tail-background);
-}
-
-
-/* top */
-
-.tail-top {
-  left: var(--tail-position);
-  top: -25px;
-
-  transform: translateX(-50%);
-
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 25px solid var(--tail-border-color);
-}
-
-.tail-top::after {
-  content: "";
-
-  position: absolute;
-
-  left: -11px;
-  top: 4px;
-
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 20px solid var(--tail-background);
-}
-
-
-/* right */
-
-.tail-right {
-  top: var(--tail-position);
-  right: -25px;
-
-  transform: translateY(-50%);
-
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-left: 25px solid var(--tail-border-color);
-}
-
-.tail-right::after {
-  content: "";
-
-  position: absolute;
-
-  left: -24px;
-  top: -11px;
-
-  border-top: 11px solid transparent;
-  border-bottom: 11px solid transparent;
-  border-left: 20px solid var(--tail-background);
-}
-
-
-/* left */
-
-.tail-left {
-  top: var(--tail-position);
-  left: -25px;
-
-  transform: translateY(-50%);
-
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-right: 25px solid var(--tail-border-color);
-}
-
-.tail-left::after {
-  content: "";
-
-  position: absolute;
-
-  right: -24px;
-  top: -11px;
-
-  border-top: 11px solid transparent;
-  border-bottom: 11px solid transparent;
-  border-right: 20px solid var(--tail-background);
+  pointer-events: none;
 }
 </style>
