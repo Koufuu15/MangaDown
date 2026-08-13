@@ -55,6 +55,54 @@ const tailPosition = computed(() => {
 
 /*
  * =========================
+ * Distance
+ * =========================
+ *
+ * 吹き出し中心から、
+ * Tailを描き始める位置までの距離。
+ *
+ * デフォルト:
+ * 47
+ *
+ * 47 = 現在の吹き出し外周付近
+ */
+
+const tailDistance = computed(() => {
+  const distance = Number(props.tail?.distance)
+
+  if (isNaN(distance)) {
+    return 47
+  }
+
+  return Math.max(0, distance)
+})
+
+/*
+ * =========================
+ * Size
+ * =========================
+ *
+ * デフォルトサイズに対する倍率。
+ *
+ * 1   = デフォルト
+ * 2   = 2倍
+ * 0.5 = 半分
+ *
+ * 縦横比は維持する。
+ */
+
+const tailSize = computed(() => {
+  const size = Number(props.tail?.size)
+
+  if (isNaN(size)) {
+    return 1
+  }
+
+  return Math.max(0, size)
+})
+
+/*
+ * =========================
  * Angle
  * =========================
  *
@@ -62,9 +110,6 @@ const tailPosition = computed(() => {
  * 90°  = 上
  * 180° = 左
  * 270° = 下
- *
- * positionは
- * 0〜360°で指定する。
  */
 
 const angle = computed(() => {
@@ -86,40 +131,15 @@ function pointFromCenter(radius) {
 
 /*
  * =========================
- * Bubble外周
+ * Tail開始位置
  * =========================
+ *
+ * distanceで指定した位置から
+ * Tailを描き始める。
  */
 
 const tailBase = computed(() => {
-  const cos = Math.cos(angle.value)
-  const sin = Math.sin(angle.value)
-
-  /*
-   * Square
-   */
-  if (props.bubbleShape === "square") {
-    const radius =
-      47 / Math.max(
-        Math.abs(cos),
-        Math.abs(sin)
-      )
-
-    return pointFromCenter(radius)
-  }
-
-  /*
-   * Round
-   */
-  if (props.bubbleShape === "round") {
-    return pointFromCenter(47)
-  }
-
-  /*
-   * Thought / Shout / Star
-   *
-   * 現時点では簡易的に44を外周として扱う。
-   */
-  return pointFromCenter(44)
+  return pointFromCenter(tailDistance.value)
 })
 
 /*
@@ -147,14 +167,16 @@ const triangleTail = computed(() => {
   }
 
   /*
-   * Tailの根元の幅
+   * =========================
+   * デフォルトサイズ
+   * =========================
+   *
+   * 根元の幅: 6
+   * Tailの長さ: 20
    */
-  const baseWidth = 6
 
-  /*
-   * Tailの長さ
-   */
-  const length = 20
+  const baseWidth = 6 * tailSize.value
+  const length = 20 * tailSize.value
 
   /*
    * 根元の左側
@@ -192,10 +214,11 @@ const triangleTail = computed(() => {
  * Circle Tail
  * =========================
  *
- * 本体に近いほど大きく、
- * 離れるほど小さくする。
+ * distance:
+ *   円を描き始める位置
  *
- * 大 → 中 → 小
+ * size:
+ *   円の大きさと間隔を倍率変更
  */
 
 const circleTail = computed(() => {
@@ -203,18 +226,36 @@ const circleTail = computed(() => {
     return []
   }
 
+  const size = tailSize.value
+
+  /*
+   * デフォルト:
+   *
+   * 円1 → 中心から 53
+   * 円2 → 中心から 63
+   * 円3 → 中心から 73
+   *
+   * distanceを起点として、
+   * デフォルトの間隔をsize倍する。
+   */
+
+  const baseDistance = tailDistance.value
+
+  const gap1 = 6 * size
+  const gap2 = 16 * size
+
   return [
     {
-      ...pointFromCenter(53),
-      radius: 5.5
+      ...pointFromCenter(baseDistance + gap1),
+      radius: 5.5 * size
     },
     {
-      ...pointFromCenter(63),
-      radius: 4
+      ...pointFromCenter(baseDistance + gap2),
+      radius: 4 * size
     },
     {
-      ...pointFromCenter(73),
-      radius: 2.5
+      ...pointFromCenter(baseDistance + 26 * size),
+      radius: 2.5 * size
     }
   ]
 })
@@ -286,7 +327,6 @@ function pointsToString(points) {
       :stroke-width="tailStrokeWidth"
       stroke-linejoin="round"
     />
-
 
     <!-- =========================
          Circle
