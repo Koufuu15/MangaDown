@@ -61,5 +61,73 @@ export default function parseBubble(
     case "borderColor":
       bubble.borderColor = value
       break
+
+    // =========================
+    // text
+    // =========================
+
+    case "text":
+      if (!bubble.text) {
+        bubble.text = {
+          content: "",
+          color: null,
+          size: null,
+          position: null
+        }
+      }
+
+      bubble.text.content = value
+      break
+
+    case "text.color":
+      if (!bubble.text) {
+        bubble.text = {
+          content: "",
+          color: null,
+          size: null,
+          position: null
+        }
+      }
+
+      bubble.text.color = value
+      break
+
+    case "text.size":
+      if (!bubble.text) {
+        bubble.text = {
+          content: "",
+          color: null,
+          size: null,
+          position: null
+        }
+      }
+
+      if (isNaN(Number(value))) {
+        state.errMsg = "text.sizeは数値で入力してください"
+      } else {
+        bubble.text.size = Number(value)
+      }
+
+      break
+
+    case "text.position": {
+      if (!bubble.text) {
+        bubble.text = {
+          content: "",
+          color: null,
+          size: null,
+          position: null
+        }
+      }
+
+      const pos = parseObject(value)
+
+      bubble.text.position = {
+        x: pos.x ?? 0,
+        y: pos.y ?? 0
+      }
+
+      break
+    }
   }
 }

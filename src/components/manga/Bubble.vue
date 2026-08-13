@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue"
+import { marked } from "marked"
 import Tail from "./Tail.vue"
 
 const props = defineProps({
@@ -28,21 +29,30 @@ const textDirection = computed(() => {
 })
 
 /*
+ * Text
+ *
+ * bubble.text.content をMarkdownとして変換する。
+ *
+ * breaks: true
+ * → Markdown上で普通に改行した場合も
+ *   <br>として扱う。
+ */
+const textHtml = computed(() => {
+  const content = props.bubble.text?.content ?? ""
+
+  if (!content) {
+    return ""
+  }
+
+  return marked.parse(content, {
+    breaks: true
+  })
+})
+
+/*
  * Tail
  *
  * bubble.tailは配列として扱う。
- *
- * 例:
- * tail: [
- *   {
- *     shape: "triangle",
- *     position: 90
- *   },
- *   {
- *     shape: "circle",
- *     position: 180
- *   }
- * ]
  */
 const tails = computed(() => {
   if (!Array.isArray(props.bubble.tail)) {
@@ -243,9 +253,8 @@ const strokeWidth = computed(() =>
         fontFamily: bubble.text.font,
         writingMode: textDirection
       }"
-    >
-      {{ bubble.text.content }}
-    </div>
+      v-html="textHtml"
+    />
 
   </div>
 </template>
@@ -268,7 +277,6 @@ const strokeWidth = computed(() =>
 
 .bubble-text {
   position: absolute;
-  white-space: pre-wrap;
   inset: 0;
 
   display: flex;
@@ -282,9 +290,38 @@ const strokeWidth = computed(() =>
   text-orientation: mixed;
 
   font-size: 14px;
+  line-height: 1.5;
 
   z-index: 2;
 
   pointer-events: none;
+
+  /*
+   * Markdownが生成するpなどの余白を
+   * 吹き出し内では抑える。
+   */
+  white-space: normal;
+}
+
+.bubble-text :deep(p) {
+  margin: 0;
+}
+
+.bubble-text :deep(strong) {
+  font-weight: 700;
+}
+
+.bubble-text :deep(em) {
+  font-style: italic;
+}
+
+.bubble-text :deep(ul),
+.bubble-text :deep(ol) {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.bubble-text :deep(blockquote) {
+  margin: 0;
 }
 </style>
