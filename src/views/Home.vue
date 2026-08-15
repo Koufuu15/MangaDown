@@ -3,94 +3,76 @@ import { useRouter } from "vue-router"
 import "../assets/Home.css"
 
 const router = useRouter()
-
-const openTutorial = () => {
-  // TODO
-}
-
-const openSample = () => {
-  // TODO
-}
 </script>
 
 <template>
   <div class="home-page">
     <main class="manga-page">
       <header class="panel title-panel">
-        <span class="sound">ゴゴゴ</span>
-
-        <img
-          src="/favicon.ico"
-          class="logo"
-          alt="MangaDown Logo"
-        >
-
-        <div class="title-content">
-          <h1>MangaDown</h1>
-          <p>Turn Markdown into Manga.</p>
+        <div class="brand-block">
+          <img src="/logo-mark.svg" class="logo" alt="MangaDown Logo" />
+          <div class="title-content">
+            <span class="eyebrow">Editorial manga studio</span>
+            <h1>MangaDown</h1>
+          </div>
         </div>
+
+        <button class="ghost-button" @click="router.push('/guide')">
+          ガイドを見る
+        </button>
       </header>
 
-      <section class="panel markdown-panel">
-        <div class="number blue">01</div>
+      <section class="panel intro-panel">
+        <div class="panel-kicker">Create</div>
 
         <div class="hero-text">
-          <h2>Markdownから<br>漫画を作ろう。</h2>
-
+          <h2>Markdownで、<br>本格的な漫画を作る。</h2>
           <p>
-            独自Markdownを書くだけで漫画をレイアウト。
-            吹き出し・画像・背景・コマ割りを自由に配置し、
-            リアルタイムプレビューを見ながら編集できます。
+            文章とレイアウトを一体で扱える編集環境。<br>
+            余白の美しさと読みやすさを保ちながら、<br>
+            作品の世界観をそのまま出力できます。
           </p>
         </div>
 
         <div class="button-group">
-          <button
-            class="primary-button"
-            @click="router.push('/write-md')"
-          >
-            漫画を作る →
+          <button class="primary-button" @click="router.push('/write-md')">
+            漫画を作成する
           </button>
-
-          <button
-            class="secondary-button"
-            @click="router.push('/guide')"
-          >
-            ガイドを見る
+          <button class="secondary-button" @click="router.push('/save')">
+            作品を見る
           </button>
         </div>
       </section>
 
-      <section
-        class="panel guide-panel"
-        @click="openTutorial"
-      >
-        <div class="guide-header">
-          <span class="number green">02</span>
+      <aside class="panel info-panel">
+        <div class="panel-kicker muted">Workflow</div>
 
-          <div>
-            <h3>Quick Start</h3>
-            <p>3ステップで漫画を作成できます。</p>
-          </div>
-        </div>
-
-        <div class="guide-steps">
-          <div class="step">
+        <div class="process-list">
+          <div class="process-item">
             <span>01</span>
-            <p>Markdownを書く</p>
+            <div>
+              <strong>構成を考える</strong>
+              <p>コマ割りと流れを整える</p>
+            </div>
           </div>
 
-          <div class="step">
+          <div class="process-item">
             <span>02</span>
-            <p>リアルタイムで編集</p>
+            <div>
+              <strong>本文を整える</strong>
+              <p>注釈と会話を自然に配置</p>
+            </div>
           </div>
 
-          <div class="step">
+          <div class="process-item">
             <span>03</span>
-            <p>PNG・PDFで出力</p>
+            <div>
+              <strong>完成を出力</strong>
+              <p>PNG / PDF で保存</p>
+            </div>
           </div>
         </div>
-      </section>
+      </aside>
     </main>
   </div>
 </template>
