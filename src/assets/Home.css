@@ -40,7 +40,6 @@
   box-sizing: border-box;
 }
 
-
 .home-page {
   width: 100%;
   min-height: 100vh;
@@ -54,11 +53,10 @@
   justify-content: center;
   align-items: flex-start;
 
-  background-color: #202026;
-
   /*
    * 紙の後ろにあるスクリーントーン
    */
+
   background-image:
     radial-gradient(
       rgba(255,255,255,.08) 1px,
@@ -99,9 +97,6 @@
     );
 
   background-size: 22px 22px;
-
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.45);
 
   overflow: hidden;
 }
@@ -178,35 +173,6 @@
       #f5f3ed 100%
     );
 }
-
-
-/*
- * 右側の集中線
- */
-.title-panel::after {
-  content: "";
-
-  position: absolute;
-
-  width: clamp(280px, 45vw, 650px);
-  height: clamp(280px, 45vw, 650px);
-
-  right: clamp(-300px, -20vw, -150px);
-  top: clamp(-320px, -25vw, -180px);
-
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      #111 0deg 1.5deg,
-      transparent 1.5deg 7deg
-    );
-
-  opacity: .07;
-
-  pointer-events: none;
-}
-
-
 /* =========================================================
    Logo
    ========================================================= */
@@ -224,8 +190,6 @@
   margin-right: clamp(14px, 3vw, 32px);
 
   background: #fff;
-
-  border: 3px solid var(--ink);
 
   z-index: 2;
 }
@@ -323,56 +287,7 @@
       rgba(17,17,17,.035) 21px 22px
     ),
     #fff;
-
-  /*
-   * 漫画のコマらしい少し不規則な形
-   */
-  clip-path: polygon(
-    0 1.5%,
-    100% 0,
-    99% 98.5%,
-    1% 100%
-  );
 }
-
-
-/* =========================================================
-   Number
-   ========================================================= */
-
-.number {
-  position: absolute;
-
-  top: clamp(16px, 2.5vw, 26px);
-  left: clamp(18px, 3vw, 30px);
-
-  padding:
-    clamp(6px, .8vw, 9px)
-    clamp(10px, 1.2vw, 14px);
-
-  color: var(--ink);
-
-  background: #fff;
-
-  border: 3px solid var(--ink);
-
-  box-shadow:
-    4px 4px 0 var(--ink);
-
-  font-family: var(--font-manga);
-
-  font-size:
-    clamp(1.15rem, 2vw, 1.55rem);
-
-  line-height: 1;
-
-  transform:
-    skewX(-10deg)
-    rotate(-3deg);
-
-  z-index: 5;
-}
-
 
 /* =========================================================
    Hero Text
@@ -476,34 +391,27 @@
 
 .primary-button {
   color: #fff;
-
   background: var(--red);
-
   box-shadow:
     6px 6px 0 var(--ink);
-
-  transform: rotate(-1deg);
+  border-radius: 0;
 }
 
 
 .primary-button span {
   display: inline-block;
-
   margin-left: 8px;
-
   font-size: 1.2em;
-
   transition: transform .15s ease;
 }
 
 
 .secondary-button {
   color: var(--ink);
-
   background: #fff;
-
   box-shadow:
     5px 5px 0 var(--ink);
+  border-radius: 0 !important;
 }
 
 
@@ -514,7 +422,7 @@
     rotate(-1deg);
 
   box-shadow:
-    9px 9px 0 var(--ink);
+    9px 9px 0 var(--ink) !important;
 }
 
 
@@ -522,11 +430,9 @@
   transform: translateX(5px);
 }
 
-
 .primary-button:active,
 .secondary-button:active {
   transform: translate(2px, 2px);
-
   box-shadow:
     2px 2px 0 var(--ink);
 }
