@@ -6,19 +6,19 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="home-page">
-    <main class="manga-page">
+  <div class="md-home-page">
+    <main class="md-home-manga-page">
 
       <!-- Top Banner -->
-      <header class="brand-banner">
-        <div class="brand-main">
+      <header class="md-home-brand-banner">
+        <div class="md-home-brand-main">
           <img
             src="../components/icons/MangaDown_logo.ico"
-            class="logo"
+            class="md-home-logo"
             alt="MangaDown Logo"
           >
 
-          <div class="brand-text">
+          <div class="md-home-brand-text">
             <h1>MangaDown</h1>
             <p>Turn Markdown into Manga</p>
           </div>
@@ -27,10 +27,10 @@ const router = useRouter()
 
 
       <!-- Hero -->
-      <section class="markdown-panel">
+      <section class="md-home-markdown-panel">
 
-        <div class="hero-text">
-          <span class="hero-label">MARKDOWN × MANGA</span>
+        <div class="md-home-hero-text">
+          <span class="md-home-hero-label">MARKDOWN × MANGA</span>
 
           <h2>
             Markdownから<br>
@@ -45,9 +45,9 @@ const router = useRouter()
         </div>
 
 
-        <div class="button-group">
+        <div class="md-home-button-group">
           <button
-            class="Home.primary-button"
+            class="md-home-primary-button"
             @click="router.push('/write-md')"
           >
             漫画を作る
@@ -55,7 +55,7 @@ const router = useRouter()
           </button>
 
           <button
-            class="Home.secondary-button"
+            class="md-home-secondary-button"
             @click="router.push('/guide')"
           >
             ガイドを見る
@@ -66,13 +66,13 @@ const router = useRouter()
 
 
       <!-- Footer -->
-      <footer class="site-footer">
+      <footer class="md-home-site-footer">
         <span>© MangaDown</span>
 
-        <span class="footer-divider">|</span>
+        <span class="md-home-footer-divider">|</span>
 
         <button
-          class="terms-link"
+          class="md-home-terms-link"
           @click="router.push('/terms')"
         >
           利用規約

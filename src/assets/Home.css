@@ -3,19 +3,20 @@
    ========================================================= */
 
 :root {
-  --paper: #faf8f2;
-  --ink: #111111;
-  --ink-soft: #44444a;
-  --red: #e63946;
+  --md-home-paper: #faf8f2;
+  --md-home-ink: #111111;
+  --md-home-ink-soft: #44444a;
+  --md-home-red: #e63946;
+  --md-home-blue: #3b82f6;
 
-  --font-manga:
+  --md-home-font-manga:
     Impact,
     "Arial Black",
     "Hiragino Kaku Gothic ProN",
     "Yu Gothic",
     sans-serif;
 
-  --font-body:
+  --md-home-font-body:
     "Hiragino Kaku Gothic ProN",
     "Yu Gothic",
     Meiryo,
@@ -31,7 +32,7 @@
   box-sizing: border-box;
 }
 
-.home-page {
+.md-home-page {
   width: 100%;
   min-height: 100vh;
 
@@ -40,7 +41,7 @@
 
   padding: 20px;
 
-  background-color: var(--paper);
+  background-color: var(--md-home-paper);
 
   background-image:
     radial-gradient(
@@ -50,9 +51,9 @@
 
   background-size: 18px 18px;
 
-  color: var(--ink);
+  color: var(--md-home-ink);
 
-  font-family: var(--font-body);
+  font-family: var(--md-home-font-body);
 
   overflow-x: hidden;
 }
@@ -62,7 +63,7 @@
    Main Page
    ========================================================= */
 
-.manga-page {
+.md-home-manga-page {
   width: 100%;
   max-width: 1180px;
 
@@ -75,7 +76,7 @@
 
   padding: 20px 28px 12px;
 
-  background: var(--paper);
+  background: var(--md-home-paper);
 
   overflow: hidden;
 }
@@ -85,7 +86,7 @@
    Brand Banner
    ========================================================= */
 
-.brand-banner {
+.md-home-brand-banner {
   width: 100%;
 
   min-height: 76px;
@@ -98,7 +99,7 @@
 
   background: #fff;
 
-  border-bottom: 4px solid var(--ink);
+  border-bottom: 4px solid var(--md-home-ink);
 
   position: relative;
   z-index: 1;
@@ -107,7 +108,7 @@
 
 /* Left side */
 
-.brand-main {
+.md-home-brand-main {
   display: flex;
   align-items: center;
 
@@ -115,7 +116,7 @@
 }
 
 
-.logo {
+.md-home-logo {
   width: 54px;
   height: 54px;
 
@@ -127,15 +128,15 @@
 }
 
 
-.brand-text {
+.md-home-brand-text {
   min-width: 0;
 }
 
 
-.brand-text h1 {
+.md-home-brand-text h1 {
   margin: 0;
 
-  font-family: var(--font-manga);
+  font-family: var(--md-home-font-manga);
 
   font-size: clamp(2rem, 4vw, 3.2rem);
 
@@ -145,7 +146,7 @@
 }
 
 
-.brand-text p {
+.md-home-brand-text p {
   margin: 7px 0 0;
 
   font-size: .78rem;
@@ -162,7 +163,7 @@
    Hero Panel
    ========================================================= */
 
-.markdown-panel {
+.md-home-markdown-panel {
   flex: 1;
 
   min-height: 0;
@@ -187,7 +188,7 @@
     ),
     #fff;
 
-  border: 3px solid var(--ink);
+  border: 3px solid var(--md-home-ink);
 
   overflow: hidden;
 }
@@ -197,7 +198,7 @@
  * 左側の漫画的アクセント
  */
 
-.markdown-panel::before {
+.md-home-markdown-panel::before {
   content: "";
 
   position: absolute;
@@ -208,7 +209,7 @@
 
   width: 9px;
 
-  background: var(--red);
+  background: var(--md-home-red);
 }
 
 
@@ -216,7 +217,7 @@
    Hero Text
    ========================================================= */
 
-.hero-text {
+.md-home-hero-text {
   width: 100%;
   max-width: 850px;
 
@@ -224,14 +225,14 @@
 }
 
 
-.hero-label {
+.md-home-hero-label {
   display: inline-block;
 
   margin-bottom: 12px;
 
   padding: 5px 10px;
 
-  background: var(--ink);
+  background: var(--md-home-ink);
 
   color: #fff;
 
@@ -243,10 +244,10 @@
 }
 
 
-.hero-text h2 {
+.md-home-hero-text h2 {
   margin: 0;
 
-  font-family: var(--font-manga);
+  font-family: var(--md-home-font-manga);
 
   font-size:
     clamp(3.2rem, 6.5vw, 6.5rem);
@@ -264,7 +265,7 @@
 }
 
 
-.hero-text p {
+.md-home-hero-text p {
   width: 100%;
   max-width: 760px;
 
@@ -280,7 +281,7 @@
 
   font-weight: 700;
 
-  color: var(--ink-soft);
+  color: var(--md-home-ink-soft);
 }
 
 
@@ -288,7 +289,7 @@
    Buttons
    ========================================================= */
 
-.button-group {
+.md-home-button-group {
   display: flex;
 
   flex-wrap: wrap;
@@ -299,15 +300,15 @@
 }
 
 
-.button-group button {
+.md-home-button-group button {
   min-height: 48px;
 
   padding:
     10px 24px;
 
-  border: 3px solid var(--ink);
+  border: 3px solid var(--md-home-ink);
 
-  font-family: var(--font-body);
+  font-family: var(--md-home-font-body);
 
   font-size: 1rem;
 
@@ -321,19 +322,19 @@
 }
 
 
-.primary-button {
+.md-home-primary-button {
   color: #fff;
 
-  background: var(--red);
+  background: var(--md-home-blue);
 
   box-shadow:
-    6px 6px 0 var(--ink);
+    6px 6px 0 var(--md-home-ink);
 
   border-radius: 0;
 }
 
 
-.primary-button span {
+.md-home-primary-button span {
   display: inline-block;
 
   margin-left: 8px;
@@ -344,38 +345,38 @@
 }
 
 
-.secondary-button {
-  color: var(--ink);
+.md-home-secondary-button {
+  color: var(--md-home-ink);
 
   background: #fff;
 
   box-shadow:
-    5px 5px 0 var(--ink);
+    5px 5px 0 var(--md-home-ink);
 
   border-radius: 0 !important;
 }
 
 
-.primary-button:hover,
-.secondary-button:hover {
+.md-home-primary-button:hover,
+.md-home-secondary-button:hover {
   transform: translate(-3px, -3px);
 
   box-shadow:
-    9px 9px 0 var(--ink);
+    9px 9px 0 var(--md-home-ink);
 }
 
 
-.primary-button:hover span {
+.md-home-primary-button:hover span {
   transform: translateX(5px);
 }
 
 
-.primary-button:active,
-.secondary-button:active {
+.md-home-primary-button:active,
+.md-home-secondary-button:active {
   transform: translate(2px, 2px);
 
   box-shadow:
-    2px 2px 0 var(--ink);
+    2px 2px 0 var(--md-home-ink);
 }
 
 
@@ -383,7 +384,7 @@
    Footer
    ========================================================= */
 
-.site-footer {
+.md-home-site-footer {
   min-height: 34px;
 
   display: flex;
@@ -398,23 +399,23 @@
 
   font-weight: 700;
 
-  color: var(--ink-soft);
+  color: var(--md-home-ink-soft);
 }
 
 
-.footer-divider {
+.md-home-footer-divider {
   opacity: .5;
 }
 
 
-.terms-link {
+.md-home-terms-link {
   padding: 0;
 
   border: 0;
 
   background: none;
 
-  color: var(--ink-soft);
+  color: var(--md-home-ink-soft);
 
   font: inherit;
 
@@ -424,8 +425,8 @@
 }
 
 
-.terms-link:hover {
-  color: var(--red);
+.md-home-terms-link:hover {
+  color: var(--md-home-red);
 }
 
 
@@ -435,26 +436,26 @@
 
 @media (max-width: 800px) {
 
-  .home-page {
+  .md-home-page {
     padding: 12px 8px 24px;
   }
 
 
-  .manga-page {
+  .md-home-manga-page {
     min-height: calc(100vh - 36px);
 
     padding: 14px 14px 10px;
   }
 
 
-  .brand-banner {
+  .md-home-brand-banner {
     min-height: 68px;
 
     padding: 10px 14px;
   }
 
 
-  .logo {
+  .md-home-logo {
     width: 48px;
     height: 48px;
 
@@ -462,7 +463,7 @@
   }
 
 
-  .markdown-panel {
+  .md-home-markdown-panel {
     margin-top: 14px;
 
     padding:
@@ -471,12 +472,12 @@
   }
 
 
-  .hero-text {
+  .md-home-hero-text {
     margin-left: 0;
   }
 
 
-  .button-group {
+  .md-home-button-group {
     margin-left: 0;
   }
 
@@ -489,26 +490,26 @@
 
 @media (max-width: 560px) {
 
-  .home-page {
+  .md-home-page {
     padding: 6px;
   }
 
 
-  .manga-page {
+  .md-home-manga-page {
     min-height: 100vh;
 
     padding: 8px;
   }
 
 
-  .brand-banner {
+  .md-home-brand-banner {
     min-height: 62px;
 
     padding: 8px 10px;
   }
 
 
-  .logo {
+  .md-home-logo {
     width: 42px;
     height: 42px;
 
@@ -516,12 +517,12 @@
   }
 
 
-  .brand-text h1 {
+  .md-home-brand-text h1 {
     font-size: 1.8rem;
   }
 
 
-  .brand-text p {
+  .md-home-brand-text p {
     margin-top: 5px;
 
     font-size: .62rem;
@@ -529,7 +530,8 @@
     letter-spacing: .8px;
   }
 
-  .markdown-panel {
+
+  .md-home-markdown-panel {
     flex: none;
 
     min-height: 0;
@@ -543,24 +545,24 @@
   }
 
 
-  .markdown-panel::before {
+  .md-home-markdown-panel::before {
     width: 6px;
   }
 
 
-  .hero-text {
+  .md-home-hero-text {
     margin-left: 0;
   }
 
 
-  .hero-label {
+  .md-home-hero-label {
     font-size: .65rem;
 
     margin-bottom: 10px;
   }
 
 
-  .hero-text h2 {
+  .md-home-hero-text h2 {
     font-size:
       clamp(2.5rem, 12vw, 4rem);
 
@@ -573,7 +575,7 @@
   }
 
 
-  .hero-text p {
+  .md-home-hero-text p {
     margin:
       20px
       0
@@ -585,7 +587,7 @@
   }
 
 
-  .button-group {
+  .md-home-button-group {
     width: 100%;
 
     flex-direction: column;
@@ -594,14 +596,14 @@
   }
 
 
-  .button-group button {
+  .md-home-button-group button {
     width: 100%;
 
     min-height: 50px;
   }
 
 
-  .site-footer {
+  .md-home-site-footer {
     min-height: 38px;
 
     padding-top: 9px;
@@ -618,16 +620,17 @@
 
 @media (max-width: 360px) {
 
-  .brand-text h1 {
+  .md-home-brand-text h1 {
     font-size: 1.55rem;
   }
 
 
-  .brand-text p {
+  .md-home-brand-text p {
     font-size: .55rem;
   }
 
-  .markdown-panel {
+
+  .md-home-markdown-panel {
     padding:
       32px
       16px
@@ -635,12 +638,12 @@
   }
 
 
-  .hero-text h2 {
+  .md-home-hero-text h2 {
     font-size: 2.3rem;
   }
 
 
-  .hero-text p {
+  .md-home-hero-text p {
     font-size: .82rem;
   }
 
@@ -653,8 +656,8 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-  .button-group button,
-  .primary-button span {
+  .md-home-button-group button,
+  .md-home-primary-button span {
     transition: none;
   }
 }
