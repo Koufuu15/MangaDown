@@ -3,14 +3,6 @@ import { useRouter } from "vue-router"
 import "../assets/Home.css"
 
 const router = useRouter()
-
-const openTutorial = () => {
-  // TODO
-}
-
-const openSample = () => {
-  // TODO
-}
 </script>
 
 <template>
@@ -59,38 +51,7 @@ const openSample = () => {
             ガイドを見る
           </button>
         </div>
-      </section>
-
-      <section
-        class="panel guide-panel"
-        @click="openTutorial"
-      >
-        <div class="guide-header">
-          <span class="number green">02</span>
-
-          <div>
-            <h3>Quick Start</h3>
-            <p>3ステップで漫画を作成できます。</p>
-          </div>
-        </div>
-
-        <div class="guide-steps">
-          <div class="step">
-            <span>01</span>
-            <p>Markdownを書く</p>
-          </div>
-
-          <div class="step">
-            <span>02</span>
-            <p>リアルタイムで編集</p>
-          </div>
-
-          <div class="step">
-            <span>03</span>
-            <p>PNG・PDFで出力</p>
-          </div>
-        </div>
-      </section>
+      </section> 
     </main>
   </div>
 </template>

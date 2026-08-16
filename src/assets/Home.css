@@ -1,421 +1,766 @@
-:root{
-  --line:#18181b;
-  --paper:#f6f2e8;
-  --panel:#ffffff;
-  --text:#27272a;
-  --sub:#71717a;
-  --blue:#3b82f6;
-  --green:#10b981;
-}
+/* =========================================================
+   MangaDown Home
+   Manga / Comic inspired responsive UI
+   ========================================================= */
 
-*{
-  box-sizing:border-box;
-}
+:root {
+  --paper: #faf8f2;
+  --paper-dark: #f1eee5;
 
-body{
-  margin:0;
-  font-family:
-    Inter,
-    "Noto Sans JP",
+  --ink: #111111;
+  --ink-soft: #44444a;
+
+  --red: #e63946;
+  --blue: #1976d2;
+
+  --border: 4px solid var(--ink);
+
+  --shadow: 7px 7px 0 var(--ink);
+
+  --font-manga:
+    Impact,
+    "Arial Black",
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
     sans-serif;
-  color:var(--text);
-  background:var(--paper);
+
+  --font-body:
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Meiryo,
+    sans-serif;
 }
 
-.home-page{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:48px;
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+.home-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding:
+    clamp(16px, 4vw, 48px)
+    clamp(10px, 4vw, 60px)
+    clamp(40px, 6vw, 80px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-color: #202026;
+
+  /*
+   * 紙の後ろにあるスクリーントーン
+   */
+  background-image:
+    radial-gradient(
+      rgba(255,255,255,.08) 1px,
+      transparent 1px
+    );
+
+  background-size: 18px 18px;
+
+  color: var(--ink);
+
+  font-family: var(--font-body);
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   Manga Page
+   ========================================================= */
+
+.manga-page {
+  width: 100%;
+  max-width: 1180px;
+
+  padding: clamp(14px, 3vw, 34px);
+
+  position: relative;
+
+  background-color: var(--paper);
+
+  /*
+   * 紙そのもののスクリーントーン
+   */
+  background-image:
+    radial-gradient(
+      rgba(17,17,17,.12) 1px,
+      transparent 1px
+    );
+
+  background-size: 22px 22px;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+  overflow: hidden;
+}
+
+
+/*
+ * 紙の上に薄い漫画的な斜線
+ */
+.manga-page::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
   background:
-    radial-gradient(circle at top,#faf8f2,transparent 60%),
-    var(--paper);
+    linear-gradient(
+      115deg,
+      transparent 0 44%,
+      rgba(0,0,0,.025) 44.2% 45%,
+      transparent 45.2%
+    );
+
+  z-index: 0;
 }
 
-.manga-page{
-  width:min(1180px,100%);
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  grid-template-rows:170px 430px;
-  gap:3px;
-  background:var(--line);
-  border:2px solid var(--line);
-  border-radius:28px;
-  overflow:hidden;
-  box-shadow:0 24px 60px rgba(0,0,0,.12);
+
+/* =========================================================
+   Panel Common
+   ========================================================= */
+
+.panel {
+  position: relative;
+
+  width: 100%;
+
+  background: #fff;
+
+  border: var(--border);
+
+  box-shadow: var(--shadow);
+
+  overflow: hidden;
+
+  z-index: 1;
 }
 
-.panel{
-  position:relative;
-  overflow:hidden;
-  background:var(--panel);
-  padding:40px;
+
+/* =========================================================
+   Title Panel
+   ========================================================= */
+
+.title-panel {
+  min-height: clamp(150px, 20vw, 220px);
+
+  display: flex;
+  align-items: center;
+
+  padding:
+    clamp(24px, 4vw, 48px)
+    clamp(20px, 5vw, 56px);
+
+  transform: rotate(-0.45deg);
+
+  /*
+   * タイトルコマの背景
+   */
+  background:
+    linear-gradient(
+      110deg,
+      #ffffff 0%,
+      #ffffff 55%,
+      #f5f3ed 100%
+    );
+}
+
+
+/*
+ * 右側の集中線
+ */
+.title-panel::after {
+  content: "";
+
+  position: absolute;
+
+  width: clamp(280px, 45vw, 650px);
+  height: clamp(280px, 45vw, 650px);
+
+  right: clamp(-300px, -20vw, -150px);
+  top: clamp(-320px, -25vw, -180px);
+
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      #111 0deg 1.5deg,
+      transparent 1.5deg 7deg
+    );
+
+  opacity: .07;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   Logo
+   ========================================================= */
+
+.logo {
+  width: clamp(60px, 9vw, 108px);
+  height: clamp(60px, 9vw, 108px);
+
+  flex: 0 0 auto;
+
+  object-fit: contain;
+
+  padding: clamp(6px, 1vw, 11px);
+
+  margin-right: clamp(14px, 3vw, 32px);
+
+  background: #fff;
+
+  border: 3px solid var(--ink);
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   Title
+   ========================================================= */
+
+.title-content {
+  position: relative;
+
+  z-index: 2;
+
+  min-width: 0;
+}
+
+
+.title-content h1 {
+  margin: 0;
+
+  font-family: var(--font-manga);
+
+  font-size:
+    clamp(3rem, 8vw, 7.2rem);
+
+  line-height: .82;
+
+  letter-spacing: clamp(-3px, -.3vw, -1px);
+
+  white-space: nowrap;
+}
+
+
+/*
+ * Manga-style underline
+ */
+.title-content h1::after {
+  content: "";
+
+  display: block;
+
+  width: min(82%, 420px);
+
+  height: clamp(6px, .8vw, 11px);
+
+  margin-top: clamp(8px, 1.5vw, 14px);
+
+  background: var(--red);
+
+  transform: skewX(-25deg);
+}
+
+
+.title-content p {
+  margin:
+    clamp(12px, 2vw, 20px)
+    0
+    0;
+
+  font-size:
+    clamp(.8rem, 1.5vw, 1.2rem);
+
+  font-weight: 900;
+
+  letter-spacing:
+    clamp(.5px, .15vw, 2px);
+}
+
+
+/* =========================================================
+   Hero Panel
+   ========================================================= */
+
+.markdown-panel {
+  min-height: clamp(390px, 48vw, 520px);
+
+  margin-top: clamp(20px, 3vw, 30px);
+
+  padding:
+    clamp(52px, 7vw, 72px)
+    clamp(22px, 6vw, 70px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  /*
+   * 集中線風背景
+   */
+  background:
+    repeating-linear-gradient(
+      108deg,
+      transparent 0 20px,
+      rgba(17,17,17,.035) 21px 22px
+    ),
+    #fff;
+
+  /*
+   * 漫画のコマらしい少し不規則な形
+   */
+  clip-path: polygon(
+    0 1.5%,
+    100% 0,
+    99% 98.5%,
+    1% 100%
+  );
+}
+
+
+/* =========================================================
+   Number
+   ========================================================= */
+
+.number {
+  position: absolute;
+
+  top: clamp(16px, 2.5vw, 26px);
+  left: clamp(18px, 3vw, 30px);
+
+  padding:
+    clamp(6px, .8vw, 9px)
+    clamp(10px, 1.2vw, 14px);
+
+  color: var(--ink);
+
+  background: #fff;
+
+  border: 3px solid var(--ink);
+
+  box-shadow:
+    4px 4px 0 var(--ink);
+
+  font-family: var(--font-manga);
+
+  font-size:
+    clamp(1.15rem, 2vw, 1.55rem);
+
+  line-height: 1;
+
+  transform:
+    skewX(-10deg)
+    rotate(-3deg);
+
+  z-index: 5;
+}
+
+
+/* =========================================================
+   Hero Text
+   ========================================================= */
+
+.hero-text {
+  width: 100%;
+  max-width: 820px;
+
+  margin-left:
+    clamp(0px, 2vw, 28px);
+}
+
+
+.hero-text h2 {
+  margin: 0;
+
+  font-family: var(--font-manga);
+
+  font-size:
+    clamp(2.8rem, 7vw, 7rem);
+
+  line-height: .98;
+
+  letter-spacing:
+    clamp(-3px, -.3vw, -1px);
+
+  transform: rotate(-1deg);
+
+  /*
+   * 黄色い漫画的な強調
+   */
+  text-shadow:
+    clamp(1px, .3vw, 3px)
+    clamp(1px, .3vw, 3px)
+    0
+    #ffd84d;
+}
+
+
+.hero-text p {
+  width: 100%;
+  max-width: 760px;
+
+  margin:
+    clamp(22px, 3vw, 32px)
+    0
+    clamp(20px, 3vw, 28px);
+
+  font-size:
+    clamp(.9rem, 1.5vw, 1.18rem);
+
+  line-height: 1.9;
+
+  font-weight: 700;
+
+  color: var(--ink-soft);
+}
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.button-group {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap:
+    clamp(10px, 1.5vw, 18px);
+
+  margin-left:
+    clamp(0px, 2vw, 28px);
+}
+
+
+.button-group button {
+  min-height: 48px;
+
+  padding:
+    clamp(11px, 1.5vw, 15px)
+    clamp(18px, 2.5vw, 28px);
+
+  border: 3px solid var(--ink);
+
+  font-family: var(--font-body);
+
+  font-size:
+    clamp(.9rem, 1.3vw, 1.08rem);
+
+  font-weight: 900;
+
+  cursor: pointer;
+
   transition:
-    transform .25s ease,
-    box-shadow .25s ease;
+    transform .15s ease,
+    box-shadow .15s ease;
 }
 
-.panel:hover{
-  transform:translateY(-6px) rotate(-.4deg);
-  box-shadow:0 18px 40px rgba(0,0,0,.14);
-  z-index:2;
+
+.primary-button {
+  color: #fff;
+
+  background: var(--red);
+
+  box-shadow:
+    6px 6px 0 var(--ink);
+
+  transform: rotate(-1deg);
 }
 
-/* ---------- タイトル ---------- */
 
-.title-panel{
-  grid-column:1/3;
-  display:flex;
-  align-items:center;
-  gap:28px;
-  background:
-    linear-gradient(to right,#fff,#fafafa);
+.primary-button span {
+  display: inline-block;
+
+  margin-left: 8px;
+
+  font-size: 1.2em;
+
+  transition: transform .15s ease;
 }
 
-.logo{
-  width:76px;
-  height:76px;
-  flex-shrink:0;
+
+.secondary-button {
+  color: var(--ink);
+
+  background: #fff;
+
+  box-shadow:
+    5px 5px 0 var(--ink);
 }
 
-.title-content{
-  display:flex;
-  flex-direction:column;
+
+.primary-button:hover,
+.secondary-button:hover {
+  transform:
+    translate(-3px, -3px)
+    rotate(-1deg);
+
+  box-shadow:
+    9px 9px 0 var(--ink);
 }
 
-.title-content h1{
-  margin:0;
-  font-size:54px;
-  font-weight:900;
-  letter-spacing:-2px;
-  line-height:1;
+
+.primary-button:hover span {
+  transform: translateX(5px);
 }
 
-.title-content p{
-  margin-top:10px;
-  color:var(--sub);
-  font-size:18px;
-}
-
-.sound{
-  position:absolute;
-  right:28px;
-  top:18px;
-  font-size:64px;
-  font-weight:900;
-  color:#000;
-  opacity:.05;
-  transform:rotate(-12deg);
-  user-select:none;
-  pointer-events:none;
-}
-
-/* ---------- Hero ---------- */
-
-.markdown-panel{
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.hero-text{
-  display:flex;
-  flex-direction:column;
-  gap:22px;
-}
-
-.hero-text h2{
-  margin:0;
-  font-size:48px;
-  line-height:1.15;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.hero-text p{
-  max-width:620px;
-  margin:0;
-  color:var(--sub);
-  font-size:17px;
-  line-height:1.9;
-}
-
-.button-group{
-  display:flex;
-  gap:18px;
-  flex-wrap:wrap;
-}
-
-/* ---------- Number ---------- */
-
-.number{
-  width:52px;
-  height:52px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:14px;
-  margin-bottom:26px;
-  font-size:18px;
-  font-weight:900;
-  color:#fff;
-}
-
-.blue{
-  background:var(--blue);
-}
-
-.green{
-  background:var(--green);
-}
-
-/* ---------- Buttons ---------- */
-
-button{
-  cursor:pointer;
-  border:none;
-  font-size:16px;
-  font-weight:800;
-  transition:.2s;
-}
-
-.primary-button,
-.secondary-button{
-  padding:16px 30px;
-  border:3px solid #000;
-  border-radius:12px;
-  font-size:17px;
-  font-weight:900;
-  box-shadow:6px 6px 0 #000;
-}
-
-.primary-button{
-  background:var(--blue);
-  color:#fff;
-}
-
-.primary-button:hover{
-  background:#2563eb;
-}
-
-.secondary-button{
-  background:#ececec;
-  color:#222;
-}
-
-.secondary-button:hover{
-  background:#d4d4d4;
-}
 
 .primary-button:active,
-.secondary-button:active{
-  transform:translate(5px,5px);
-  box-shadow:none;
+.secondary-button:active {
+  transform: translate(2px, 2px);
+
+  box-shadow:
+    2px 2px 0 var(--ink);
 }
 
-/* ---------- Guide ---------- */
 
-.guide-panel{
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  cursor:pointer;
-  background:
-    radial-gradient(#e5e5e5 1px,transparent 1px),
-    #fafafa;
-  background-size:12px 12px;
+/* =========================================================
+   Medium Screens
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .home-page {
+    padding:
+      20px
+      12px
+      50px;
+  }
+
+
+  .manga-page {
+    padding: 14px;
+  }
+
+
+  .title-panel {
+    min-height: 155px;
+
+    padding:
+      24px
+      20px;
+  }
+
+
+  .markdown-panel {
+    min-height: 420px;
+
+    padding:
+      58px
+      24px
+      38px;
+  }
+
+
+  .hero-text {
+    margin-left: 0;
+  }
+
+
+  .button-group {
+    margin-left: 0;
+  }
+
 }
 
-.guide-panel:hover{
-  background:
-    radial-gradient(#dddddd 1px,transparent 1px),
-    #f7f7f7;
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .home-page {
+    padding:
+      10px
+      6px
+      35px;
+  }
+
+
+  .manga-page {
+    padding: 10px;
+
+    box-shadow:
+      0 10px 30px rgba(0,0,0,.4);
+  }
+
+
+  .title-panel {
+    min-height: 130px;
+
+    padding:
+      22px
+      16px;
+  }
+
+
+  .logo {
+    width: 54px;
+    height: 54px;
+
+    padding: 5px;
+
+    margin-right: 12px;
+
+    border-width: 2px;
+  }
+
+
+  .title-content h1 {
+    font-size:
+      clamp(2.3rem, 12vw, 3.5rem);
+
+    letter-spacing: -1.5px;
+  }
+
+
+  .title-content h1::after {
+    height: 6px;
+
+    margin-top: 7px;
+  }
+
+
+  .title-content p {
+    font-size: .72rem;
+
+    letter-spacing: .5px;
+  }
+
+
+  .markdown-panel {
+    min-height: 430px;
+
+    margin-top: 18px;
+
+    padding:
+      58px
+      20px
+      32px;
+  }
+
+
+  .number {
+    top: 15px;
+    left: 16px;
+
+    border-width: 2px;
+
+    box-shadow:
+      3px 3px 0 var(--ink);
+  }
+
+
+  .hero-text h2 {
+    font-size:
+      clamp(2.5rem, 12vw, 3.8rem);
+
+    line-height: 1.02;
+  }
+
+
+  .hero-text p {
+    font-size: .88rem;
+
+    line-height: 1.8;
+
+    margin-top: 22px;
+  }
+
+
+  .button-group {
+    width: 100%;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+
+  .button-group button {
+    width: 100%;
+
+    min-height: 50px;
+  }
+
 }
 
-.guide-header{
-  display:flex;
-  align-items:flex-start;
-  gap:18px;
+
+/* =========================================================
+   Very Small Screens
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .title-panel {
+    padding: 18px 12px;
+  }
+
+
+  .logo {
+    width: 45px;
+    height: 45px;
+
+    margin-right: 9px;
+  }
+
+
+  .title-content h1 {
+    font-size: 2.1rem;
+  }
+
+
+  .title-content p {
+    font-size: .62rem;
+  }
+
+
+  .markdown-panel {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+
+  .hero-text h2 {
+    font-size: 2.35rem;
+  }
+
+
+  .hero-text p {
+    font-size: .82rem;
+  }
+
 }
 
-.guide-header h3{
-  margin:0;
-  font-size:28px;
-  font-weight:900;
-}
 
-.guide-header p{
-  margin:8px 0 0;
-  color:var(--sub);
-  line-height:1.7;
-}
+/* =========================================================
+   Accessibility
+   ========================================================= */
 
-.guide-steps{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin:32px 0;
-}
+@media (prefers-reduced-motion: reduce) {
 
-.step{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:14px 18px;
-  background:#fff;
-  border:2px solid #ececec;
-  border-radius:14px;
-  transition:
-    transform .2s,
-    border-color .2s,
-    box-shadow .2s;
-}
-
-.guide-panel:hover .step{
-  border-color:#d6d6d6;
-}
-
-.step:hover{
-  transform:translateX(6px);
-  box-shadow:0 8px 18px rgba(0,0,0,.08);
-}
-
-.step span{
-  width:34px;
-  height:34px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:10px;
-  background:var(--green);
-  color:#fff;
-  font-size:13px;
-  font-weight:900;
-  flex-shrink:0;
-}
-
-.step p{
-  margin:0;
-  font-size:15px;
-  font-weight:700;
-  color:var(--text);
-}
-
-.guide-footer{
-  margin-top:auto;
-  font-weight:800;
-  color:var(--blue);
-  transition:transform .2s;
-}
-
-.guide-panel:hover .guide-footer{
-  transform:translateX(8px);
-}
-
-/* ---------- Responsive ---------- */
-
-@media (max-width:900px){
-
-  .home-page{
-    padding:20px;
+  .button-group button,
+  .primary-button span {
+    transition: none;
   }
 
-  .manga-page{
-    grid-template-columns:1fr;
-    grid-template-rows:auto;
-  }
-
-  .title-panel{
-    grid-column:auto;
-    padding:32px;
-  }
-
-  .title-content h1{
-    font-size:40px;
-  }
-
-  .title-content p{
-    font-size:16px;
-  }
-
-  .logo{
-    width:60px;
-    height:60px;
-  }
-
-  .sound{
-    display:none;
-  }
-
-  .panel{
-    padding:30px;
-  }
-
-  .hero-text h2{
-    font-size:36px;
-  }
-
-  .hero-text p{
-    font-size:16px;
-  }
-
-  .button-group{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .primary-button,
-  .secondary-button{
-    width:100%;
-    justify-content:center;
-  }
-
-  .guide-header{
-    flex-direction:column;
-    gap:12px;
-  }
-
-  .guide-steps{
-    margin:24px 0;
-  }
-}
-
-@media (max-width:600px){
-
-  .home-page{
-    padding:16px;
-  }
-
-  .title-panel{
-    gap:18px;
-  }
-
-  .title-content h1{
-    font-size:34px;
-  }
-
-  .hero-text h2{
-    font-size:30px;
-  }
-
-  .hero-text p{
-    line-height:1.8;
-  }
-
-  .number{
-    width:46px;
-    height:46px;
-    font-size:16px;
-  }
-
-  .step{
-    padding:12px 14px;
-  }
-
-  .step span{
-    width:30px;
-    height:30px;
-    font-size:12px;
-  }
 }
