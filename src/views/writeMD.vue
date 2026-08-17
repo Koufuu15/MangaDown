@@ -98,7 +98,7 @@ onMounted(()=>{
       <div class="write-md-panel-title">
         <span>Markdown</span>
         <div class="write-md-editor-toolbar">
-          <button class="write-md-toolbar-button" @click="openImagePicker">🖼 Upload</button>
+          <button class="write-md-toolbar-button" @click="openImagePicker">📤 Upload</button>
           <button class="write-md-toolbar-button" @click="openAssetPicker">📁 Assets</button>
           <input ref="fileInput" type="file" accept="image/*" hidden @change="onImageSelected" />
         </div>
