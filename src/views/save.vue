@@ -6,201 +6,76 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 
 import Renderer from "@/components/renderer/Renderer.vue"
-
 import { useClipboard } from "@/composables/useClipboard"
 import { useExport } from "@/composables/useExport"
 import { useShare } from "@/composables/useShare"
 
 const router = useRouter()
-
-const markdown = ref(
-  localStorage.getItem("content") || ""
-)
-
+const markdown = ref(localStorage.getItem("content") || "")
+const activeView = ref("preview")
 const previewRef = ref(null)
 
-const{
-  copyMarkdown,
-  copyImage
-}=useClipboard(
-  previewRef,
-  markdown
-)
+const { copyMarkdown, copyImage } = useClipboard(previewRef, markdown)
+const { exportMarkdown, exportHTML, exportPNG, exportPDF } = useExport(previewRef, markdown)
+const { shareX, shareFacebook, shareNative } = useShare()
 
-const{
-  exportMarkdown,
-  exportHTML,
-  exportPNG,
-  exportPDF
-}=useExport(
-  previewRef,
-  markdown
-)
-
-const{
-  shareX,
-  shareFacebook,
-  shareNative
-}=useShare()
+const toggleView = () => {
+  activeView.value = activeView.value === "preview" ? "markdown" : "preview"
+}
 </script>
 
 <template>
+  <div class="save-page">
+    <header class="save-header">
+      <h1 class="save-title">Publish</h1>
+      <p class="save-subtitle">Review your manga before publishing.</p>
+    </header>
 
-<div class="save-page">
+    <main class="save-main">
+      <section class="save-content">
+        <div class="save-view">
+          <div class="save-view-header">
+            <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
+            <div class="save-view-actions">
+              <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
+                {{ activeView === "preview" ? "🖼 Copy" : "📋 Copy" }}
+              </button>
+              <button class="save-toggle" @click="toggleView" :aria-label="`Switch to ${activeView === 'preview' ? 'Markdown' : 'Preview'}`">
+                {{ activeView === "preview" ? "MD" : "Preview" }}
+              </button>
+            </div>
+          </div>
 
-  <header class="save-header">
+          <div v-if="activeView === 'preview'" ref="previewRef" class="save-preview">
+            <Renderer :content="markdown" />
+          </div>
 
-    <div class="header-left">
-      <h1>Publish Manga</h1>
-      <p>Review your manga before publishing.</p>
-    </div>
+          <textarea v-else v-model="markdown" readonly class="save-markdown" />
+        </div>
 
-    <div class="header-right">
-      <span class="publish-status">
-        ● Ready
-      </span>
-    </div>
+        <button class="save-back" @click="router.push('/write-md')">← Back</button>
+      </section>
 
-  </header>
+      <aside class="save-actions">
+        <section class="save-action-group">
+          <h2 class="save-action-title">Export</h2>
+          <div class="save-button-grid">
+            <button class="save-action-button" @click="exportMarkdown">Markdown</button>
+            <button class="save-action-button" @click="exportHTML">HTML</button>
+            <button class="save-action-button" @click="exportPNG">PNG</button>
+            <button class="save-action-button" @click="exportPDF">PDF</button>
+          </div>
+        </section>
 
-  <main class="save-workspace">
-
-    <section class="markdown-panel">
-
-      <div class="panel-title">
-
-        <span>Markdown</span>
-
-        <button
-          class="toolbar-button"
-          @click="copyMarkdown"
-        >
-          📋 Copy
-        </button>
-
-      </div>
-
-      <textarea
-        v-model="markdown"
-        readonly
-      />
-
-    </section>
-
-    <section class="preview-panel">
-
-      <div class="panel-title">
-
-        <span>Preview</span>
-
-        <button
-          class="toolbar-button"
-          @click="copyImage"
-        >
-          🖼 Copy
-        </button>
-
-      </div>
-
-      <div
-        ref="previewRef"
-        class="preview"
-      >
-
-        <Renderer
-          :content="markdown"
-        />
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <section class="action-panel">
-
-    <div class="action-card">
-
-      <h3>Export</h3>
-
-      <div class="button-grid">
-
-        <button
-          class="secondary-button"
-          @click="exportMarkdown"
-        >
-          Markdown
-        </button>
-
-        <button
-          class="secondary-button"
-          @click="exportHTML"
-        >
-          HTML
-        </button>
-
-        <button
-          class="secondary-button"
-          @click="exportPNG"
-        >
-          PNG
-        </button>
-
-        <button
-          class="secondary-button"
-          @click="exportPDF"
-        >
-          PDF
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="action-card">
-
-      <h3>Share</h3>
-
-      <div class="button-grid">
-
-        <button
-          class="secondary-button"
-          @click="shareX()"
-        >
-          X
-        </button>
-
-        <button
-          class="secondary-button"
-          @click="shareFacebook()"
-        >
-          Facebook
-        </button>
-
-        <button
-          class="secondary-button"
-          @click="shareNative()"
-        >
-          Share
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-  <footer class="button-panel">
-
-    <button
-      class="secondary-button"
-      @click="router.push('/write-md')"
-    >
-      ← Back
-    </button>
-
-  </footer>
-
-</div>
-
+        <section class="save-action-group">
+          <h2 class="save-action-title">Share</h2>
+          <div class="save-button-grid">
+            <button class="save-action-button" @click="shareX()">X</button>
+            <button class="save-action-button" @click="shareFacebook()">Facebook</button>
+            <button class="save-action-button" @click="shareNative()">Share</button>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
 </template>
