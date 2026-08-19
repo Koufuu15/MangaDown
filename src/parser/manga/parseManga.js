@@ -29,6 +29,14 @@ export default function parseManga(md) {
     // --------------------------------
     if (line.startsWith("# panel")) {
       currentPanel = {
+        position: {
+          x: 0,
+          y: 0
+        },
+        size: {
+          width: 500,
+          height: 500
+        },
         components: []
       }
 

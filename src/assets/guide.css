@@ -1,478 +1,637 @@
-/* ===========================
-   Guide Layout
-=========================== */
-
-:root{
-
-    --bg:#f5f5f5;
-    --panel:#ffffff;
-    --border:#dcdcdc;
-
-    --primary:#3b82f6;
-
-    --text:#222;
-    --sub:#777;
-
-    --radius:14px;
-
+:root {
+  --guide-ink: #1c2524;
+  --guide-muted: #64716f;
+  --guide-paper: #fbfaf7;
+  --guide-card: #ffffff;
+  --guide-line: #dce4e1;
+  --guide-soft: #eef3f0;
+  --guide-accent: #d45c45;
+  --guide-accent-dark: #a84131;
+  --guide-teal: #277d78;
+  --guide-code: #182221;
+  --guide-radius: 10px;
 }
 
-*{
-
-    box-sizing:border-box;
-
+* {
+  box-sizing: border-box;
 }
 
-body{
-
-    margin:0;
-    background:var(--bg);
-
+body {
+  margin: 0;
+  background: var(--guide-paper);
+  color: var(--guide-ink);
+  font-family: "Avenir Next", "Noto Sans JP", "Yu Gothic", sans-serif;
 }
 
-.guide-page{
-
-    width:100%;
-    min-height:100vh;
-
-    display:flex;
-    flex-direction:column;
-
-    background:var(--bg);
-
+button,
+input {
+  font: inherit;
 }
 
-/* ===========================
-   Header
-=========================== */
-
-.guide-header{
-
-    height:72px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:0 40px;
-
-    background:white;
-
-    border-bottom:1px solid var(--border);
-
-    position:sticky;
-    top:0;
-    z-index:100;
-
+.guide-page {
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(39, 125, 120, 0.035) 1px, transparent 1px) 0 0 / 36px 36px,
+    var(--guide-paper);
 }
 
-.guide-header h1{
-
-    margin:0;
-
-    font-size:26px;
-
+.guide-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--guide-line);
+  background: rgba(251, 250, 247, 0.96);
+  backdrop-filter: blur(12px);
 }
 
-.guide-header p{
-
-    margin-top:4px;
-
-    color:var(--sub);
-
-    font-size:14px;
-
+.guide-header-inner {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 100px;
+  align-items: center;
+  gap: 24px;
+  max-width: 1440px;
+  min-height: 96px;
+  margin: 0 auto;
+  padding: 16px 40px;
 }
 
-/* ===========================
-   Body
-=========================== */
-
-.guide-body{
-
-    flex:1;
-
-    display:grid;
-
-    grid-template-columns:260px 1fr;
-
-    overflow:hidden;
-
+.guide-heading h1 {
+  margin: 3px 0 2px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
-/* ===========================
-   Sidebar
-=========================== */
-
-.guide-sidebar{
-
-    background:white;
-
-    border-right:1px solid var(--border);
-
-    padding:20px;
-
-    overflow-y:auto;
-
-    position:sticky;
-
-    top:72px;
-
-    height:calc(100vh - 72px);
-
+.guide-heading p {
+  margin: 0;
+  color: var(--guide-muted);
+  font-size: 13px;
 }
 
-.search-box{
-
-    width:100%;
-
-    height:42px;
-
-    padding:0 14px;
-
-    border:1px solid var(--border);
-
-    border-radius:10px;
-
-    outline:none;
-
-    margin-bottom:20px;
-
-    font-size:15px;
-
+.eyebrow,
+.sidebar-label,
+.section-level,
+.section-kicker,
+.nav-group-title {
+  color: var(--guide-accent-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
 }
 
-.search-box:focus{
-
-    border-color:var(--primary);
-
+.guide-header-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--guide-muted);
+  line-height: 1.1;
 }
 
-.nav-item{
-
-    width:100%;
-
-    text-align:left;
-
-    border:none;
-
-    background:none;
-
-    cursor:pointer;
-
-    padding:12px 10px;
-
-    border-radius:8px;
-
-    margin-bottom:6px;
-
-    transition:.2s;
-
-    font-size:15px;
-
+.guide-header-stat strong {
+  color: var(--guide-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
 }
 
-.nav-item:hover{
-
-    background:#edf4ff;
-
+.guide-header-stat span {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* ===========================
-   Main
-=========================== */
-
-.guide-content{
-
-    overflow-y:auto;
-
-    padding:32px;
-
-}
-/* ===========================
-   Section
-=========================== */
-
-.guide-section{
-
-    background:white;
-
-    border:1px solid var(--border);
-
-    border-radius:14px;
-
-    margin-bottom:28px;
-
-    overflow:hidden;
-
+.secondary-button,
+.copy-button,
+.nav-item,
+.section-header {
+  border: 0;
+  cursor: pointer;
 }
 
-.section-header{
-
-    padding:18px 24px;
-
-    cursor:pointer;
-
-    user-select:none;
-
-    background:#fafafa;
-
-    border-bottom:1px solid var(--border);
-
-    transition:.2s;
-
+.secondary-button {
+  justify-self: start;
+  padding: 9px 12px;
+  border: 1px solid var(--guide-line);
+  border-radius: 6px;
+  background: var(--guide-card);
+  color: var(--guide-ink);
+  font-size: 12px;
 }
 
-.section-header:hover{
-
-    background:#f3f3f3;
-
+.secondary-button span {
+  margin-right: 5px;
+  color: var(--guide-accent);
 }
 
-.section-header h2{
-
-    margin:0;
-
-    font-size:20px;
-
+.secondary-button:hover,
+.nav-item:hover {
+  border-color: #b8cbc6;
+  background: var(--guide-soft);
 }
 
-.section-body{
-
-    padding:24px;
-
+.guide-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
-.section-description{
-
-    color:var(--sub);
-
-    line-height:1.7;
-
-    margin-bottom:20px;
-
+.guide-sidebar {
+  position: sticky;
+  top: 97px;
+  align-self: start;
+  height: calc(100vh - 97px);
+  padding: 30px 20px;
+  border-right: 1px solid var(--guide-line);
+  overflow-y: auto;
 }
 
-/* ===========================
-   Code + Preview
-=========================== */
+.sidebar-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 24px;
+}
 
-.example{
+.sidebar-intro strong {
+  font-size: 17px;
+  font-weight: 650;
+}
 
-    display:grid;
+.search-label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--guide-muted);
+  font-size: 11px;
+}
 
-    grid-template-columns:1fr 1fr;
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 1px solid var(--guide-line);
+  border-radius: 6px;
+  background: var(--guide-card);
+  color: var(--guide-muted);
+}
 
-    gap:24px;
+.search-box {
+  width: 100%;
+  height: 38px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--guide-ink);
+  font-size: 13px;
+}
 
-    margin-bottom:28px;
+.search-wrap:focus-within {
+  border-color: var(--guide-teal);
+  box-shadow: 0 0 0 3px rgba(39, 125, 120, 0.1);
+}
 
+.guide-nav {
+  margin-top: 28px;
+}
+
+.nav-group + .nav-group {
+  margin-top: 24px;
+}
+
+.nav-group-title {
+  display: block;
+  margin: 0 10px 8px;
+  color: var(--guide-muted);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--guide-ink);
+  text-align: left;
+  font-size: 13px;
+}
+
+.nav-item small {
+  color: var(--guide-muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.empty-search {
+  color: var(--guide-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.guide-content {
+  min-width: 0;
+  padding: 48px clamp(24px, 5vw, 84px) 100px;
+}
+
+.content-intro {
+  max-width: 800px;
+  margin-bottom: 54px;
+}
+
+.content-intro h2 {
+  margin: 9px 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 500;
+}
+
+.content-intro p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--guide-muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.syntax-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  color: var(--guide-teal);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+}
+
+.syntax-path span {
+  padding: 7px 9px;
+  border: 1px solid #bcd8d2;
+  border-radius: 5px;
+  background: #f0f8f5;
+}
+
+.syntax-path b {
+  color: var(--guide-muted);
+  font-weight: 400;
+}
+
+.content-group {
+  max-width: 1000px;
+  scroll-margin-top: 125px;
+}
+
+.content-group + .content-group {
+  margin-top: 58px;
+}
+
+.content-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 13px;
+  color: var(--guide-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.content-group-heading i {
+  flex: 1;
+  height: 1px;
+  background: var(--guide-line);
+}
+
+.guide-section {
+  margin-bottom: 14px;
+  border: 1px solid var(--guide-line);
+  border-radius: var(--guide-radius);
+  background: var(--guide-card);
+  scroll-margin-top: 125px;
+  overflow: hidden;
+}
+
+.guide-section.level-advanced {
+  border-left: 3px solid var(--guide-teal);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 14px;
+  padding: 17px 20px;
+  background: transparent;
+  color: var(--guide-ink);
+  text-align: left;
+}
+
+.section-header:hover {
+  background: #fcfdfc;
+}
+
+.section-index {
+  color: var(--guide-accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+}
+
+.section-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.section-title-wrap strong {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.section-level {
+  color: var(--guide-muted);
+  font-size: 9px;
+}
+
+.section-toggle {
+  margin-left: auto;
+  color: var(--guide-accent);
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.section-body {
+  padding: 0 20px 24px;
+}
+
+.section-description {
+  max-width: 760px;
+  margin: 0 0 22px 45px;
+  color: var(--guide-muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.example {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  gap: 14px;
+  margin-bottom: 25px;
 }
 
 .example-code,
-.example-preview{
-
-    background:#fafafa;
-
-    border:1px solid var(--border);
-
-    border-radius:12px;
-
-    overflow:hidden;
-
+.example-preview {
+  min-width: 0;
+  border: 1px solid var(--guide-line);
+  border-radius: 7px;
+  overflow: hidden;
 }
 
-.example-title{
-
-    height:48px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:0 16px;
-
-    background:white;
-
-    border-bottom:1px solid var(--border);
-
-    font-weight:600;
-
+.example-code {
+  background: var(--guide-code);
 }
 
-.example-code pre{
-
-    margin:0;
-
-    padding:18px;
-
-    overflow:auto;
-
-    font-size:14px;
-
-    line-height:1.6;
-
-    font-family:
-        "JetBrains Mono",
-        "Consolas",
-        monospace;
-
-    background:#f8f8f8;
-
+.example-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 43px;
+  padding: 0 13px;
+  border-bottom: 1px solid var(--guide-line);
+  background: var(--guide-card);
+  color: var(--guide-ink);
+  font-size: 12px;
+  font-weight: 700;
 }
 
-.preview-box{
-
-    padding:20px;
-
-    overflow:auto;
-
-    background:#f8f8f8;
-
-    min-height:320px;
-
-    display:block;
-
-    justify-content:center;
-
+.example-title > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
-/* Viewerの幅を調整 */
-
-.preview-box .viewer{
-
-    min-width:500px;
-
-    width:max-content;
-
+.code-dot,
+.preview-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--guide-accent);
 }
 
-/* ===========================
-   Copy Button
-=========================== */
-
-.copy-button{
-
-    border:none;
-
-    background:#3b82f6;
-
-    color:white;
-
-    padding:8px 14px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    transition:.2s;
-
-    font-size:13px;
-
+.preview-dot {
+  background: var(--guide-teal);
 }
 
-.copy-button:hover{
-
-    background:#2563eb;
-
+.example-code pre {
+  min-height: 180px;
+  margin: 0;
+  padding: 17px;
+  overflow: auto;
+  color: #dce8e3;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre;
 }
 
-/* ===========================
-   Property Table
-=========================== */
-
-.property-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    margin-top:16px;
-
+.preview-box {
+  min-height: 245px;
+  padding: 16px;
+  background: #f3f6f3;
+  overflow: auto;
 }
 
-.property-table th{
-
-    background:#f3f3f3;
-
-    text-align:left;
-
-    padding:12px;
-
-    border:1px solid var(--border);
-
+.preview-box .viewer {
+  width: max-content;
+  min-width: 500px;
 }
 
-.property-table td{
-
-    padding:12px;
-
-    border:1px solid var(--border);
-
+.copy-button {
+  padding: 6px 9px;
+  border-radius: 4px;
+  background: var(--guide-accent);
+  color: #fff;
+  font-size: 11px;
 }
 
-/* ===========================
-   Buttons
-=========================== */
-
-.secondary-button{
-
-    border:1px solid var(--border);
-
-    background:white;
-
-    padding:10px 18px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    transition:.2s;
-
+.copy-button:hover {
+  background: var(--guide-accent-dark);
 }
 
-.secondary-button:hover{
-
-    background:#f5f5f5;
-
+.reference-block,
+.notes-block {
+  margin: 0 0 8px 45px;
 }
 
-/* ===========================
-   Responsive
-=========================== */
+.block-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 9px;
+  color: var(--guide-ink);
+  font-size: 13px;
+  font-weight: 750;
+}
 
-@media (max-width:1100px){
+.block-heading small {
+  color: var(--guide-muted);
+  font-size: 10px;
+  font-weight: 400;
+}
 
-    .guide-body{
+.property-table-wrap {
+  overflow-x: auto;
+}
 
-        grid-template-columns:1fr;
+.property-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
 
-    }
+.property-table th,
+.property-table td {
+  padding: 10px 9px;
+  border-bottom: 1px solid var(--guide-line);
+  text-align: left;
+  vertical-align: top;
+}
 
-    .guide-sidebar{
+.property-table th {
+  color: var(--guide-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
-        position:static;
+.property-table td code {
+  color: var(--guide-teal);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+}
 
-        height:auto;
+.type-chip {
+  display: inline-block;
+  padding: 3px 5px;
+  border-radius: 4px;
+  background: var(--guide-soft);
+  color: var(--guide-teal);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+  white-space: nowrap;
+}
 
-        border-right:none;
+.default-value {
+  color: var(--guide-muted);
+}
 
-        border-bottom:1px solid var(--border);
+.notes-block {
+  margin-top: 22px;
+  padding: 13px 15px;
+  border-left: 3px solid var(--guide-accent);
+  background: #fff7f3;
+}
 
-    }
+.notes-block ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #5e4c47;
+  font-size: 12px;
+  line-height: 1.7;
+}
 
-    .example{
+@media (max-width: 1050px) {
+  .guide-header-inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 14px 24px;
+  }
 
-        grid-template-columns:1fr;
+  .guide-header-stat {
+    display: none;
+  }
 
-    }
+  .guide-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
 
-    .preview-box{
+  .guide-content {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
 
-        min-height:260px;
+  .example {
+    grid-template-columns: 1fr;
+  }
+}
 
-    }
+@media (max-width: 720px) {
+  .guide-header-inner {
+    display: block;
+    padding: 14px 18px 16px;
+  }
 
+  .guide-heading {
+    margin-top: 17px;
+  }
+
+  .guide-heading h1 {
+    font-size: 26px;
+  }
+
+  .guide-layout {
+    display: block;
+  }
+
+  .guide-sidebar {
+    position: static;
+    height: auto;
+    padding: 20px 18px 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--guide-line);
+  }
+
+  .guide-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 20px;
+    margin-top: 18px;
+  }
+
+  .nav-group + .nav-group {
+    margin-top: 0;
+  }
+
+  .guide-content {
+    padding: 35px 16px 70px;
+  }
+
+  .content-intro {
+    margin-bottom: 38px;
+  }
+
+  .content-intro h2 {
+    font-size: 30px;
+  }
+
+  .section-description,
+  .reference-block,
+  .notes-block {
+    margin-left: 0;
+  }
+
+  .section-body {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .section-header {
+    padding: 15px 14px;
+  }
 }

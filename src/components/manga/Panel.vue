@@ -14,10 +14,10 @@ defineProps({
   <div
     class="relative shadow-sm overflow-hidden bg-white"
     :style="{
-      left: panel.position.x + 'px',
-      top: panel.position.y + 'px',
-      width: panel.size.width + 'px',
-      height: panel.size.height + 'px',
+      left: (panel.position?.x ?? 0) + 'px',
+      top: (panel.position?.y ?? 0) + 'px',
+      width: (panel.size?.width ?? 500) + 'px',
+      height: (panel.size?.height ?? 500) + 'px',
       backgroundColor: panel.backgroundColor,
       borderStyle: panel.border ?? 'solid',
       borderWidth: (panel.borderWidth ?? 2) + 'px',
@@ -48,10 +48,10 @@ defineProps({
         :src="resolveAsset(image.name)"
         class="absolute"
         :style="{
-          left: image.position.x + '%',
-          top: image.position.y + '%',
-          width: image.size.width + 'px',
-          height: image.size.height + 'px',
+          left: (image.position?.x ?? 0) + '%',
+          top: (image.position?.y ?? 0) + '%',
+          width: (image.size?.width ?? 100) + 'px',
+          height: (image.size?.height ?? 100) + 'px',
           zIndex: image.layer
         }"
       />
