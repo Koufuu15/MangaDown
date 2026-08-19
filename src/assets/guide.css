@@ -50,15 +50,15 @@ input {
   align-items: center;
   gap: 24px;
   max-width: 1440px;
-  min-height: 96px;
+  min-height: 72px;
   margin: 0 auto;
-  padding: 16px 40px;
+  padding: 10px 40px;
 }
 
 .guide-heading h1 {
-  margin: 3px 0 2px;
+  margin: 1px 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -66,7 +66,7 @@ input {
 .guide-heading p {
   margin: 0;
   color: var(--guide-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .eyebrow,
@@ -139,9 +139,10 @@ input {
 
 .guide-sidebar {
   position: sticky;
-  top: 97px;
+  top: 73px;
   align-self: start;
-  height: calc(100vh - 97px);
+  z-index: 9;
+  height: calc(100vh - 73px);
   padding: 0 20px 30px;
   border-right: 1px solid var(--guide-line);
   overflow-y: auto;
@@ -153,9 +154,9 @@ input {
   align-items: center;
   justify-content: space-between;
   width: calc(100% + 40px);
-  min-height: 76px;
+  min-height: 52px;
   margin: 0 -20px;
-  padding: 15px 20px;
+  padding: 8px 20px;
   border: 0;
   border-bottom: 1px solid var(--guide-line);
   background: rgba(255, 255, 255, 0.72);
@@ -170,13 +171,13 @@ input {
 
 .sidebar-toggle-icon {
   display: grid;
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   place-items: center;
   border: 1px solid #b8cbc6;
   border-radius: 50%;
   color: var(--guide-teal);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 300;
   line-height: 1;
 }
@@ -198,11 +199,11 @@ input {
 .sidebar-intro {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
 }
 
 .sidebar-intro strong {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 650;
 }
 
@@ -619,7 +620,7 @@ input {
 @media (max-width: 1050px) {
   .guide-header-inner {
     grid-template-columns: auto minmax(0, 1fr);
-    padding: 14px 24px;
+    padding: 8px 24px;
   }
 
   .guide-header-stat {
@@ -642,16 +643,18 @@ input {
 
 @media (max-width: 720px) {
   .guide-header-inner {
-    display: block;
-    padding: 14px 18px 16px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 8px 18px;
   }
 
   .guide-heading {
-    margin-top: 17px;
+    margin-top: 0;
   }
 
   .guide-heading h1 {
-    font-size: 26px;
+    font-size: 22px;
   }
 
   .guide-layout {
@@ -659,8 +662,11 @@ input {
   }
 
   .guide-sidebar {
-    position: static;
-    height: auto;
+    position: sticky;
+    top: 73px;
+    z-index: 9;
+    height: calc(100vh - 73px);
+    max-height: calc(100vh - 73px);
     padding: 0 18px 16px;
     border-right: 0;
     border-bottom: 1px solid var(--guide-line);
