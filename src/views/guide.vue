@@ -10,6 +10,7 @@ import guideData from "@/data/guideData"
 const router = useRouter()
 const keyword = ref("")
 const copiedId = ref("")
+const sidebarOpen = ref(true)
 const opened = ref(
   Object.fromEntries(guideData.map(item => [item.id, true]))
 )
@@ -96,41 +97,52 @@ function jump(id) {
     </header>
 
     <div class="guide-layout">
-      <aside class="guide-sidebar">
-        <div class="sidebar-intro">
-          <span class="sidebar-label">CONTENTS</span>
-          <strong>記法を探す</strong>
-        </div>
+      <aside class="guide-sidebar" :class="{ 'is-collapsed': !sidebarOpen }">
+        <button
+          class="sidebar-toggle"
+          type="button"
+          :aria-expanded="sidebarOpen"
+          aria-controls="guide-navigation"
+          @click="sidebarOpen = !sidebarOpen"
+        >
+          <span class="sidebar-intro">
+            <span class="sidebar-label">CONTENTS</span>
+            <strong>記法を探す</strong>
+          </span>
+          <span class="sidebar-toggle-icon" aria-hidden="true">{{ sidebarOpen ? "−" : "+" }}</span>
+        </button>
 
-        <label class="search-label" for="guide-search">キーワード</label>
-        <div class="search-wrap">
-          <span aria-hidden="true">⌕</span>
-          <input
-            id="guide-search"
-            v-model="keyword"
-            class="search-box"
-            type="search"
-            placeholder="panel, layer..."
-          />
-        </div>
-
-        <nav class="guide-nav" aria-label="ガイドの目次">
-          <div v-for="group in groupedGuides" :key="group.name" class="nav-group">
-            <span class="nav-group-title">{{ group.name }}</span>
-            <button
-              v-for="item in group.items"
-              :key="item.id"
-              class="nav-item"
-              type="button"
-              @click="jump(item.id)"
-            >
-              <span>{{ item.title }}</span>
-              <small>{{ item.level === "advanced" ? "ADV" : "BASIC" }}</small>
-            </button>
+        <div v-show="sidebarOpen" id="guide-navigation" class="sidebar-navigation">
+          <label class="search-label" for="guide-search">キーワード</label>
+          <div class="search-wrap">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="guide-search"
+              v-model="keyword"
+              class="search-box"
+              type="search"
+              placeholder="panel, layer..."
+            />
           </div>
-        </nav>
 
-        <p v-if="!guides.length" class="empty-search">該当する章がありません。</p>
+          <nav class="guide-nav" aria-label="ガイドの目次">
+            <div v-for="group in groupedGuides" :key="group.name" class="nav-group">
+              <span class="nav-group-title">{{ group.name }}</span>
+              <button
+                v-for="item in group.items"
+                :key="item.id"
+                class="nav-item"
+                type="button"
+                @click="jump(item.id)"
+              >
+                <span>{{ item.title }}</span>
+                <small>{{ item.level === "advanced" ? "ADV" : "BASIC" }}</small>
+              </button>
+            </div>
+          </nav>
+
+          <p v-if="!guides.length" class="empty-search">該当する章がありません。</p>
+        </div>
       </aside>
 
       <main class="guide-content">

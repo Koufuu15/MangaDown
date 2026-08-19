@@ -142,16 +142,63 @@ input {
   top: 97px;
   align-self: start;
   height: calc(100vh - 97px);
-  padding: 30px 20px;
+  padding: 0 20px 30px;
   border-right: 1px solid var(--guide-line);
   overflow-y: auto;
+  background: rgba(251, 250, 247, 0.92);
+}
+
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% + 40px);
+  min-height: 76px;
+  margin: 0 -20px;
+  padding: 15px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--guide-line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--guide-ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-toggle:hover {
+  background: var(--guide-soft);
+}
+
+.sidebar-toggle-icon {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid #b8cbc6;
+  border-radius: 50%;
+  color: var(--guide-teal);
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.sidebar-navigation {
+  padding-top: 24px;
+  animation: sidebar-reveal 180ms ease-out;
+}
+
+.guide-sidebar.is-collapsed {
+  height: auto;
+  overflow: hidden;
+}
+
+.guide-sidebar.is-collapsed .sidebar-toggle {
+  border-bottom-color: transparent;
 }
 
 .sidebar-intro {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin-bottom: 24px;
 }
 
 .sidebar-intro strong {
@@ -194,6 +241,17 @@ input {
 
 .guide-nav {
   margin-top: 28px;
+}
+
+@keyframes sidebar-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav-group + .nav-group {
@@ -440,15 +498,26 @@ input {
 }
 
 .preview-box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   min-height: 245px;
   padding: 16px;
   background: #f3f6f3;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .preview-box .viewer {
-  width: max-content;
-  min-width: 500px;
+  width: 100%;
+  min-width: 0;
+}
+
+.preview-box .viewer > div {
+  width: min(500px, 100%) !important;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .copy-button {
@@ -592,9 +661,20 @@ input {
   .guide-sidebar {
     position: static;
     height: auto;
-    padding: 20px 18px 16px;
+    padding: 0 18px 16px;
     border-right: 0;
     border-bottom: 1px solid var(--guide-line);
+  }
+
+  .sidebar-toggle {
+    width: calc(100% + 36px);
+    margin: 0 -18px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .sidebar-navigation {
+    padding-top: 18px;
   }
 
   .guide-nav {
