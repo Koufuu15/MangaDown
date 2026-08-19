@@ -38,11 +38,28 @@ const toggleView = () => {
             <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
             <div class="save-view-actions">
               <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
-                {{ activeView === "preview" ? "🖼 Copy" : "📋 Copy" }}
+                {{ activeView === "preview" ? "📋 Copy" : "📋 Copy" }}
               </button>
-              <button class="save-toggle" @click="toggleView" :aria-label="`Switch to ${activeView === 'preview' ? 'Markdown' : 'Preview'}`">
-                {{ activeView === "preview" ? "MD" : "Preview" }}
-              </button>
+              <div class="save-view-toggle" role="tablist">
+                <button
+                  class="save-view-option"
+                  :class="{ 'save-view-option--active': activeView === 'preview' }"
+                  @click="activeView = 'preview'"
+                  role="tab"
+                  :aria-selected="activeView === 'preview'"
+                >
+                  Preview
+                </button>
+                <button
+                  class="save-view-option"
+                  :class="{ 'save-view-option--active': activeView === 'markdown' }"
+                  @click="activeView = 'markdown'"
+                  role="tab"
+                  :aria-selected="activeView === 'markdown'"
+                >
+                  Markdown
+                </button>
+              </div>
             </div>
           </div>
 

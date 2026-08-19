@@ -74,7 +74,7 @@
 }
 
 .save-copy-button,
-.save-toggle,
+.save-view-option,
 .save-action-button,
 .save-back{
   border:2px solid var(--line,#18181b);
@@ -86,17 +86,38 @@
   transition:.18s;
 }
 
-.save-copy-button,
-.save-toggle{
+.save-copy-button{
   padding:7px 11px;
 }
 
-.save-toggle{
-  min-width:48px;
+.save-view-toggle{
+  display:flex;
+  align-items:stretch;
+  border:2px solid var(--line,#18181b);
+  background:#fff;
+}
+
+.save-view-option{
+  min-width:86px;
+  padding:7px 12px;
+  border:0;
+  border-radius:0;
+}
+
+.save-view-option + .save-view-option{
+  border-left:2px solid var(--line,#18181b);
+}
+
+.save-view-option--active{
+  background:var(--line,#18181b);
+  color:#fff;
+}
+
+.save-view-option:hover:not(.save-view-option--active){
+  background:#f5f5f5;
 }
 
 .save-copy-button:hover,
-.save-toggle:hover,
 .save-action-button:hover,
 .save-back:hover{
   background:#f5f5f5;
