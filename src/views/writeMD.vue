@@ -3,38 +3,51 @@ import "../assets/writeMD.css"
 
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
-
 import { EditorView, basicSetup } from "codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
 
 import Renderer from "@/components/renderer/Renderer.vue"
-import ImageDrawer from "@/components/ImageDrawer.vue"
+import AssetPicker from "@/components/library/AssetPicker.vue"
+import UploadDialog from "@/components/UploadDialog.vue"
 
 import { validateImageName } from "@/utils/imageValidator"
 import { saveUserAsset } from "@/utils/userAssets"
+import { getAllAssets } from "@/utils/assetResolver"
 
 const router = useRouter()
 
 const editor = ref()
 const editorView = ref(null)
-
 const fileInput = ref(null)
-const drawerOpen = ref(false)
+
+const pickerOpen = ref(false)
+const uploadOpen = ref(false)
+const selectedFile = ref(null)
+
+const assets = ref([])
 
 const content = ref(localStorage.getItem("content") ?? "")
+
+const mobileView = ref("editor")
 
 function openImagePicker() {
   fileInput.value?.click()
 }
 
-function openDrawer() {
-  drawerOpen.value = true
+function openAssetPicker() {
+  assets.value = getAllAssets()
+  pickerOpen.value = true
 }
 
-function closeDrawer() {
-  drawerOpen.value = false
+function closeAssetPicker() {
+  pickerOpen.value = false
+}
+
+function closeUploadDialog() {
+  uploadOpen.value = false
+  selectedFile.value = null
 }
 
 function onImageSelected(event) {
@@ -42,41 +55,54 @@ function onImageSelected(event) {
 
   if (!file) return
 
-  const name = prompt("画像名を入力してください")
+  selectedFile.value = file
+  uploadOpen.value = true
+  event.target.value = ""
+}
 
-  if (!name) {
-    event.target.value = ""
-    return
-  }
+function saveImage(data) {
+  if (!selectedFile.value) return
 
-  const result = validateImageName(name)
+  const result = validateImageName(data.name)
 
   if (!result.valid) {
     alert(result.message)
-    event.target.value = ""
     return
   }
 
   const reader = new FileReader()
 
   reader.onload = () => {
-    saveUserAsset(name, reader.result)
-    insertImageMarkdown(name)
-    event.target.value = ""
+    saveUserAsset({
+      name: data.name,
+      src: reader.result,
+      folderId: data.folderId,
+      tags: data.tags,
+      createdAt: Date.now()
+    })
+
+    insertImageMarkdown(data.name)
+    closeUploadDialog()
   }
 
-  reader.readAsDataURL(file)
+  reader.readAsDataURL(selectedFile.value)
+}
+
+function selectAsset(asset) {
+  insertImageMarkdown(asset.name)
 }
 
 function insertImageMarkdown(name) {
-
   if (!editorView.value) return
 
-  const insertText =
-`### image
+  const insertText = `### image
+
 - name: ${name}
+
 - layer: 1
+
 - position: { x: 50, y: 50 }
+
 - size: { w: 300, h: 300 }
 
 `
@@ -84,154 +110,147 @@ function insertImageMarkdown(name) {
   const selection = editorView.value.state.selection.main
 
   editorView.value.dispatch({
-    changes:{
-      from:selection.from,
-      to:selection.to,
-      insert:insertText
+    changes: {
+      from: selection.from,
+      to: selection.to,
+      insert: insertText
     }
   })
 
-  drawerOpen.value = false
+  pickerOpen.value = false
 }
 
 onMounted(() => {
-
   editorView.value = new EditorView({
-    doc:content.value,
-    extensions:[
+    doc: content.value,
+    extensions: [
       basicSetup,
       markdown(),
       EditorView.lineWrapping,
-      keymap.of([
-        indentWithTab
-      ]),
-      EditorView.updateListener.of((update)=>{
-        if(!update.docChanged) return
+      keymap.of([indentWithTab]),
+      EditorView.updateListener.of(update => {
+        if (!update.docChanged) return
 
         content.value = update.state.doc.toString()
-
-        localStorage.setItem(
-          "content",
-          content.value
-        )
+        localStorage.setItem("content", content.value)
       })
     ],
-    parent:editor.value
+    parent: editor.value
   })
-
 })
 </script>
 
 <template>
+  <div class="write-md-page">
+    <header class="write-md-header">
+      <div class="write-md-header-brand">
+        <img
+          src="../components/icons/MangaDown_logo.ico"
+          class="md-home-logo"
+          alt="MangaDown Logo"
+        >
 
-<div class="write-page">
+        <div class="write-md-header-left">
+          <h1>Manga Editor</h1>
+          <p>Write Markdown and preview your manga.</p>
+        </div>
+      </div>
+    </header>
 
-  <header class="write-header">
+    <main class="write-md-workspace">
+      <section
+        class="write-md-editor-panel"
+        :class="{ 'write-md-mobile-hidden': mobileView !== 'editor' }"
+      >
+        <div class="write-md-panel-title">
+          <span>Markdown</span>
 
-    <div class="header-left">
-      <h1>Manga Editor</h1>
-      <p>Write Markdown and preview your manga.</p>
-    </div>
+          <div class="write-md-editor-toolbar">
+            <button
+              class="write-md-toolbar-button"
+              @click="openImagePicker"
+            >
+              📤 Upload
+            </button>
 
-    <div class="header-right">
-      <span class="save-status">
-        ● Auto Saved
-      </span>
-    </div>
+            <button
+              class="write-md-toolbar-button"
+              @click="openAssetPicker"
+            >
+              📁 Assets
+            </button>
 
-  </header>
-
-  <main class="workspace">
-
-    <section class="editor-panel">
-
-      <div class="panel-title">
-
-        <span>
-          Markdown
-        </span>
-
-        <div class="editor-toolbar">
-
-          <button
-            class="toolbar-button"
-            @click="openImagePicker"
-          >
-            🖼 Upload
-          </button>
-
-          <button
-            class="toolbar-button"
-            @click="openDrawer"
-          >
-            📁 Assets
-          </button>
-
-          <input
-            ref="fileInput"
-            type="file"
-            accept="image/*"
-            hidden
-            @change="onImageSelected"
-          />
-
+            <input
+              ref="fileInput"
+              type="file"
+              accept="image/*"
+              hidden
+              @change="onImageSelected"
+            />
+          </div>
         </div>
 
-      </div>
+        <div ref="editor" class="write-md-editor"></div>
+      </section>
 
-      <div
-        ref="editor"
-        class="editor"
-      />
+      <section
+        class="write-md-preview-panel"
+        :class="{ 'write-md-mobile-hidden': mobileView !== 'preview' }"
+      >
+        <div class="write-md-panel-title">
+          <span>Preview</span>
+        </div>
 
-    </section>
+        <div class="write-md-preview">
+          <Renderer :content="content" />
+        </div>
+      </section>
+    </main>
 
-    <section class="preview-panel">
+    <div class="write-md-mobile-toggle">
+      <button
+        class="write-md-mobile-toggle-button"
+        :class="{ active: mobileView === 'editor' }"
+        @click="mobileView = 'editor'"
+      >
+        Markdown
+      </button>
 
-      <div class="panel-title">
+      <button
+        class="write-md-mobile-toggle-button"
+        :class="{ active: mobileView === 'preview' }"
+        @click="mobileView = 'preview'"
+      >
+        Preview
+      </button>
+    </div>
 
-        <span>
-          Preview
-        </span>
+    <footer class="write-md-button-panel">
+      <button
+        class="write-md-secondary-button"
+        @click="router.push('/')"
+      >
+        ← Home
+      </button>
 
-      </div>
+      <button
+        class="write-md-primary-button"
+        @click="router.push('/save')"
+      >
+        Publish →
+      </button>
+    </footer>
 
-      <div class="preview">
+    <AssetPicker
+      v-model="pickerOpen"
+      :assets="assets"
+      @select="selectAsset"
+    />
 
-        <Renderer
-          :content="content"
-        />
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <footer class="button-panel">
-
-    <button
-      class="secondary-button"
-      @click="router.push('/')"
-    >
-      ← Home
-    </button>
-
-    <button
-      class="primary-button"
-      @click="router.push('/save')"
-    >
-      Publish →
-    </button>
-
-  </footer>
-
-  <ImageDrawer
-    :open="drawerOpen"
-    @close="closeDrawer"
-    @insert="insertImageMarkdown"
-  />
-
-</div>
-
+    <UploadDialog
+      :open="uploadOpen"
+      @close="closeUploadDialog"
+      @save="saveImage"
+    />
+  </div>
 </template>

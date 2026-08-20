@@ -10,6 +10,18 @@ export default function parsePanel(panel,key,value){
             panel.backgroundImage=value
             break
 
+        case "border":
+            panel.border=value
+            break
+
+        case "borderWidth":
+            panel.borderWidth=Number(value)
+            break
+
+        case "borderColor":
+            panel.borderColor=value
+            break
+
         case "position":
             const pos=parseObject(value)
             panel.position={
@@ -24,5 +36,6 @@ export default function parsePanel(panel,key,value){
                 width:size.w??500,
                 height:size.h??500
             }
+            break
     }
 }

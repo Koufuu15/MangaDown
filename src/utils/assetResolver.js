@@ -1,6 +1,6 @@
 import defaultAssets from "@/data/defaultAssets"
 import {
-  getUserAsset,
+  getUserAssetSrc,
   getUserAssets,
   getUserAssetNames
 } from "./userAssets"
@@ -16,29 +16,31 @@ const builtinAssets = Object.fromEntries(
  * asset名から画像URLを返す
  */
 export function resolveAsset(assetName) {
-
   if (!assetName) return null
 
   if (builtinAssets[assetName]) {
     return builtinAssets[assetName]
   }
 
-  return getUserAsset(assetName)
-
+  return getUserAssetSrc(assetName)
 }
 
 /**
  * 運営素材かどうか
  */
 export function isBuiltinAsset(assetName) {
-  return assetName in builtinAssets
+  return defaultAssets.some(
+    asset => asset.name === assetName
+  )
 }
 
 /**
  * ユーザー素材かどうか
  */
 export function isUserAsset(assetName) {
-  return assetName in getUserAssets()
+  return getUserAssets().some(
+    asset => asset.name === assetName
+  )
 }
 
 /**
@@ -46,7 +48,28 @@ export function isUserAsset(assetName) {
  */
 export function getAllAssetNames() {
   return [
-    ...Object.keys(builtinAssets),
+    ...defaultAssets.map(
+      asset => asset.name
+    ),
     ...getUserAssetNames()
+  ]
+}
+
+/**
+ * AssetPicker用
+ * すべての画像素材を取得
+ */
+export function getAllAssets() {
+  return [
+    ...defaultAssets.map(asset => ({
+      ...asset,
+      type:"builtin"
+    })),
+
+    ...getUserAssets().map(asset => ({
+      ...asset,
+      folderId:asset.folderId ?? "",
+      type:"user"
+    }))
   ]
 }

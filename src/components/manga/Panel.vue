@@ -1,5 +1,6 @@
 <script setup>
 import { resolveAsset } from "@/utils/assetResolver"
+import Bubble from "./Bubble.vue"
 
 defineProps({
   panel: {
@@ -11,57 +12,50 @@ defineProps({
 
 <template>
   <div
-    class="relative border-2 border-zinc-900 shadow-sm overflow-hidden bg-white"
+    class="relative shadow-sm overflow-hidden bg-white"
     :style="{
-      left: panel.position.x + 'px',
-      top: panel.position.y + 'px',
-      width: panel.size.width + 'px',
-      height: panel.size.height + 'px',
-      backgroundColor: panel.backgroundColor
+      left: (panel.position?.x ?? 0) + 'px',
+      top: (panel.position?.y ?? 0) + 'px',
+      width: (panel.size?.width ?? 500) + 'px',
+      height: (panel.size?.height ?? 500) + 'px',
+      backgroundColor: panel.backgroundColor,
+      borderStyle: panel.border ?? 'solid',
+      borderWidth: (panel.borderWidth ?? 2) + 'px',
+      borderColor: panel.borderColor ?? '#18181b'
     }"
   >
     <template
       v-for="(component, index) in panel.components"
       :key="index"
     >
-      <div
+
+      <!-- Bubble -->
+      <Bubble
         v-if="component.bubble"
         v-for="(bubble, bubbleIndex) in component.bubble"
         :key="bubbleIndex"
-        class="absolute bg-white border border-zinc-900 rounded-xl px-3 py-2 shadow-sm"
+        :bubble="bubble"
         :style="{
-          left: bubble.position.x + '%',
-          top: bubble.position.y + '%',
-          minWidth: bubble.size.width + 'px',
-          minHeight: bubble.size.height + 'px',
-          maxWidth: '260px',
           zIndex: bubble.layer
         }"
-      >
-        <p
-          :style="{
-            fontSize: bubble.text.fontSize,
-            color: bubble.text.color,
-            fontFamily: bubble.text.font
-          }"
-        >
-          {{ bubble.text.content }}
-        </p>
-      </div>
+      />
 
+      <!-- Image -->
       <img
         v-if="component.image"
         v-for="image in component.image"
+        :key="image.name"
         :src="resolveAsset(image.name)"
         class="absolute"
         :style="{
-            left: image.position.x + '%',
-            top: image.position.y + '%',
-            width: image.size.width + 'px',
-            height: image.size.height + 'px',
-            zIndex: image.layer
+          left: (image.position?.x ?? 0) + '%',
+          top: (image.position?.y ?? 0) + '%',
+          width: (image.size?.width ?? 100) + 'px',
+          height: (image.size?.height ?? 100) + 'px',
+          zIndex: image.layer
         }"
       />
+
     </template>
   </div>
 </template>

@@ -1,250 +1,252 @@
 <script setup>
 import "../assets/guide.css"
 
-import { ref, computed } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import Renderer from "@/components/renderer/Renderer.vue"
 import guideData from "@/data/guideData"
 
 const router = useRouter()
-
-// 検索キーワード
 const keyword = ref("")
-
-// 開いているセクション
+const copiedId = ref("")
+const sidebarOpen = ref(true)
 const opened = ref(
-    Object.fromEntries(
-        guideData.map(item => [item.id, true])
-    )
+  Object.fromEntries(guideData.map(item => [item.id, true]))
 )
 
-// 検索
 const guides = computed(() => {
+  const key = keyword.value.trim().toLowerCase()
 
-    if (!keyword.value.trim()) {
-        return guideData
-    }
+  if (!key) {
+    return guideData
+  }
 
-    const key = keyword.value.toLowerCase()
+  return guideData.filter(item => {
+    const properties = item.properties
+      ?.map(property => `${property.name} ${property.description}`)
+      .join(" ") ?? ""
+    const notes = item.notes?.join(" ") ?? ""
+    const searchable = `${item.title} ${item.description} ${item.code ?? ""} ${properties} ${notes}`
 
-    return guideData.filter(item => {
-
-        return (
-            item.title.toLowerCase().includes(key) ||
-            item.description.toLowerCase().includes(key) ||
-            item.code.toLowerCase().includes(key)
-        )
-
-    })
-
+    return searchable.toLowerCase().includes(key)
+  })
 })
 
-// 折りたたみ
-function toggle(id) {
-    opened.value[id] = !opened.value[id]
-}
+const groupedGuides = computed(() => {
+  const groups = []
 
-// コピー
-async function copyCode(code) {
+  for (const item of guides.value) {
+    let group = groups.find(candidate => candidate.name === item.group)
 
-    try {
-
-        await navigator.clipboard.writeText(code)
-
-        alert("Copied!")
-
-    } catch {
-
-        alert("コピーに失敗しました。")
-
+    if (!group) {
+      group = { name: item.group, items: [] }
+      groups.push(group)
     }
 
+    group.items.push(item)
+  }
+
+  return groups
+})
+
+function toggle(id) {
+  opened.value[id] = !opened.value[id]
 }
 
-// サイドバークリック
+async function copyCode(item) {
+  try {
+    await navigator.clipboard.writeText(item.code)
+    copiedId.value = item.id
+    window.setTimeout(() => {
+      if (copiedId.value === item.id) copiedId.value = ""
+    }, 1600)
+  } catch {
+    alert("コピーに失敗しました。")
+  }
+}
+
 function jump(id) {
-
-    document
-        .getElementById(id)
-        ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        })
-
+  document.getElementById(id)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  })
 }
 </script>
 
 <template>
-
-<div class="guide-page">
-
+  <div class="guide-page">
     <header class="guide-header">
-
-        <div>
-
-            <h1>Writing Guide</h1>
-
-            <p>
-                Manga Markdown Reference
-            </p>
-
+      <div class="guide-header-inner">
+        <button class="secondary-button" type="button" @click="router.push('/')">
+          <span aria-hidden="true">←</span>
+          Home
+        </button>
+        <div class="guide-heading">
+          <div class="guide-heading-title">
+            <img
+              src="../components/icons/MangaDown_logo.ico"
+              class="md-guide-logo"
+              alt="MangaDown Logo"
+            >
+            <div>
+              <span class="eyebrow">MANGADOWN / REFERENCE</span>
+              <h1>Writing Guide</h1>
+            </div>
+          </div>
+          <p>独自Markdownで漫画を組み立てるためのリファレンス</p>
         </div>
 
-        <button
-            class="secondary-button"
-            @click="router.push('/')"
-        >
-            ← Home
-        </button>
-
+        <div class="guide-header-stat">
+          <strong>{{ guideData.length }}</strong>
+          <span>chapters</span>
+        </div>
+      </div>
     </header>
 
-    <div class="guide-body">
+    <div class="guide-layout">
+      <aside class="guide-sidebar" :class="{ 'is-collapsed': !sidebarOpen }">
+        <button
+          class="sidebar-toggle"
+          type="button"
+          :aria-expanded="sidebarOpen"
+          aria-controls="guide-navigation"
+          @click="sidebarOpen = !sidebarOpen"
+        >
+          <span class="sidebar-intro">
+            <span class="sidebar-label">CONTENTS</span>
+            <strong>記法を探す</strong>
+          </span>
+          <span class="sidebar-toggle-icon" aria-hidden="true">{{ sidebarOpen ? "−" : "+" }}</span>
+        </button>
 
-        <aside class="guide-sidebar">
-
+        <div v-show="sidebarOpen" id="guide-navigation" class="sidebar-navigation">
+          <label class="search-label" for="guide-search">キーワード</label>
+          <div class="search-wrap">
+            <span aria-hidden="true">⌕</span>
             <input
-                v-model="keyword"
-                class="search-box"
-                placeholder="Search..."
+              id="guide-search"
+              v-model="keyword"
+              class="search-box"
+              type="search"
+              placeholder="panel, layer..."
             />
+          </div>
 
-            <button
-                v-for="item in guides"
+          <nav class="guide-nav" aria-label="ガイドの目次">
+            <div v-for="group in groupedGuides" :key="group.name" class="nav-group">
+              <span class="nav-group-title">{{ group.name }}</span>
+              <button
+                v-for="item in group.items"
                 :key="item.id"
                 class="nav-item"
+                type="button"
                 @click="jump(item.id)"
-            >
-                {{ item.title }}
-            </button>
+              >
+                <span>{{ item.title }}</span>
+                <small>{{ item.level === "advanced" ? "ADV" : "BASIC" }}</small>
+              </button>
+            </div>
+          </nav>
 
-        </aside>
+          <p v-if="!guides.length" class="empty-search">該当する章がありません。</p>
+        </div>
+      </aside>
 
-        <main class="guide-content">
-          <div
-    v-for="item in guides"
-    :key="item.id"
-    :id="item.id"
-    class="guide-section"
->
-
-    <div
-        class="section-header"
-        @click="toggle(item.id)"
-    >
-
-        <h2>
-            {{ opened[item.id] ? "▼" : "▶" }}
-            {{ item.title }}
-        </h2>
-
-    </div>
-
-    <div
-        v-if="opened[item.id]"
-        class="section-body"
-    >
-
-        <p class="section-description">
-            {{ item.description }}
-        </p>
-
-        <div class="example">
-
-            <!-- Code -->
-
-            <section class="example-code">
-
-                <div class="example-title">
-
-                    <span>Code</span>
-
-                    <button
-                        class="copy-button"
-                        @click="copyCode(item.code)"
-                    >
-                        Copy
-                    </button>
-
-                </div>
-
-                <pre>
-<code>{{ item.code }}</code>
-                </pre>
-
-            </section>
-
-            <!-- Preview -->
-
-            <section class="example-preview">
-
-                <div class="example-title">
-
-                    Preview
-
-                </div>
-
-                <div class="preview-box">
-
-                    <Renderer
-                        :content="item.code"
-                    />
-
-                </div>
-
-            </section>
-
+      <main class="guide-content">
+        <div class="content-intro">
+          <span class="section-kicker">START HERE</span>
+          <h2>漫画記法の全体像</h2>
+          <p>
+            まずブロックの囲み方を確認し、次に要素ごとの属性を見ていきます。
+            例はそのままエディターへ貼り付けて試せます。
+          </p>
+          <div class="syntax-path" aria-label="記法の階層">
+            <span>manga</span><b>→</b><span>panel</span><b>→</b><span>bubble / image</span><b>→</b><span>text / tail</span>
+          </div>
         </div>
 
-        <!-- Property Table -->
+        <div v-for="group in groupedGuides" :key="group.name" class="content-group">
+          <div class="content-group-heading">
+            <span>{{ group.name }}</span>
+            <i aria-hidden="true"></i>
+          </div>
 
-        <table
-            v-if="item.properties"
-            class="property-table"
-        >
+          <article
+            v-for="item in group.items"
+            :id="item.id"
+            :key="item.id"
+            class="guide-section"
+            :class="`level-${item.level}`"
+          >
+            <button
+              class="section-header"
+              type="button"
+              :aria-expanded="opened[item.id]"
+              @click="toggle(item.id)"
+            >
+              <span class="section-index">{{ String(guideData.indexOf(item) + 1).padStart(2, "0") }}</span>
+              <span class="section-title-wrap">
+                <span class="section-level">{{ item.level === "advanced" ? "ADVANCED" : "BASIC" }}</span>
+                <strong>{{ item.title }}</strong>
+              </span>
+              <span class="section-toggle" aria-hidden="true">{{ opened[item.id] ? "−" : "+" }}</span>
+            </button>
 
-            <thead>
+            <div v-if="opened[item.id]" class="section-body">
+              <p class="section-description">{{ item.description }}</p>
 
-                <tr>
+              <div v-if="item.code" class="example">
+                <section class="example-code">
+                  <div class="example-title">
+                    <span><i class="code-dot" aria-hidden="true"></i> Syntax</span>
+                    <button class="copy-button" type="button" @click.stop="copyCode(item)">
+                      {{ copiedId === item.id ? "Copied" : "Copy code" }}
+                    </button>
+                  </div>
+                  <pre><code>{{ item.code }}</code></pre>
+                </section>
 
-                    <th>Name</th>
+                <section class="example-preview">
+                  <div class="example-title"><span><i class="preview-dot" aria-hidden="true"></i> Preview</span></div>
+                  <div class="preview-box">
+                    <Renderer :content="item.code" />
+                  </div>
+                </section>
+              </div>
 
-                    <th>Type</th>
+              <div v-if="item.properties" class="reference-block">
+                <div class="block-heading">
+                  <span>属性リファレンス</span>
+                  <small>{{ item.properties.length }} properties</small>
+                </div>
+                <div class="property-table-wrap">
+                  <table class="property-table">
+                    <thead>
+                      <tr><th>属性</th><th>型</th><th>説明</th><th>既定値</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="property in item.properties" :key="property.name">
+                        <td><code>{{ property.name }}</code></td>
+                        <td><span class="type-chip">{{ property.type }}</span></td>
+                        <td>{{ property.description }}</td>
+                        <td class="default-value">{{ property.default }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-                    <th>Description</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr
-                    v-for="property in item.properties"
-                    :key="property.name"
-                >
-
-                    <td>{{ property.name }}</td>
-
-                    <td>{{ property.type }}</td>
-
-                    <td>{{ property.description }}</td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
+              <div v-if="item.notes" class="notes-block">
+                <div class="block-heading"><span>注意</span></div>
+                <ul>
+                  <li v-for="note in item.notes" :key="note">{{ note }}</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </main>
     </div>
-
-</div>
-
-        </main>
-
-    </div>
-
-</div>
-
+  </div>
 </template>
