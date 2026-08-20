@@ -15,7 +15,7 @@ const props = defineProps({
 
 <div
     class="markdown"
-    v-html="marked.parse(content)"
+    v-html="marked.parse(content, {breaks: true})"
 />
 
 </template>

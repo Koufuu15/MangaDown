@@ -23,5 +23,13 @@ export default function parseText(
     case "color":
       bubble.text.color = value
       break
+
+    case "direction":
+      if (value !== "tb" && value !== "rl") {
+        bubble.text.direction = "rl"
+      } else {
+        bubble.text.direction = value
+      }
+      break
   }
 }

@@ -1,0 +1,107 @@
+.drawer-folders{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:12px 16px;
+  border-bottom:1px solid #ececec;
+}
+
+.folder-button{
+  padding:8px 10px;
+  border:2px solid transparent;
+  background:#fff;
+  text-align:left;
+  cursor:pointer;
+}
+
+.folder-button:hover,
+.folder-button.active{
+  border-color:var(--line);
+}
+
+.drawer-sort{
+  padding:12px 16px;
+  border-bottom:1px solid #ececec;
+}
+
+.drawer-sort select{
+  width:100%;
+  padding:8px;
+  border:2px solid #ddd;
+}
+
+.asset-card-wrapper{
+  display:flex;
+  flex-direction:column;
+}
+
+.asset-actions{
+  display:flex;
+  gap:6px;
+  padding:6px;
+}
+
+.asset-actions button{
+  flex:1;
+  padding:6px;
+  border:1px solid var(--line);
+  background:#fff;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.drawer-folder-header{
+  padding:10px 16px;
+  border-bottom:1px solid #eee;
+}
+
+.drawer-folders{
+  max-height:220px;
+  overflow-y:auto;
+}
+
+.folder-toggle{
+  width:100%;
+  text-align:left;
+  border:none;
+  background:none;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.folder-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+}
+
+.folder-button{
+  flex:1;
+  text-align:left;
+  padding:8px 10px;
+  border:none;
+  background:#fff;
+  cursor:pointer;
+}
+
+.folder-button:hover{
+  background:#f5f5f5;
+}
+
+.folder-actions{
+  display:flex;
+  gap:4px;
+}
+
+.folder-actions button{
+  width:28px;
+  height:28px;
+  border:1px solid #ddd;
+  background:#fff;
+  cursor:pointer;
+}
+
+.folder-actions button:hover{
+  background:#f5f5f5;
+}

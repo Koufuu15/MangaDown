@@ -3,39 +3,39 @@ import { useRouter } from "vue-router"
 import "../assets/Home.css"
 
 const router = useRouter()
-
-const openTutorial = () => {
-  // TODO
-}
-
-const openSample = () => {
-  // TODO
-}
 </script>
 
 <template>
-  <div class="home-page">
-    <main class="manga-page">
-      <header class="panel title-panel">
-        <span class="sound">ゴゴゴ</span>
+  <div class="md-home-page">
+    <main class="md-home-manga-page">
 
-        <img
-          src="/favicon.ico"
-          class="logo"
-          alt="MangaDown Logo"
-        >
+      <!-- Top Banner -->
+      <header class="md-home-brand-banner">
+        <div class="md-home-brand-main">
+          <img
+            src="../components/icons/MangaDown_logo.ico"
+            class="md-home-logo"
+            alt="MangaDown Logo"
+          >
 
-        <div class="title-content">
-          <h1>MangaDown</h1>
-          <p>Turn Markdown into Manga.</p>
+          <div class="md-home-brand-text">
+            <h1>MangaDown</h1>
+            <p>Turn Markdown into Manga</p>
+          </div>
         </div>
       </header>
 
-      <section class="panel markdown-panel">
-        <div class="number blue">01</div>
 
-        <div class="hero-text">
-          <h2>Markdownから<br>漫画を作ろう。</h2>
+      <!-- Hero -->
+      <section class="md-home-markdown-panel">
+
+        <div class="md-home-hero-text">
+          <span class="md-home-hero-label">MARKDOWN × MANGA</span>
+
+          <h2>
+            Markdownから<br>
+            漫画を作ろう。
+          </h2>
 
           <p>
             独自Markdownを書くだけで漫画をレイアウト。
@@ -44,57 +44,41 @@ const openSample = () => {
           </p>
         </div>
 
-        <div class="button-group">
+
+        <div class="md-home-button-group">
           <button
-            class="primary-button"
+            class="md-home-primary-button"
             @click="router.push('/write-md')"
           >
-            漫画を作る →
+            漫画を作る
+            <span>→</span>
           </button>
 
           <button
-            class="secondary-button"
+            class="md-home-secondary-button"
             @click="router.push('/guide')"
           >
             ガイドを見る
           </button>
         </div>
+
       </section>
 
-      <section
-        class="panel guide-panel"
-        @click="openTutorial"
-      >
-        <div class="guide-header">
-          <span class="number green">02</span>
 
-          <div>
-            <h3>Quick Start</h3>
-            <p>3ステップで漫画を作成できます。</p>
-          </div>
-        </div>
+      <!-- Footer -->
+      <footer class="md-home-site-footer">
+        <span>© MangaDown</span>
 
-        <div class="guide-steps">
-          <div class="step">
-            <span>01</span>
-            <p>Markdownを書く</p>
-          </div>
+        <span class="md-home-footer-divider">|</span>
 
-          <div class="step">
-            <span>02</span>
-            <p>リアルタイムで編集</p>
-          </div>
+        <button
+          class="md-home-terms-link"
+          @click="router.push('/terms')"
+        >
+          利用規約
+        </button>
+      </footer>
 
-          <div class="step">
-            <span>03</span>
-            <p>PNG・PDFで出力</p>
-          </div>
-        </div>
-
-        <div class="guide-footer">
-          チュートリアルを見る →
-        </div>
-      </section>
     </main>
   </div>
 </template>
