@@ -38,7 +38,7 @@ const toggleView = () => {
             <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
             <div class="save-view-actions">
               <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
-                {{ activeView === "preview" ? "📋 Copy" : "📋 Copy" }}
+                {{ "📋 Copy" }}
               </button>
               <div class="save-view-toggle" role="tablist">
                 <button
