@@ -117,8 +117,8 @@
 
 
 .md-home-logo {
-  width: 54px;
-  height: 54px;
+  width: 64px;
+  height: 64px;
 
   flex: 0 0 auto;
 
@@ -306,7 +306,7 @@
   padding:
     10px 24px;
 
-  border: 3px solid var(--md-home-ink);
+  border: 2px solid var(--md-home-ink);
 
   font-family: var(--md-home-font-body);
 
@@ -326,10 +326,6 @@
   color: #fff;
 
   background: var(--md-home-blue);
-
-  box-shadow:
-    6px 6px 0 var(--md-home-ink);
-
   border-radius: 0;
 }
 
@@ -347,12 +343,7 @@
 
 .md-home-secondary-button {
   color: var(--md-home-ink);
-
   background: #fff;
-
-  box-shadow:
-    5px 5px 0 var(--md-home-ink);
-
   border-radius: 0 !important;
 }
 
@@ -360,9 +351,8 @@
 .md-home-primary-button:hover,
 .md-home-secondary-button:hover {
   transform: translate(-3px, -3px);
-
   box-shadow:
-    9px 9px 0 var(--md-home-ink);
+    5px 5px 0 var(--md-home-ink);
 }
 
 

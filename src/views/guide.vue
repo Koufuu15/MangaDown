@@ -83,6 +83,11 @@ function jump(id) {
           Home
         </button>
 
+        <img
+            src="../components/icons/MangaDown_logo.ico"
+            class="md-home-logo"
+            alt="MangaDown Logo"
+        >
         <div class="guide-heading">
           <span class="eyebrow">MANGADOWN / REFERENCE</span>
           <h1>Writing Guide</h1>

@@ -27,6 +27,11 @@ const toggleView = () => {
 <template>
   <div class="save-page">
     <header class="save-header">
+      <img
+        src="../components/icons/MangaDown_logo.ico"
+        class="md-home-logo"
+        alt="MangaDown Logo"
+      >
       <h1 class="save-title">Publish</h1>
       <p class="save-subtitle">Review your manga before publishing.</p>
     </header>

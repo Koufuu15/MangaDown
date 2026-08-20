@@ -120,8 +120,8 @@
 .save-copy-button:hover,
 .save-action-button:hover,
 .save-back:hover {
-  background: #f5f5f5;
-  transform: translateY(-2px);
+  transform:translateY(-2px);
+  box-shadow:5px 5px 0 #111111;
 }
 
 .save-preview {

@@ -108,8 +108,8 @@
 }
 
 .write-md-toolbar-button:hover{
-  background:#f5f5f5;
   transform:translateY(-2px);
+  box-shadow:4px 4px 0 var(--write-md-ink);
 }
 
 .write-md-editor{
@@ -196,7 +196,7 @@
 .write-md-secondary-button:hover,
 .write-md-primary-button:hover{
   transform:translateY(-2px);
-  box-shadow:7px 7px 0 var(--write-md-ink);
+  box-shadow:5px 5px 0 var(--write-md-ink);
 }
 
 .write-md-secondary-button{
