@@ -37,6 +37,19 @@
   border-bottom:2px solid var(--write-md-line);
 }
 
+.write-md-header-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.write-md-logo{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  flex-shrink:0;
+}
+
 .write-md-header-left{
   display:flex;
   flex-direction:column;

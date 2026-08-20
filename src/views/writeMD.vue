@@ -87,14 +87,16 @@ onMounted(()=>{
 <template>
 <div class="write-md-page">
   <header class="write-md-header">
-    <img
-      src="../components/icons/MangaDown_logo.ico"
-      class="md-home-logo"
-      alt="MangaDown Logo"
-    >
-    <div class="write-md-header-left">
-      <h1>Manga Editor</h1>
-      <p>Write Markdown and preview your manga.</p>
+    <div class="write-md-header-brand">
+      <img
+        src="../components/icons/MangaDown_logo.ico"
+        class="md-home-logo"
+        alt="MangaDown Logo"
+      >
+      <div class="write-md-header-left">
+        <h1>Manga Editor</h1>
+        <p>Write Markdown and preview your manga.</p>
+      </div>
     </div>
   </header>
 

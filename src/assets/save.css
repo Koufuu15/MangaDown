@@ -15,6 +15,19 @@
   border-bottom: 2px solid var(--line, #18181b);
 }
 
+.save-header-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.save-logo{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  flex-shrink:0;
+}
+
 .save-title {
   margin: 0;
   font-size: 30px;

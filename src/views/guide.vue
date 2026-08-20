@@ -82,15 +82,18 @@ function jump(id) {
           <span aria-hidden="true">←</span>
           Home
         </button>
-
-        <img
-            src="../components/icons/MangaDown_logo.ico"
-            class="md-home-logo"
-            alt="MangaDown Logo"
-        >
         <div class="guide-heading">
-          <span class="eyebrow">MANGADOWN / REFERENCE</span>
-          <h1>Writing Guide</h1>
+          <div class="guide-heading-title">
+            <img
+              src="../components/icons/MangaDown_logo.ico"
+              class="md-guide-logo"
+              alt="MangaDown Logo"
+            >
+            <div>
+              <span class="eyebrow">MANGADOWN / REFERENCE</span>
+              <h1>Writing Guide</h1>
+            </div>
+          </div>
           <p>独自Markdownで漫画を組み立てるためのリファレンス</p>
         </div>
 
