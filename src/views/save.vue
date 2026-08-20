@@ -27,8 +27,17 @@ const toggleView = () => {
 <template>
   <div class="save-page">
     <header class="save-header">
-      <h1 class="save-title">Publish</h1>
-      <p class="save-subtitle">Review your manga before publishing.</p>
+      <div class="save-header-brand">
+        <img
+          src="../components/icons/MangaDown_logo.ico"
+          class="md-home-logo"
+          alt="MangaDown Logo"
+        >
+        <div>
+          <h1 class="save-title">Publish</h1>
+          <p class="save-subtitle">Review your manga before publishing.</p>
+        </div>
+      </div>
     </header>
 
     <main class="save-main">
@@ -38,7 +47,7 @@ const toggleView = () => {
             <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
             <div class="save-view-actions">
               <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
-                {{ activeView === "preview" ? "📋 Copy" : "📋 Copy" }}
+                {{ "📋 Copy" }}
               </button>
               <div class="save-view-toggle" role="tablist">
                 <button
