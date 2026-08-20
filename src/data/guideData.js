@@ -23,25 +23,22 @@ export default [
 
 ### text
 - content: "こんにちは！"
-- size: 20
-- direction: rl
-:::`
-  },
-  {
-    id: "structure",
-    title: "書き方の流れ",
-    group: "まず読む",
-    level: "basic",
-    description: "見出しの階層で、パネル・吹き出し・画像・テキスト・しっぽの親子関係を表します。",
-    code: `:::manga
-  # panel
-    ## bubble
-      ### text
-      ### tail
-    ## image
-:::`
-  },
-  {
+- font: UTF-8
+- size: 18
+- color: black
+- position: { x:0, y:0 }
+
+### images
+- name: tarou
+- layer: 0
+- position: { x:180, y:20 }
+- size: { w:180, h:180 }
+
+:::
+`
+},
+
+{
     id: "panel",
     title: "Panel",
     group: "要素リファレンス",
