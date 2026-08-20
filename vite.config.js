@@ -14,7 +14,7 @@ export default defineConfig({
     tailwindcss()
   ],
   build: {
-    outDir: "docs"
+    outDir: "dist"
   },
   resolve: {
     alias: {
