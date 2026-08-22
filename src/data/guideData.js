@@ -28,11 +28,11 @@ export default [
 - color: black
 - position: { x:0, y:0 }
 
-### images
-- name: tarou
+## image
+- name: boy_arm
 - layer: 0
 - position: { x:180, y:20 }
-- size: { w:180, h:180 }
+- size: { w:150, h:150 }
 
 :::
 `
@@ -42,7 +42,6 @@ export default [
     id: "panel",
     title: "Panel",
     group: "要素リファレンス",
-    level: "basic",
     description: "Panelは1コマを表します。複数のpanelを並べると、上から順に複数コマになります。",
     code: `:::manga
 # panel
@@ -67,7 +66,6 @@ export default [
     id: "bubble",
     title: "Bubble",
     group: "要素リファレンス",
-    level: "basic",
     description: "BubbleはPanelの中に吹き出しを追加します。本文を表示するには、子要素としてtextを置きます。",
     code: `:::manga
 # panel
@@ -96,7 +94,6 @@ export default [
     id: "text",
     title: "Text",
     group: "要素リファレンス",
-    level: "basic",
     description: "TextはBubbleの中に配置します。contentは属性として書くほか、属性でない行を本文として書くこともできます。",
     code: `:::manga
 # panel
@@ -156,7 +153,6 @@ export default [
     id: "image",
     title: "Image",
     group: "要素リファレンス",
-    level: "basic",
     description: "ImageはPanelの中に画像素材を配置します。nameには組み込み素材、またはアップロード済み素材の名前を指定します。",
     code: `:::manga
 # panel
@@ -201,20 +197,6 @@ export default [
       "Panelのpositionはpx、BubbleとImageのpositionはパーセントです。",
       "sizeのwとhはすべてpxです。",
       "layerが大きい要素ほど前面に表示されます。"
-    ]
-  },
-  {
-    id: "implementation-notes",
-    title: "実装上の注意",
-    group: "仕上げと注意",
-    level: "advanced",
-    description: "現在のパーサーが受け付ける記法と、古いサンプルやエディター生成処理との違いです。",
-    notes: [
-      "画像の開始行は ## image です。## images は認識されません。",
-      "エディターの一部には ### image を生成する処理が残っていますが、現在のパーサーでは画像として認識されません。",
-      "数値属性に数値以外を指定した場合や、Tailの制約に違反した場合はエラーになります。",
-      "未知の属性はエラーにならず無視されます。",
-      "オブジェクト値はカンマ区切りで解析されるため、値の中にカンマを含めないでください。"
     ]
   }
 ]

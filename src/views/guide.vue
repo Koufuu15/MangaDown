@@ -96,11 +96,6 @@ function jump(id) {
           </div>
           <p>独自Markdownで漫画を組み立てるためのリファレンス</p>
         </div>
-
-        <div class="guide-header-stat">
-          <strong>{{ guideData.length }}</strong>
-          <span>chapters</span>
-        </div>
       </div>
     </header>
 
@@ -161,9 +156,6 @@ function jump(id) {
             まずブロックの囲み方を確認し、次に要素ごとの属性を見ていきます。
             例はそのままエディターへ貼り付けて試せます。
           </p>
-          <div class="syntax-path" aria-label="記法の階層">
-            <span>manga</span><b>→</b><span>panel</span><b>→</b><span>bubble / image</span><b>→</b><span>text / tail</span>
-          </div>
         </div>
 
         <div v-for="group in groupedGuides" :key="group.name" class="content-group">
