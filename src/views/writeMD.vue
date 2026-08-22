@@ -166,14 +166,14 @@ onMounted(() => {
               class="write-md-toolbar-button"
               @click="openImagePicker"
             >
-              📤 Upload
+              📤 アップロード
             </button>
 
             <button
               class="write-md-toolbar-button"
               @click="openAssetPicker"
             >
-              📁 Assets
+              📁 素材を取得
             </button>
 
             <input
@@ -226,14 +226,14 @@ onMounted(() => {
         class="write-md-secondary-button"
         @click="router.push('/')"
       >
-        ← Home
+        ← ホームに戻る
       </button>
 
       <button
         class="write-md-primary-button"
         @click="router.push('/save')"
       >
-        Publish →
+        出力する →
       </button>
     </footer>
 
