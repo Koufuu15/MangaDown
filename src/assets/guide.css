@@ -2,12 +2,11 @@
   --guide-ink: #171717;
   --guide-muted: #707070;
   --guide-paper: #ffffff;
-  --guide-card: #ffffff;
   --guide-line: #dedede;
   --guide-soft: #f6f6f6;
   --guide-accent: #e04435;
   --guide-accent-dark: #bd3024;
-  --guide-code: #191919;
+  --guide-code: #1e1e1e;
   --guide-radius: 4px;
 }
 
@@ -32,6 +31,10 @@ input {
   background: #fff;
 }
 
+/* =========================
+   Header
+========================= */
+
 .guide-header {
   position: sticky;
   top: 0;
@@ -39,6 +42,17 @@ input {
   border-bottom: 2px solid var(--guide-ink);
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(10px);
+}
+
+.guide-header-inner {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  max-width: 1440px;
+  min-height: 76px;
+  margin: 0 auto;
+  padding: 10px 40px;
 }
 
 .guide-heading-title {
@@ -52,17 +66,6 @@ input {
   height: 50px;
   object-fit: contain;
   flex-shrink: 0;
-}
-
-.guide-header-inner {
-  display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) 100px;
-  align-items: center;
-  gap: 24px;
-  max-width: 1440px;
-  min-height: 76px;
-  margin: 0 auto;
-  padding: 10px 40px;
 }
 
 .guide-heading h1 {
@@ -82,35 +85,16 @@ input {
 
 .eyebrow,
 .sidebar-label,
-.section-level,
-.section-kicker,
-.nav-group-title {
+.section-kicker {
   color: var(--guide-accent);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
 
-.guide-header-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  color: var(--guide-muted);
-  line-height: 1.1;
-}
-
-.guide-header-stat strong {
-  color: var(--guide-ink);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 27px;
-  font-weight: 700;
-}
-
-.guide-header-stat span {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
+/* =========================
+   Buttons
+========================= */
 
 .secondary-button,
 .copy-button,
@@ -138,9 +122,13 @@ input {
 }
 
 .secondary-button:hover {
-  transform:translateY(-2px);
-  box-shadow:5px 5px 0 var(--guide-ink);
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 var(--guide-ink);
 }
+
+/* =========================
+   Layout
+========================= */
 
 .guide-layout {
   display: grid;
@@ -148,6 +136,10 @@ input {
   max-width: 1440px;
   margin: 0 auto;
 }
+
+/* =========================
+   Sidebar
+========================= */
 
 .guide-sidebar {
   position: sticky;
@@ -181,6 +173,16 @@ input {
   background: var(--guide-soft);
 }
 
+.sidebar-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sidebar-intro strong {
+  font-size: 14px;
+}
+
 .sidebar-toggle-icon {
   display: grid;
   width: 23px;
@@ -190,24 +192,6 @@ input {
   border-radius: 2px;
   color: var(--guide-accent);
   font-size: 16px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.sidebar-intro {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.sidebar-intro strong {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.sidebar-navigation {
-  padding-top: 22px;
-  animation: sidebar-reveal 180ms ease-out;
 }
 
 .guide-sidebar.is-collapsed {
@@ -215,13 +199,9 @@ input {
   overflow: hidden;
 }
 
-.guide-sidebar.is-collapsed .sidebar-toggle {
-  border-bottom-color: transparent;
-}
-
 .search-label {
   display: block;
-  margin-bottom: 7px;
+  margin: 22px 0 7px;
   color: var(--guide-muted);
   font-size: 11px;
 }
@@ -235,7 +215,6 @@ input {
   border-radius: 2px;
   background: #fff;
   color: var(--guide-muted);
-  transition: 0.15s ease;
 }
 
 .search-box {
@@ -250,39 +229,17 @@ input {
 
 .search-wrap:focus-within {
   border-color: var(--guide-accent);
-  box-shadow: 0 0 0 2px rgba(224, 68, 53, 0.08);
 }
 
 .guide-nav {
-  margin-top: 27px;
-}
-
-@keyframes sidebar-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.nav-group + .nav-group {
-  margin-top: 25px;
-}
-
-.nav-group-title {
-  display: block;
-  margin: 0 10px 8px;
-  color: var(--guide-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 22px;
 }
 
 .nav-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   padding: 9px 10px;
   border: 1px solid transparent;
@@ -299,17 +256,14 @@ input {
   background: var(--guide-soft);
 }
 
-.nav-item small {
-  color: var(--guide-muted);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-}
-
 .empty-search {
   color: var(--guide-muted);
   font-size: 13px;
-  line-height: 1.6;
 }
+
+/* =========================
+   Main
+========================= */
 
 .guide-content {
   min-width: 0;
@@ -326,7 +280,6 @@ input {
   color: var(--guide-ink);
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(28px, 4vw, 42px);
-  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
@@ -338,72 +291,21 @@ input {
   line-height: 1.85;
 }
 
-.syntax-path {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
-  color: var(--guide-ink);
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 12px;
-}
+/* =========================
+   Guide sections
+========================= */
 
-.syntax-path span {
-  padding: 7px 9px;
-  border: 1px solid #cfcfcf;
-  border-radius: 2px;
-  background: #fafafa;
-}
-
-.syntax-path span:first-child {
-  border-color: var(--guide-accent);
-  color: var(--guide-accent);
-}
-
-.syntax-path b {
-  color: var(--guide-muted);
-  font-weight: 400;
-}
-
-.content-group {
+.guide-list {
   max-width: 1000px;
-  scroll-margin-top: 125px;
-}
-
-.content-group + .content-group {
-  margin-top: 58px;
-}
-
-.content-group-heading {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 13px;
-  color: var(--guide-muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.content-group-heading i {
-  flex: 1;
-  height: 1px;
-  background: var(--guide-line);
 }
 
 .guide-section {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   border: 1px solid var(--guide-line);
-  border-radius: 2px;
+  border-radius: 3px;
   background: #fff;
   scroll-margin-top: 125px;
   overflow: hidden;
-}
-
-.guide-section.level-advanced {
-  border-left: 3px solid var(--guide-accent);
 }
 
 .section-header {
@@ -415,7 +317,6 @@ input {
   background: #fff;
   color: var(--guide-ink);
   text-align: left;
-  transition: 0.15s ease;
 }
 
 .section-header:hover {
@@ -430,27 +331,14 @@ input {
   font-weight: 700;
 }
 
-.section-title-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .section-title-wrap strong {
   font-size: 18px;
-  font-weight: 700;
-}
-
-.section-level {
-  color: var(--guide-muted);
-  font-size: 9px;
 }
 
 .section-toggle {
   margin-left: auto;
   color: var(--guide-accent);
   font-size: 21px;
-  font-weight: 400;
 }
 
 .section-body {
@@ -465,9 +353,13 @@ input {
   line-height: 1.75;
 }
 
+/* =========================
+   Editor / Preview
+========================= */
+
 .example {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 14px;
   margin-bottom: 25px;
 }
@@ -476,9 +368,11 @@ input {
 .example-preview {
   min-width: 0;
   border: 1px solid var(--guide-line);
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
+
+/* Markdown Editor風 */
 
 .example-code {
   background: var(--guide-code);
@@ -509,6 +403,9 @@ input {
   width: 7px;
   height: 7px;
   border-radius: 50%;
+}
+
+.code-dot {
   background: var(--guide-accent);
 }
 
@@ -516,54 +413,79 @@ input {
   background: var(--guide-ink);
 }
 
+/*
+ * CodeMirrorに近い見た目
+ */
 .example-code pre {
-  min-height: 180px;
+  min-height: 230px;
+  max-height: 430px;
   margin: 0;
-  padding: 17px;
+  padding: 18px 20px;
   overflow: auto;
-  color: #eeeeee;
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 12px;
+
+  color: #d4d4d4;
+
+  background: #1e1e1e;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 13px;
   line-height: 1.7;
+
+  tab-size: 2;
   white-space: pre;
+}
+
+.example-code code {
+  font-family: inherit;
+}
+
+/*
+ * Preview
+ *
+ * Renderer側の実際のサイズを尊重する。
+ * ここで width を 500px 等に固定しない。
+ */
+.example-preview {
+  background: #fff;
 }
 
 .preview-box {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 245px;
-  padding: 16px;
+
+  min-height: 230px;
+  max-height: 430px;
+
+  padding: 18px;
+
   background: #f7f7f7;
-  overflow-x: hidden;
-  overflow-y: auto;
+
+  overflow: auto;
 }
 
+/*
+ * Rendererが画像を含む場合でも、
+ * 親の幅を超えないようにする。
+ */
 .preview-box .viewer {
   width: 100%;
   min-width: 0;
-}
-
-.preview-box .viewer > div {
-  width: min(500px, 100%) !important;
   max-width: 100%;
-  margin-right: auto;
-  margin-left: auto;
 }
 
-.copy-button {
-  padding: 6px 9px;
-  border-radius: 2px;
-  background: var(--guide-accent);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  transition: 0.15s ease;
+.preview-box img {
+  max-width: 100%;
 }
 
-.copy-button:hover {
-  background: var(--guide-accent-dark);
-}
+/* =========================
+   Properties
+========================= */
 
 .reference-block,
 .notes-block {
@@ -609,8 +531,6 @@ input {
   color: var(--guide-muted);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .property-table td code {
@@ -625,15 +545,17 @@ input {
   border: 1px solid #d7d7d7;
   border-radius: 2px;
   background: #f7f7f7;
-  color: var(--guide-ink);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 10px;
-  white-space: nowrap;
 }
 
 .default-value {
   color: var(--guide-muted);
 }
+
+/* =========================
+   Notes
+========================= */
 
 .notes-block {
   margin-top: 22px;
@@ -650,14 +572,14 @@ input {
   line-height: 1.7;
 }
 
+/* =========================
+   Tablet
+========================= */
+
 @media (max-width: 1050px) {
   .guide-header-inner {
     grid-template-columns: auto minmax(0, 1fr);
     padding: 8px 24px;
-  }
-
-  .guide-header-stat {
-    display: none;
   }
 
   .guide-layout {
@@ -674,16 +596,15 @@ input {
   }
 }
 
+/* =========================
+   Mobile
+========================= */
+
 @media (max-width: 720px) {
   .guide-header-inner {
-    display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: 12px;
     padding: 8px 18px;
-  }
-
-  .guide-heading {
-    margin-top: 0;
   }
 
   .guide-heading h1 {
@@ -697,8 +618,7 @@ input {
   .guide-sidebar {
     position: sticky;
     top: 77px;
-    z-index: 9;
-    height: calc(100vh - 77px);
+    height: auto;
     max-height: calc(100vh - 77px);
     padding: 0 18px 16px;
     border-right: 0;
@@ -712,19 +632,10 @@ input {
     padding-left: 18px;
   }
 
-  .sidebar-navigation {
-    padding-top: 18px;
-  }
-
   .guide-nav {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 20px;
-    margin-top: 18px;
-  }
-
-  .nav-group + .nav-group {
-    margin-top: 0;
+    gap: 5px 10px;
   }
 
   .guide-content {
@@ -752,5 +663,13 @@ input {
 
   .section-header {
     padding: 15px 14px;
+  }
+
+  .example-code pre {
+    font-size: 12px;
+  }
+
+  .preview-box {
+    min-height: 200px;
   }
 }
