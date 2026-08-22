@@ -95,15 +95,11 @@ function selectAsset(asset) {
 function insertImageMarkdown(name) {
   if (!editorView.value) return
 
-  const insertText = `### image
-
+  const insertText = `## image
 - name: ${name}
-
 - layer: 1
-
 - position: { x: 50, y: 50 }
-
-- size: { w: 300, h: 300 }
+- size: { w: 150, h: 150 }
 
 `
 
@@ -163,7 +159,7 @@ onMounted(() => {
         :class="{ 'write-md-mobile-hidden': mobileView !== 'editor' }"
       >
         <div class="write-md-panel-title">
-          <span>Markdown</span>
+          <span>Markdown Editor</span>
 
           <div class="write-md-editor-toolbar">
             <button

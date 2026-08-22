@@ -68,15 +68,6 @@ const router = useRouter()
       <!-- Footer -->
       <footer class="md-home-site-footer">
         <span>© MangaDown</span>
-
-        <span class="md-home-footer-divider">|</span>
-
-        <button
-          class="md-home-terms-link"
-          @click="router.push('/terms')"
-        >
-          利用規約
-        </button>
       </footer>
 
     </main>

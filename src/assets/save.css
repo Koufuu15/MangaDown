@@ -104,17 +104,22 @@
 }
 
 .save-view-toggle {
-  display: flex;
-  align-items: stretch;
-  border: 2px solid var(--line, #18181b);
-  background: #fff;
+  display:flex;
+  z-index:150;
+  padding:2px;
+  background:#fff;
+  border:2px solid var(--line, #18181b);
 }
 
 .save-view-option {
-  min-width: 86px;
-  padding: 7px 12px;
-  border: 0;
-  border-radius: 0;
+  min-width:86px;
+  padding:7px 12px;
+  border:0;
+  background:transparent;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s;
 }
 
 .save-view-option + .save-view-option {
@@ -140,27 +145,25 @@
 .save-preview {
   flex: 1;
   min-height: 0;
-  max-height: 350px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0px 24px 24px 24px;
+  overflow: hidden;
+  padding: 0px 10px 0px 24px;
   background: #fafaf9;
   box-sizing: border-box;
 }
 
-.save-preview > * {
-  max-width: 100%;
+.save-preview .renderer {
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
+  padding-right: 8px;
 }
 
-.save-preview * {
+.save-preview .renderer * {
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-wrap: anywhere;
   word-break: break-word;
-}
-
-.save-preview > div {
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .save-markdown {
@@ -274,7 +277,7 @@
   }
 
   .save-view {
-    min-height: 500px;
+    min-height: 430px;
   }
 }
 
@@ -335,6 +338,10 @@
 
   .save-preview {
     padding: 0px 16px 16px 16px;
+  }
+
+  .save-preview .renderer {
+    max-height: 350px;
   }
 
   .save-markdown {
