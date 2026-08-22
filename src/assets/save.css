@@ -101,6 +101,16 @@
 
 .save-copy-button {
   padding: 7px 11px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.save-copy-button svg{
+  color:#e53935;
+  width:15px;
+  height:15px;
+  flex-shrink:0;
 }
 
 .save-view-toggle {

@@ -7,6 +7,8 @@ import { EditorView, basicSetup } from "codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { keymap } from "@codemirror/view"
 import { indentWithTab } from "@codemirror/commands"
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { faUpload, faFolderOpen } from "@fortawesome/free-solid-svg-icons"
 
 import Renderer from "@/components/renderer/Renderer.vue"
 import AssetPicker from "@/components/library/AssetPicker.vue"
@@ -166,14 +168,16 @@ onMounted(() => {
               class="write-md-toolbar-button"
               @click="openImagePicker"
             >
-              📤 アップロード
+              <FontAwesomeIcon :icon="faUpload" />
+              <span>アップロード</span>
             </button>
 
             <button
               class="write-md-toolbar-button"
               @click="openAssetPicker"
             >
-              📁 素材を取得
+              <FontAwesomeIcon :icon="faFolderOpen" />
+              <span>素材を取得</span>
             </button>
 
             <input

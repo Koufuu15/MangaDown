@@ -4,6 +4,8 @@ import "@/assets/save.css"
 
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { faCopy } from "@fortawesome/free-solid-svg-icons"
 
 import Renderer from "@/components/renderer/Renderer.vue"
 import { useClipboard } from "@/composables/useClipboard"
@@ -47,7 +49,8 @@ const toggleView = () => {
             <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
             <div class="save-view-actions">
               <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
-                {{ "📋 Copy" }}
+                <FontAwesomeIcon :icon="faCopy" />
+                <span>Copy</span>
               </button>
               <div class="save-view-toggle" role="tablist">
                 <button

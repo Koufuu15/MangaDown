@@ -110,6 +110,7 @@
   align-items:center;
 }
 
+/*
 .write-md-toolbar-button{
   padding:8px 14px;
   border:2px solid var(--write-md-line);
@@ -119,6 +120,29 @@
   cursor:pointer;
   transition:.18s;
   white-space: nowrap;
+}
+*/
+
+.write-md-toolbar-button{
+  padding:8px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:2px solid var(--write-md-line);
+  background:#fff;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.18s;
+  white-space:nowrap;
+}
+
+.write-md-toolbar-button svg{
+  width:15px;
+  height:15px;
+  flex-shrink:0;
+  color:var(--write-md-red);
 }
 
 .write-md-toolbar-button:hover{
