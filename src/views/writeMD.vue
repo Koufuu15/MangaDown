@@ -78,7 +78,12 @@ const defaultContent = `# サンプルコード
 - size: { w: 150, h: 150 }
 :::`
 
-const content = ref(localStorage.getItem("content") ?? defaultContent)
+const savedContent = localStorage.getItem("content")
+const content = ref(savedContent ?? defaultContent)
+
+if (!savedContent) {
+  localStorage.setItem("content", defaultContent)
+}
 
 const mobileView = ref("editor")
 
