@@ -83,7 +83,7 @@ function jump(id) {
           @click="router.push('/')"
         >
           <span aria-hidden="true">←</span>
-          Home
+          ホームに戻る
         </button>
 
         <div class="guide-heading">

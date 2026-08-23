@@ -18,7 +18,12 @@ body {
   margin: 0;
   background: var(--guide-paper);
   color: var(--guide-ink);
-  font-family: "Avenir Next", "Noto Sans JP", "Yu Gothic", sans-serif;
+  font-family:
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Meiryo,
+    sans-serif;
+  font-weight: 500;
 }
 
 button,
@@ -278,9 +283,15 @@ input {
 .content-intro h2 {
   margin: 9px 0 10px;
   color: var(--guide-ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Impact,
+    "Arial Black",
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
   font-size: clamp(28px, 4vw, 42px);
-  letter-spacing: -0.025em;
+  font-weight: 900;
+  letter-spacing: 0em;
 }
 
 .content-intro p {
