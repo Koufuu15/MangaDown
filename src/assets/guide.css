@@ -45,7 +45,7 @@ input {
   top: 0;
   z-index: 10;
   border-bottom: 2px solid var(--guide-ink);
-  background: rgba(255, 255, 255, 0.96);
+  background: #f6f2e8;
   backdrop-filter: blur(10px);
 }
 
@@ -168,7 +168,7 @@ input {
   padding: 8px 20px;
   border: 0;
   border-bottom: 1px solid var(--guide-line);
-  background: #fff;
+  background: #f6f2e8;
   color: var(--guide-ink);
   cursor: pointer;
   text-align: left;
@@ -371,42 +371,63 @@ input {
 .example {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 14px;
+  min-width: 0;
   margin-bottom: 25px;
+  border: 2px solid var(--guide-ink);
+  background: var(--guide-ink);
 }
+
+/* 共通パネル */
 
 .example-code,
 .example-preview {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  border: 1px solid var(--guide-line);
-  border-radius: 3px;
+  min-height: 0;
   overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
 }
 
-/* Markdown Editor風 */
+/* 右側Previewとの境界 */
 
-.example-code {
-  background: var(--guide-code);
+.example-preview {
+  border-left: 2px solid var(--guide-ink);
 }
+
+/* =========================
+   Panel Header
+========================= */
 
 .example-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 43px;
-  padding: 0 13px;
-  border-bottom: 1px solid var(--guide-line);
-  background: #fff;
+
+  height: 56px;
+  min-height: 56px;
+
+  padding: 0 18px;
+
+  border-bottom: 2px solid var(--guide-ink);
+  background: #f6f2e8;
+
   color: var(--guide-ink);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
+
+  flex-shrink: 0;
 }
 
 .example-title > span {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
+
+/* ドット */
 
 .code-dot,
 .preview-dot {
@@ -424,19 +445,52 @@ input {
   background: var(--guide-ink);
 }
 
-/*
- * CodeMirrorに近い見た目
- */
+/* =========================
+   Copy Button
+========================= */
+
+.copy-button {
+  padding: 7px 12px;
+
+  border: 2px solid var(--guide-ink);
+  border-radius: 0;
+
+  background: #fff;
+  color: var(--guide-ink);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.copy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--guide-ink);
+}
+
+/* =========================
+   Markdown
+========================= */
+
+.example-code {
+  background: #fff;
+}
+
 .example-code pre {
+  flex: 1;
+
   min-height: 230px;
   max-height: 430px;
+
   margin: 0;
-  padding: 18px 20px;
+  padding: 22px;
+
   overflow: auto;
 
-  color: #d4d4d4;
-
-  background: #1e1e1e;
+  background: #fff;
+  color: var(--guide-ink);
 
   font-family:
     "SFMono-Regular",
@@ -444,46 +498,53 @@ input {
     "Liberation Mono",
     monospace;
 
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
 
   tab-size: 2;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .example-code code {
   font-family: inherit;
 }
 
-/*
- * Preview
- *
- * Renderer側の実際のサイズを尊重する。
- * ここで width を 500px 等に固定しない。
- */
+/* =========================
+   Preview
+========================= */
+
 .example-preview {
   background: #fff;
 }
 
 .preview-box {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex: 1;
 
   min-height: 230px;
   max-height: 430px;
 
-  padding: 18px;
-
-  background: #f7f7f7;
+  padding: 0 40px 20px;
 
   overflow: auto;
+
+  background: #fff;
+
+  position: relative;
+  z-index: 1;
+}
+
+.preview-box * {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /*
- * Rendererが画像を含む場合でも、
- * 親の幅を超えないようにする。
+ * Renderer側の幅を尊重しつつ、
+ * Previewパネルからはみ出さないようにする
  */
+
 .preview-box .viewer {
   width: 100%;
   min-width: 0;
@@ -492,6 +553,31 @@ input {
 
 .preview-box img {
   max-width: 100%;
+}
+
+/* =========================
+   Scrollbar
+========================= */
+
+.example-code pre::-webkit-scrollbar,
+.preview-box::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.example-code pre::-webkit-scrollbar-thumb,
+.preview-box::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+}
+
+.example-code pre::-webkit-scrollbar-thumb:hover,
+.preview-box::-webkit-scrollbar-thumb:hover {
+  background: #8d8d8d;
+}
+
+.example-code pre::-webkit-scrollbar-track,
+.preview-box::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* =========================
@@ -604,6 +690,11 @@ input {
 
   .example {
     grid-template-columns: 1fr;
+  }
+
+  .example-preview {
+    border-left: 0;
+    border-top: 2px solid var(--guide-ink);
   }
 }
 

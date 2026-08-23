@@ -10,7 +10,7 @@ import guideData from "@/data/guideData"
 const router = useRouter()
 const keyword = ref("")
 const copiedId = ref("")
-const sidebarOpen = ref(true)
+const sidebarOpen = ref(false)
 
 const opened = ref(
   Object.fromEntries(guideData.map(item => [item.id, true]))
