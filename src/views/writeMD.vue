@@ -30,7 +30,55 @@ const selectedFile = ref(null)
 
 const assets = ref([])
 
-const content = ref(localStorage.getItem("content") ?? "")
+const defaultContent = `# サンプルコード
+---
+マークダウンの中に、漫画イラストを組み込んで記述できます。
+
+## 特徴
+- 細部まで自分好みの漫画イラストを作成できる！
+- リアルタイムで変更が反映される！
+
+| このように | 位置を調整して |
+| -- | -- |
+|文章と横並び|にもできます|
+
+:::manga
+# panel
+- backgroundColor: #e5fff2
+- position: { x:150, y:-100 }
+- size: { w:300, h: 300 }
+- border: none
+
+## bubble
+- layer: 1
+- shape: thought
+- position: { x:15, y:0 }
+- size: { w:110, h:250 }
+- background: lightblue
+- border: none
+- borderWidth: 3
+- borderColor: grey
+
+### text
+- color: gray
+- direction: tb
+**縦書き**もできる！
+何て便利なんじゃ
+
+### tail
+- shape: triangle
+- position: 335
+- size: 3
+- distance: 4
+
+## image
+- name: doctor_surprise
+- layer: 1
+- position: { x: 50, y: 50 }
+- size: { w: 150, h: 150 }
+:::`
+
+const content = ref(localStorage.getItem("content") ?? defaultContent)
 
 const mobileView = ref("editor")
 
