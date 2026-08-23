@@ -19,22 +19,16 @@ const blocks = computed(() => parseMarkdown(props.content))
 </script>
 
 <template>
-
-<template
-    v-for="(block,index) in blocks"
-    :key="index"
->
-
-<MarkdownBlock
-    v-if="block.type===BLOCK_TYPES.MARKDOWN"
-    :content="block.content"
-/>
-
-<MangaBlock
-    v-else-if="block.type===BLOCK_TYPES.MANGA"
-    :content="block.content"
-/>
-
-</template>
-
+    <div class="renderer">
+        <template v-for="(block,index) in blocks" :key="index">
+            <MarkdownBlock
+                v-if="block.type===BLOCK_TYPES.MARKDOWN"
+                :content="block.content"
+            />
+            <MangaBlock
+                v-else-if="block.type===BLOCK_TYPES.MANGA"
+                :content="block.content"
+            />
+        </template>
+    </div>
 </template>

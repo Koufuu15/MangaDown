@@ -4,6 +4,8 @@ import "@/assets/save.css"
 
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { faCopy } from "@fortawesome/free-solid-svg-icons"
 
 import Renderer from "@/components/renderer/Renderer.vue"
 import { useClipboard } from "@/composables/useClipboard"
@@ -47,7 +49,8 @@ const toggleView = () => {
             <span>{{ activeView === "preview" ? "Preview" : "Markdown" }}</span>
             <div class="save-view-actions">
               <button class="save-copy-button" @click="activeView === 'preview' ? copyImage() : copyMarkdown()">
-                {{ "📋 Copy" }}
+                <FontAwesomeIcon :icon="faCopy" />
+                <span>Copy</span>
               </button>
               <div class="save-view-toggle" role="tablist">
                 <button
@@ -84,7 +87,7 @@ const toggleView = () => {
 
       <aside class="save-actions">
         <section class="save-action-group">
-          <h2 class="save-action-title">Export</h2>
+          <h2 class="save-action-title">出力する</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="exportMarkdown">Markdown</button>
             <button class="save-action-button" @click="exportHTML">HTML</button>
@@ -94,11 +97,11 @@ const toggleView = () => {
         </section>
 
         <section class="save-action-group">
-          <h2 class="save-action-title">Share</h2>
+          <h2 class="save-action-title">共有する</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="shareX()">X</button>
             <button class="save-action-button" @click="shareFacebook()">Facebook</button>
-            <button class="save-action-button" @click="shareNative()">Share</button>
+            <button class="save-action-button" @click="shareNative()">その他</button>
           </div>
         </section>
       </aside>

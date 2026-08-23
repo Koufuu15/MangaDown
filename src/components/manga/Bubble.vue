@@ -16,49 +16,20 @@ const borderEnabled = computed(() => props.bubble.border ?? true)
 const borderWidth = computed(() => props.bubble.borderWidth ?? 3)
 const borderColor = computed(() => props.bubble.borderColor ?? "#111111")
 
-/*
- * Text direction
- *
- * tb = 縦書き
- * rl = 横書き
- */
 const textDirection = computed(() => {
   return props.bubble.text?.direction === "tb"
     ? "vertical-rl"
     : "horizontal-tb"
 })
 
-/*
- * Text
- *
- * bubble.text.content をMarkdownとして変換する。
- *
- * breaks: true
- * → Markdown上で普通に改行した場合も
- *   <br>として扱う。
- */
 const textHtml = computed(() => {
   const content = props.bubble.text?.content ?? ""
-
-  if (!content) {
-    return ""
-  }
-
-  return marked.parse(content, {
-    breaks: true
-  })
+  if (!content) return ""
+  return marked.parse(content, { breaks: true })
 })
 
-/*
- * Tail
- *
- * bubble.tailは配列として扱う。
- */
 const tails = computed(() => {
-  if (!Array.isArray(props.bubble.tail)) {
-    return []
-  }
-
+  if (!Array.isArray(props.bubble.tail)) return []
   return props.bubble.tail
 })
 
@@ -79,6 +50,71 @@ const stroke = computed(() =>
 const strokeWidth = computed(() =>
   borderEnabled.value ? borderWidth.value : 0
 )
+
+/*
+ * =========================
+ * Tail接続部分のマスク
+ * =========================
+ *
+ * 吹き出し本体の輪郭線を、
+ * 尻尾の根元と重なる部分だけ背景色で覆う。
+ */
+const tailMasks = computed(() => {
+  return tails.value
+    .filter(tail => (tail?.shape ?? "triangle") === "triangle")
+    .map(tail => {
+      const position = Number(tail?.position)
+      const distance = Number(tail?.distance)
+      const size = Number(tail?.size)
+
+      const angle =
+        (isNaN(position) ? 0 : Math.max(0, Math.min(360, position))) *
+        Math.PI / 180
+
+      const radius = isNaN(distance) ? 47 : Math.max(0, distance)
+      const scale = isNaN(size) ? 1 : Math.max(0, size)
+
+      const baseWidth = 6 * scale
+
+      const cos = Math.cos(angle)
+      const sin = Math.sin(angle)
+
+      const base = {
+        x: 50 + radius * cos,
+        y: 50 - radius * sin
+      }
+
+      const perpendicular = {
+        x: -sin,
+        y: -cos
+      }
+
+      const p1 = {
+        x: base.x + perpendicular.x * baseWidth,
+        y: base.y + perpendicular.y * baseWidth
+      }
+
+      const p2 = {
+        x: base.x - perpendicular.x * baseWidth,
+        y: base.y - perpendicular.y * baseWidth
+      }
+
+      const maskDepth = 10 + borderWidth.value
+
+      const inner = {
+        x: base.x - cos * maskDepth,
+        y: base.y + sin * maskDepth
+      }
+
+      return [p1, inner, p2]
+    })
+})
+
+function pointsToString(points) {
+  return points
+    .map(point => `${point.x},${point.y}`)
+    .join(" ")
+}
 </script>
 
 <template>
@@ -87,17 +123,12 @@ const strokeWidth = computed(() =>
     :class="`bubble-${shape}`"
     :style="bubbleStyle"
   >
-
     <svg
       class="bubble-svg"
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
     >
-
-      <!-- =========================
-           Square
-           ========================= -->
-
+      <!-- Square -->
       <path
         v-if="shape === 'square'"
         d="
@@ -113,11 +144,7 @@ const strokeWidth = computed(() =>
         stroke-linejoin="round"
       />
 
-
-      <!-- =========================
-           Round
-           ========================= -->
-
+      <!-- Round -->
       <ellipse
         v-else-if="shape === 'round'"
         cx="50"
@@ -129,11 +156,7 @@ const strokeWidth = computed(() =>
         :stroke-width="strokeWidth"
       />
 
-
-      <!-- =========================
-           Thought
-           ========================= -->
-
+      <!-- Thought -->
       <path
         v-else-if="shape === 'thought'"
         d="
@@ -159,11 +182,7 @@ const strokeWidth = computed(() =>
         stroke-linejoin="round"
       />
 
-
-      <!-- =========================
-           Shout
-           ========================= -->
-
+      <!-- Shout -->
       <path
         v-else-if="shape === 'shout'"
         d="
@@ -193,11 +212,7 @@ const strokeWidth = computed(() =>
         stroke-linejoin="round"
       />
 
-
-      <!-- =========================
-           Star
-           ========================= -->
-
+      <!-- Star -->
       <path
         v-else-if="shape === 'star'"
         d="
@@ -221,13 +236,17 @@ const strokeWidth = computed(() =>
         stroke-linejoin="round"
       />
 
+      <!-- Tailとの接続部分をマスク -->
+      <polygon
+        v-for="(mask, index) in tailMasks"
+        :key="index"
+        :points="pointsToString(mask)"
+        :fill="background"
+        stroke="none"
+      />
     </svg>
 
-
-    <!-- =========================
-         Tail
-         ========================= -->
-
+    <!-- Tail -->
     <Tail
       v-for="(tail, index) in tails"
       :key="index"
@@ -239,11 +258,7 @@ const strokeWidth = computed(() =>
       :border-enabled="borderEnabled"
     />
 
-
-    <!-- =========================
-         Text
-         ========================= -->
-
+    <!-- Text -->
     <div
       v-if="bubble.text"
       class="bubble-text"
@@ -254,8 +269,7 @@ const strokeWidth = computed(() =>
         writingMode: textDirection
       }"
       v-html="textHtml"
-    />
-
+    ></div>
   </div>
 </template>
 
@@ -268,38 +282,25 @@ const strokeWidth = computed(() =>
 .bubble-svg {
   position: absolute;
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   overflow: visible;
+  z-index: 1;
 }
 
 .bubble-text {
   position: absolute;
   inset: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 8px;
-
   text-align: center;
-
   text-orientation: mixed;
-
   font-size: 14px;
   line-height: 1.5;
-
   z-index: 2;
-
   pointer-events: none;
-
-  /*
-   * Markdownが生成するpなどの余白を
-   * 吹き出し内では抑える。
-   */
   white-space: normal;
 }
 
