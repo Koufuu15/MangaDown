@@ -30,6 +30,7 @@ const textStyle = () => props.editableBlock ? {
 function startResize(event, corner) {
     if (!props.editableBlock) return
     previewSelection.select(props.editableBlock)
+    event.stopPropagation()
     resizing.value = { corner, x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
 }
@@ -37,6 +38,7 @@ function startResize(event, corner) {
 function startMove(event) {
     if (!props.editableBlock || event.button !== 0) return
     previewSelection.select(props.editableBlock)
+    event.stopPropagation()
     moving.value = { x: event.clientX, y: event.clientY, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
     event.preventDefault()

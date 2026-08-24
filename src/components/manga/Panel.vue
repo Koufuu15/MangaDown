@@ -41,8 +41,14 @@ function selectTarget(target) {
   previewSelection.select(target)
 }
 
-function clearSelection() {
+function selectPanelOrClear(event) {
+  if (event.target === event.currentTarget) {
+    previewSelection.clear()
+    return
+  }
+
   previewSelection.select(props.panel)
+  startDrag(event, props.panel, "pixel")
 }
 
 function startResize(event, target, corner, unit = "pixel") {
@@ -103,7 +109,7 @@ function endDrag() {
   <div
     class="manga-panel relative shadow-sm overflow-hidden bg-white"
     :class="{ 'panel-selected': selectedTarget === props.panel }"
-    @pointerdown="clearSelection(); startDrag($event, props.panel, 'pixel')"
+    @pointerdown="selectPanelOrClear"
     @pointermove="moveDrag"
     @pointerup="endDrag"
     @pointercancel="endDrag"

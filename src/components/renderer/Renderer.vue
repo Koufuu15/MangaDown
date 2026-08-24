@@ -35,6 +35,9 @@ const previewSelection = {
     selectedElement,
     select(element) {
         selectedElement.value = element
+    },
+    clear() {
+        selectedElement.value = null
     }
 }
 provide("previewSelection", previewSelection)
@@ -51,7 +54,7 @@ function panelsForBlock(index) {
 </script>
 
 <template>
-    <div class="renderer">
+    <div class="renderer" @pointerdown="previewSelection.clear">
         <template v-for="(block,index) in blocks" :key="index">
             <MarkdownBlock
                 v-if="block.type===BLOCK_TYPES.MARKDOWN"
