@@ -366,13 +366,6 @@
   background:#f7f7f5;
 }
 
-.write-md-block-insert{
-  display:flex;
-  gap:8px;
-  max-width:760px;
-  margin:0 auto 8px;
-}
-
 .write-md-text-block-body{padding:16px}
 
 .write-md-text-block-body textarea{
@@ -413,7 +406,12 @@
   padding:14px 16px;
   background:var(--write-md-paper);
   border-bottom:2px solid var(--write-md-line);
+  cursor:grab;
+  user-select:none;
 }
+
+.write-md-card-header:active{cursor:grabbing}
+.write-md-drag-over{outline:3px dashed var(--write-md-blue);outline-offset:4px}
 
 .write-md-card-header strong{font-size:18px}
 .write-md-panel-card small{margin-left:8px;color:var(--write-md-sub);font-weight:600}

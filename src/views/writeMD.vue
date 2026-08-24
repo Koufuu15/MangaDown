@@ -57,6 +57,8 @@ if (editorBlocks.value.length === 0) {
 const panels = computed(() => editorBlocks.value.filter(block => block.type === "panel").map(block => block.panel))
 const panelGroups = computed(() => editorBlocks.value.filter(block => block.type === "panel").map(block => [block.panel]))
 const content = ref("")
+const draggingBlockIndex = ref(null)
+const dragOverBlockIndex = ref(null)
 
 const mobileView = ref("editor")
 const selectedPanel = ref(null)
@@ -127,6 +129,34 @@ function addText(index = editorBlocks.value.length) {
 function removeText(blockIndex) {
   editorBlocks.value.splice(blockIndex, 1)
   syncContent()
+}
+
+function startBlockDrag(event, blockIndex) {
+  draggingBlockIndex.value = blockIndex
+  event.dataTransfer.effectAllowed = "move"
+  event.dataTransfer.setData("text/plain", String(blockIndex))
+}
+
+function dragOverBlock(blockIndex) {
+  if (draggingBlockIndex.value !== null && draggingBlockIndex.value !== blockIndex) {
+    dragOverBlockIndex.value = blockIndex
+  }
+}
+
+function dropBlock(blockIndex) {
+  const fromIndex = draggingBlockIndex.value
+  if (fromIndex === null || fromIndex === blockIndex) return endBlockDrag()
+
+  const [block] = editorBlocks.value.splice(fromIndex, 1)
+  const targetIndex = fromIndex < blockIndex ? blockIndex - 1 : blockIndex
+  editorBlocks.value.splice(targetIndex, 0, block)
+  endBlockDrag()
+  syncContent()
+}
+
+function endBlockDrag() {
+  draggingBlockIndex.value = null
+  dragOverBlockIndex.value = null
 }
 
 function addBubble(panel) {
@@ -268,12 +298,14 @@ syncContent()
 
         <div class="write-md-form">
           <template v-for="(block, blockIndex) in editorBlocks" :key="blockIndex">
-          <div class="write-md-block-insert">
-            <button class="write-md-small-button" @click="addPanel(blockIndex)">＋ コマをここに追加</button>
-            <button class="write-md-small-button" @click="addText(blockIndex)">＋ テキストをここに追加</button>
-          </div>
-          <article v-if="block.type === 'text'" class="write-md-panel-card write-md-text-block">
-            <header class="write-md-card-header">
+          <article
+            v-if="block.type === 'text'"
+            class="write-md-panel-card write-md-text-block"
+            :class="{ 'write-md-drag-over': dragOverBlockIndex === blockIndex }"
+            @dragover.prevent="dragOverBlock(blockIndex)"
+            @drop.prevent="dropBlock(blockIndex)"
+          >
+            <header class="write-md-card-header" draggable="true" @dragstart="startBlockDrag($event, blockIndex)" @dragend="endBlockDrag">
               <div><span class="write-md-index">T</span><strong>Text</strong></div>
               <button class="write-md-icon-button" title="テキストを削除" @click="removeText(blockIndex)">×</button>
             </header>
@@ -282,8 +314,14 @@ syncContent()
             </div>
           </article>
 
-          <article v-else class="write-md-panel-card">
-            <header class="write-md-card-header">
+          <article
+            v-else
+            class="write-md-panel-card"
+            :class="{ 'write-md-drag-over': dragOverBlockIndex === blockIndex }"
+            @dragover.prevent="dragOverBlock(blockIndex)"
+            @drop.prevent="dropBlock(blockIndex)"
+          >
+            <header class="write-md-card-header" draggable="true" @dragstart="startBlockDrag($event, blockIndex)" @dragend="endBlockDrag">
               <div><span class="write-md-index">{{ String(blockIndex + 1).padStart(2, "0") }}</span><strong>Panel</strong></div>
               <button class="write-md-icon-button" title="コマを削除" @click="removePanel(blockIndex)">×</button>
             </header>
@@ -297,7 +335,7 @@ syncContent()
             <div class="write-md-component-list">
               <section v-for="(component, componentIndex) in block.panel.components" :key="componentIndex" class="write-md-component-card">
                 <template v-if="component.bubble">
-                  <div class="write-md-component-heading"><strong>吹き出し</strong><button class="write-md-remove-link" @click="removeComponent(panel, component)">削除</button></div>
+                  <div class="write-md-component-heading"><strong>吹き出し</strong><button class="write-md-remove-link" @click="removeComponent(block.panel, component)">削除</button></div>
                   <div class="write-md-fields">
                     <label>形<select v-model="component.bubble[0].shape" @change="syncContent"><option v-for="option in shapeOptions" :key="option.value" :value="option.value">{{ option.label }}</option></select></label>
                     <label>レイヤー<input v-model.number="component.bubble[0].layer" type="number" @change="syncContent"></label>
@@ -313,7 +351,7 @@ syncContent()
                   <button class="write-md-small-button" @click="addTail(component.bubble[0])">＋ しっぽを追加</button>
                 </template>
                 <template v-else-if="component.image">
-                  <div class="write-md-component-heading"><strong>画像: {{ component.image[0].name }}</strong><button class="write-md-remove-link" @click="removeComponent(panel, component)">削除</button></div>
+                  <div class="write-md-component-heading"><strong>画像: {{ component.image[0].name }}</strong><button class="write-md-remove-link" @click="removeComponent(block.panel, component)">削除</button></div>
                   <div class="write-md-fields"><label>レイヤー<input v-model.number="component.image[0].layer" type="number" @change="syncContent"></label><label>左位置 (%)<input v-model.number="component.image[0].position.x" type="number" @change="syncContent"></label><label>上位置 (%)<input v-model.number="component.image[0].position.y" type="number" @change="syncContent"></label><label>幅 (px)<input v-model.number="component.image[0].size.width" type="number" min="1" @change="syncContent"></label><label>高さ (px)<input v-model.number="component.image[0].size.height" type="number" min="1" @change="syncContent"></label></div>
                 </template>
               </section>
