@@ -25,6 +25,11 @@ function startTextDrag(event) {
   event.stopPropagation()
 }
 
+function selectBubble(event) {
+  emit("select")
+  event.stopPropagation()
+}
+
 function moveTextDrag(event) {
   if (!textDrag.value) return
   const current = textDrag.value
@@ -136,6 +141,7 @@ const strokeWidth = computed(() =>
     class="bubble"
     :class="`bubble-${shape}`"
     :style="bubbleStyle"
+    @pointerdown="selectBubble"
   >
 
     <svg

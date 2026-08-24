@@ -11,7 +11,8 @@ const props = defineProps({
 })
 
 const drag = ref(null)
-const selectedTarget = inject("previewSelection", ref(null))
+const previewSelection = inject("previewSelection")
+const selectedTarget = previewSelection.selectedElement
 
 function getPanelRect(event) {
   return event.currentTarget.closest(".manga-panel").getBoundingClientRect()
@@ -37,11 +38,11 @@ function startDrag(event, target, unit = "percent") {
 }
 
 function selectTarget(target) {
-  selectedTarget.value = target
+  previewSelection.select(target)
 }
 
 function clearSelection() {
-  selectedTarget.value = props.panel
+  previewSelection.select(props.panel)
 }
 
 function startResize(event, target, corner, unit = "pixel") {

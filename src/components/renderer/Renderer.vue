@@ -31,7 +31,13 @@ const blocks = computed(() => props.editorBlocks
     }))
     : parseMarkdown(props.content))
 const selectedElement = ref(null)
-provide("previewSelection", selectedElement)
+const previewSelection = {
+    selectedElement,
+    select(element) {
+        selectedElement.value = element
+    }
+}
+provide("previewSelection", previewSelection)
 
 function panelsForBlock(index) {
     if (!props.panelGroups) return null

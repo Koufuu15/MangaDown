@@ -17,7 +17,8 @@ const props = defineProps({
 
 const resizing = ref(null)
 const moving = ref(null)
-const selected = inject("previewSelection", ref(null))
+const previewSelection = inject("previewSelection")
+const selected = previewSelection.selectedElement
 const textStyle = () => props.editableBlock ? {
     position: "relative",
     left: `${props.editableBlock.position?.x ?? 0}px`,
@@ -28,14 +29,14 @@ const textStyle = () => props.editableBlock ? {
 
 function startResize(event, corner) {
     if (!props.editableBlock) return
-    selected.value = props.editableBlock
+    previewSelection.select(props.editableBlock)
     resizing.value = { corner, x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
 }
 
 function startMove(event) {
     if (!props.editableBlock || event.button !== 0) return
-    selected.value = props.editableBlock
+    previewSelection.select(props.editableBlock)
     moving.value = { x: event.clientX, y: event.clientY, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
     event.preventDefault()
