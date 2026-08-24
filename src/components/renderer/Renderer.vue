@@ -13,13 +13,23 @@ const props = defineProps({
         type: String,
         default: ""
     },
-    panels: {
+    panelGroups: {
         type: Array,
         default: null
     }
 })
 
 const blocks = computed(() => parseMarkdown(props.content))
+
+function panelsForBlock(index) {
+    if (!props.panelGroups) return null
+
+    const mangaIndex = blocks.value
+        .slice(0, index + 1)
+        .filter(block => block.type === BLOCK_TYPES.MANGA).length - 1
+
+    return props.panelGroups[mangaIndex] ?? []
+}
 </script>
 
 <template>
@@ -32,7 +42,7 @@ const blocks = computed(() => parseMarkdown(props.content))
             <MangaBlock
                 v-else-if="block.type===BLOCK_TYPES.MANGA"
                 :content="block.content"
-                :panels="props.panels"
+                :panels="panelsForBlock(index)"
             />
         </template>
     </div>

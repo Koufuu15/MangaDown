@@ -26,8 +26,6 @@ const assets = ref([])
 
 const initialContent = localStorage.getItem("content") ?? ""
 const initialBlocks = parseMarkdown(initialContent)
-const initialMangaBlock = initialBlocks.find(block => block.type === "manga")
-
 const createPanel = () => ({
   position: { x: 0, y: 0 },
   size: { width: 500, height: 360 },
@@ -38,16 +36,26 @@ const createPanel = () => ({
   components: []
 })
 
-const manga = ref(initialMangaBlock ? parseManga(initialMangaBlock.content).panels : [])
-if (manga.value.length === 0) manga.value.push(createPanel())
+const editorBlocks = ref([])
 
-const markdownText = ref(
-  initialBlocks
-    .filter(block => block.type === "markdown")
-    .map(block => block.content.trim())
-    .filter(Boolean)
-    .join("\n\n")
-)
+initialBlocks.forEach(block => {
+  if (block.type === "markdown" && block.content.trim()) {
+    editorBlocks.value.push({ type: "text", content: block.content.trim() })
+  }
+
+  if (block.type === "manga") {
+    parseManga(block.content).panels.forEach(panel => {
+      editorBlocks.value.push({ type: "panel", panel })
+    })
+  }
+})
+
+if (editorBlocks.value.length === 0) {
+  editorBlocks.value.push({ type: "panel", panel: createPanel() })
+}
+
+const panels = computed(() => editorBlocks.value.filter(block => block.type === "panel").map(block => block.panel))
+const panelGroups = computed(() => editorBlocks.value.filter(block => block.type === "panel").map(block => [block.panel]))
 const content = ref("")
 
 const mobileView = ref("editor")
@@ -73,23 +81,21 @@ function serializeSize(size) {
   return `{ w: ${numberValue(size?.width)}, h: ${numberValue(size?.height)} }`
 }
 
-function serializeManga() {
+function serializeManga(panel) {
   const lines = [":::manga"]
 
-  manga.value.forEach(panel => {
-    lines.push("# panel", `- backgroundColor: ${panel.backgroundColor || "#ffffff"}`, `- border: ${panel.border || "solid"}`, `- borderWidth: ${numberValue(panel.borderWidth, 2)}`, `- borderColor: ${panel.borderColor || "#18181b"}`, `- position: ${serializeObject(panel.position)}`, `- size: ${serializeSize(panel.size)}`, "")
+  lines.push("# panel", `- backgroundColor: ${panel.backgroundColor || "#ffffff"}`, `- border: ${panel.border || "solid"}`, `- borderWidth: ${numberValue(panel.borderWidth, 2)}`, `- borderColor: ${panel.borderColor || "#18181b"}`, `- position: ${serializeObject(panel.position)}`, `- size: ${serializeSize(panel.size)}`, "")
 
-    panel.components.forEach(component => {
-      const bubble = component.bubble?.[0]
-      const image = component.image?.[0]
+  panel.components.forEach(component => {
+    const bubble = component.bubble?.[0]
+    const image = component.image?.[0]
 
-      if (bubble) {
-        lines.push("## bubble", `- layer: ${numberValue(bubble.layer, 1)}`, `- shape: ${bubble.shape || "round"}`, `- background: ${bubble.background || "#ffffff"}`, `- border: ${bubble.border !== false}`, `- borderWidth: ${numberValue(bubble.borderWidth, 3)}`, `- borderColor: ${bubble.borderColor || "#111111"}`, `- position: ${serializeObject(bubble.position)}`, `- size: ${serializeSize(bubble.size)}`, "", "### text", `- content: "${String(bubble.text?.content || "").replaceAll('"', '\\"')}"`, `- font: ${bubble.text?.font || "sans-serif"}`, `- size: ${numberValue(bubble.text?.fontSize, 18)}`, `- color: ${bubble.text?.color || "#111111"}`, `- direction: ${bubble.text?.direction || "rl"}`, "")
-        ;(bubble.tail || []).forEach(tail => lines.push("### tail", `- shape: ${tail.shape || "triangle"}`, `- position: ${numberValue(tail.position)}`, `- size: ${numberValue(tail.size, 1)}`, `- distance: ${numberValue(tail.distance, 47)}`, ""))
-      }
+    if (bubble) {
+      lines.push("## bubble", `- layer: ${numberValue(bubble.layer, 1)}`, `- shape: ${bubble.shape || "round"}`, `- background: ${bubble.background || "#ffffff"}`, `- border: ${bubble.border !== false}`, `- borderWidth: ${numberValue(bubble.borderWidth, 3)}`, `- borderColor: ${bubble.borderColor || "#111111"}`, `- position: ${serializeObject(bubble.position)}`, `- size: ${serializeSize(bubble.size)}`, "", "### text", `- content: "${String(bubble.text?.content || "").replaceAll('"', '\\"')}"`, `- font: ${bubble.text?.font || "sans-serif"}`, `- size: ${numberValue(bubble.text?.fontSize, 18)}`, `- color: ${bubble.text?.color || "#111111"}`, `- direction: ${bubble.text?.direction || "rl"}`, "")
+      ;(bubble.tail || []).forEach(tail => lines.push("### tail", `- shape: ${tail.shape || "triangle"}`, `- position: ${numberValue(tail.position)}`, `- size: ${numberValue(tail.size, 1)}`, `- distance: ${numberValue(tail.distance, 47)}`, ""))
+    }
 
-      if (image) lines.push("## image", `- name: ${image.name || ""}`, `- layer: ${numberValue(image.layer)}`, `- position: ${serializeObject(image.position)}`, `- size: ${serializeSize(image.size)}`, "")
-    })
+    if (image) lines.push("## image", `- name: ${image.name || ""}`, `- layer: ${numberValue(image.layer)}`, `- position: ${serializeObject(image.position)}`, `- size: ${serializeSize(image.size)}`, "")
   })
 
   lines.push(":::")
@@ -97,20 +103,29 @@ function serializeManga() {
 }
 
 function syncContent() {
-  const parts = []
-  if (markdownText.value.trim()) parts.push(markdownText.value.trim())
-  if (manga.value.length > 0) parts.push(serializeManga())
-  content.value = parts.join("\n\n")
+  content.value = editorBlocks.value.map(block =>
+    block.type === "text" ? block.content.trim() : serializeManga(block.panel)
+  ).filter(Boolean).join("\n\n")
   localStorage.setItem("content", content.value)
 }
 
-function addPanel() {
-  manga.value.push(createPanel())
+function addPanel(index = editorBlocks.value.length) {
+  editorBlocks.value.splice(index, 0, { type: "panel", panel: createPanel() })
   syncContent()
 }
 
-function removePanel(panelIndex) {
-  manga.value.splice(panelIndex, 1)
+function removePanel(blockIndex) {
+  editorBlocks.value.splice(blockIndex, 1)
+  syncContent()
+}
+
+function addText(index = editorBlocks.value.length) {
+  editorBlocks.value.splice(index, 0, { type: "text", content: "" })
+  syncContent()
+}
+
+function removeText(blockIndex) {
+  editorBlocks.value.splice(blockIndex, 1)
   syncContent()
 }
 
@@ -141,12 +156,12 @@ function removeTail(bubble, tail) {
 }
 
 function openImagePicker() {
-  selectedPanel.value = manga.value[0]
+  selectedPanel.value = panels.value[0]
   fileInput.value?.click()
 }
 
 function openAssetPicker() {
-  selectedPanel.value = manga.value[0]
+  selectedPanel.value = panels.value[0]
   assets.value = getAllAssets()
   pickerOpen.value = true
 }
@@ -205,9 +220,9 @@ function selectAsset(asset) {
   pickerOpen.value = false
 }
 
-watch(manga, syncContent, { deep: true })
+watch(editorBlocks, syncContent, { deep: true })
 
-const panelCountLabel = computed(() => `${manga.value.length} panel${manga.value.length === 1 ? "" : "s"}`)
+const panelCountLabel = computed(() => `${panels.value.length} panel${panels.value.length === 1 ? "" : "s"}`)
 syncContent()
 </script>
 
@@ -239,6 +254,7 @@ syncContent()
           <div class="write-md-editor-toolbar">
             <button class="write-md-toolbar-button" @click="openImagePicker">画像をアップロード</button>
             <button class="write-md-toolbar-button" @click="addPanel">＋ コマを追加</button>
+            <button class="write-md-toolbar-button" @click="addText">＋ テキストを追加</button>
 
             <input
               ref="fileInput"
@@ -251,25 +267,35 @@ syncContent()
         </div>
 
         <div class="write-md-form">
-          <label class="write-md-plain-text">
-            <span>普通の文章</span>
-            <textarea v-model="markdownText" rows="5" placeholder="漫画の前後に表示する文章" @input="syncContent" />
-          </label>
-
-          <article v-for="(panel, panelIndex) in manga" :key="panelIndex" class="write-md-panel-card">
+          <template v-for="(block, blockIndex) in editorBlocks" :key="blockIndex">
+          <div class="write-md-block-insert">
+            <button class="write-md-small-button" @click="addPanel(blockIndex)">＋ コマをここに追加</button>
+            <button class="write-md-small-button" @click="addText(blockIndex)">＋ テキストをここに追加</button>
+          </div>
+          <article v-if="block.type === 'text'" class="write-md-panel-card write-md-text-block">
             <header class="write-md-card-header">
-              <div><span class="write-md-index">{{ String(panelIndex + 1).padStart(2, "0") }}</span><strong>Panel</strong></div>
-              <button class="write-md-icon-button" title="コマを削除" @click="removePanel(panelIndex)">×</button>
+              <div><span class="write-md-index">T</span><strong>Text</strong></div>
+              <button class="write-md-icon-button" title="テキストを削除" @click="removeText(blockIndex)">×</button>
+            </header>
+            <div class="write-md-text-block-body">
+              <textarea v-model="block.content" rows="5" placeholder="普通の文章を入力" @input="syncContent" />
+            </div>
+          </article>
+
+          <article v-else class="write-md-panel-card">
+            <header class="write-md-card-header">
+              <div><span class="write-md-index">{{ String(blockIndex + 1).padStart(2, "0") }}</span><strong>Panel</strong></div>
+              <button class="write-md-icon-button" title="コマを削除" @click="removePanel(blockIndex)">×</button>
             </header>
             <div class="write-md-fields">
-              <label>背景色<input v-model="panel.backgroundColor" type="color" @change="syncContent"></label>
-              <label>枠線<select v-model="panel.border" @change="syncContent"><option value="solid">実線</option><option value="dashed">破線</option><option value="none">なし</option></select></label>
-              <label>枠線幅<input v-model.number="panel.borderWidth" type="number" min="0" step="1" @change="syncContent"></label>
-              <label>幅 (px)<input v-model.number="panel.size.width" type="number" min="1" @change="syncContent"></label>
-              <label>高さ (px)<input v-model.number="panel.size.height" type="number" min="1" @change="syncContent"></label>
+              <label>背景色<input v-model="block.panel.backgroundColor" type="color" @change="syncContent"></label>
+              <label>枠線<select v-model="block.panel.border" @change="syncContent"><option value="solid">実線</option><option value="dashed">破線</option><option value="none">なし</option></select></label>
+              <label>枠線幅<input v-model.number="block.panel.borderWidth" type="number" min="0" step="1" @change="syncContent"></label>
+              <label>幅 (px)<input v-model.number="block.panel.size.width" type="number" min="1" @change="syncContent"></label>
+              <label>高さ (px)<input v-model.number="block.panel.size.height" type="number" min="1" @change="syncContent"></label>
             </div>
             <div class="write-md-component-list">
-              <section v-for="(component, componentIndex) in panel.components" :key="componentIndex" class="write-md-component-card">
+              <section v-for="(component, componentIndex) in block.panel.components" :key="componentIndex" class="write-md-component-card">
                 <template v-if="component.bubble">
                   <div class="write-md-component-heading"><strong>吹き出し</strong><button class="write-md-remove-link" @click="removeComponent(panel, component)">削除</button></div>
                   <div class="write-md-fields">
@@ -292,8 +318,9 @@ syncContent()
                 </template>
               </section>
             </div>
-            <footer class="write-md-card-actions"><button class="write-md-small-button" @click="addBubble(panel)">＋ 吹き出し</button><button class="write-md-small-button" @click="addImage(panel)">＋ 画像</button></footer>
+            <footer class="write-md-card-actions"><button class="write-md-small-button" @click="addBubble(block.panel)">＋ 吹き出し</button><button class="write-md-small-button" @click="addImage(block.panel)">＋ 画像</button></footer>
           </article>
+          </template>
         </div>
       </section>
 
@@ -306,7 +333,7 @@ syncContent()
         </div>
 
         <div class="write-md-preview">
-          <Renderer :content="content" :panels="manga" />
+          <Renderer :content="content" :panel-groups="panelGroups" />
         </div>
       </section>
     </main>
