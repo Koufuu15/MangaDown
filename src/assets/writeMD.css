@@ -662,3 +662,8 @@
   cursor:nwse-resize;
   touch-action:none;
 }
+
+.markdown-selected{
+  outline:2px dashed #2563eb;
+  outline-offset:3px;
+}

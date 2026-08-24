@@ -17,6 +17,7 @@ const props = defineProps({
 
 const resizing = ref(null)
 const moving = ref(null)
+const selected = ref(false)
 const textStyle = () => props.editableBlock ? {
     position: "relative",
     left: `${props.editableBlock.position?.x ?? 0}px`,
@@ -27,12 +28,14 @@ const textStyle = () => props.editableBlock ? {
 
 function startResize(event) {
     if (!props.editableBlock) return
+    selected.value = true
     resizing.value = { x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight }
     event.currentTarget.setPointerCapture?.(event.pointerId)
 }
 
 function startMove(event) {
     if (!props.editableBlock || event.button !== 0) return
+    selected.value = true
     moving.value = { x: event.clientX, y: event.clientY, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
     event.preventDefault()
@@ -59,9 +62,9 @@ function endResize() {
 
 <template>
 
-<div class="markdown-preview-item" :style="textStyle()" @pointerdown="startMove" @pointermove="moveBlock" @pointerup="endMove" @pointercancel="endMove">
+<div class="markdown-preview-item" :class="{ 'markdown-selected': selected }" :style="textStyle()" @pointerdown="startMove" @pointermove="moveBlock" @pointerup="endMove" @pointercancel="endMove">
     <div class="markdown" v-html="marked.parse(content, {breaks: true})" />
-    <span v-if="editableBlock" class="markdown-resize-handle" @pointerdown.stop="startResize" @pointermove="moveResize" @pointerup="endResize" @pointercancel="endResize" />
+    <span v-if="editableBlock && selected" class="markdown-resize-handle" @pointerdown.stop="startResize" @pointermove="moveResize" @pointerup="endResize" @pointercancel="endResize" />
 </div>
 
 </template>

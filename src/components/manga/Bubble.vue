@@ -10,12 +10,15 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(["select"])
+
 const textDrag = ref(null)
 const tailDrag = ref(null)
 
 function startTextDrag(event) {
   if (event.button !== 0) return
   const rect = event.currentTarget.closest(".bubble").getBoundingClientRect()
+  emit("select")
   textDrag.value = { x: event.clientX, y: event.clientY, rect, startX: props.bubble.text.position?.x ?? 0, startY: props.bubble.text.position?.y ?? 0 }
   event.currentTarget.setPointerCapture?.(event.pointerId)
   event.preventDefault()
@@ -35,6 +38,7 @@ function endTextDrag() {
 function startTailDrag(event, tail) {
   if (event.button !== 0) return
   const rect = event.currentTarget.closest(".bubble").getBoundingClientRect()
+  emit("select")
   tailDrag.value = { tail, rect }
   event.currentTarget.setPointerCapture?.(event.pointerId)
   event.preventDefault()

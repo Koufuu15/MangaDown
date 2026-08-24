@@ -11,6 +11,7 @@ const props = defineProps({
 })
 
 const drag = ref(null)
+const selectedTarget = ref(null)
 
 function getPanelRect(event) {
   return event.currentTarget.closest(".manga-panel").getBoundingClientRect()
@@ -33,6 +34,14 @@ function startDrag(event, target, unit = "percent") {
   }
   event.currentTarget.setPointerCapture?.(event.pointerId)
   event.preventDefault()
+}
+
+function selectTarget(target) {
+  selectedTarget.value = target
+}
+
+function clearSelection(event) {
+  if (event.target === event.currentTarget) selectedTarget.value = props.panel
 }
 
 function startResize(event, target) {
@@ -83,7 +92,8 @@ function endDrag() {
 <template>
   <div
     class="manga-panel relative shadow-sm overflow-hidden bg-white"
-    @pointerdown="startDrag($event, props.panel, 'pixel')"
+    :class="{ 'panel-selected': selectedTarget === props.panel }"
+    @pointerdown="clearSelection($event); startDrag($event, props.panel, 'pixel')"
     @pointermove="moveDrag"
     @pointerup="endDrag"
     @pointercancel="endDrag"
@@ -99,6 +109,7 @@ function endDrag() {
     }"
   >
     <span
+      v-if="selectedTarget === props.panel"
       class="panel-resize-handle"
       @pointerdown.stop="startResize($event, props.panel)"
       @pointermove="moveDrag"
@@ -119,13 +130,15 @@ function endDrag() {
         :style="{
           zIndex: bubble.layer
         }"
-        @pointerdown.stop="startDrag($event, bubble)"
+        :class="{ 'element-selected': selectedTarget === bubble }"
+        @pointerdown.stop="selectTarget(bubble); startDrag($event, bubble)"
+        @select="selectTarget(bubble)"
         @pointermove="moveDrag"
         @pointerup="endDrag"
         @pointercancel="endDrag"
       />
       <span
-        v-if="component.bubble"
+        v-if="component.bubble && selectedTarget === bubble"
         v-for="bubble in component.bubble"
         :key="`bubble-resize-${index}`"
         class="element-resize-handle"
@@ -150,13 +163,14 @@ function endDrag() {
           height: (image.size?.height ?? 100) + 'px',
           zIndex: image.layer
         }"
-        @pointerdown.stop="startDrag($event, image)"
+        :class="{ 'element-selected': selectedTarget === image }"
+        @pointerdown.stop="selectTarget(image); startDrag($event, image)"
         @pointermove="moveDrag"
         @pointerup="endDrag"
         @pointercancel="endDrag"
       />
       <span
-        v-if="component.image"
+        v-if="component.image && selectedTarget === image"
         v-for="image in component.image"
         :key="`image-resize-${index}`"
         class="element-resize-handle"
@@ -177,6 +191,16 @@ img {
   cursor: grab;
   touch-action: none;
   user-select: none;
+}
+
+.element-selected {
+  outline: 2px dashed #2563eb;
+  outline-offset: 3px;
+}
+
+.panel-selected {
+  outline: 2px dashed #2563eb;
+  outline-offset: 3px;
 }
 
 .bubble:active,
