@@ -15,17 +15,17 @@
   border-bottom: 2px solid var(--line, #18181b);
 }
 
-.save-header-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.save-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.save-logo{
-  width:42px;
-  height:42px;
-  object-fit:contain;
-  flex-shrink:0;
+.save-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .save-title {
@@ -101,35 +101,35 @@
 
 .save-copy-button {
   padding: 7px 11px;
-  display:flex;
-  align-items:center;
-  gap:7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
-.save-copy-button svg{
-  color:#e53935;
-  width:15px;
-  height:15px;
-  flex-shrink:0;
+.save-copy-button svg {
+  color: #e53935;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .save-view-toggle {
-  display:flex;
-  z-index:150;
-  padding:2px;
-  background:#fff;
-  border:2px solid var(--line, #18181b);
+  display: flex;
+  z-index: 150;
+  padding: 2px;
+  background: #fff;
+  border: 2px solid var(--line, #18181b);
 }
 
 .save-view-option {
-  min-width:86px;
-  padding:7px 12px;
-  border:0;
-  background:transparent;
-  font-size:13px;
-  font-weight:800;
-  cursor:pointer;
-  transition:.18s;
+  min-width: 86px;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.18s;
 }
 
 .save-view-option + .save-view-option {
@@ -148,15 +148,22 @@
 .save-copy-button:hover,
 .save-action-button:hover,
 .save-back:hover {
-  transform:translateY(-2px);
-  box-shadow:5px 5px 0 #111111;
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 #111111;
+}
+
+.save-action-button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
 }
 
 .save-preview {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 0 24px 0 24px;
+  padding: 0 24px;
   background: #fafaf9;
   box-sizing: border-box;
 }
@@ -236,6 +243,23 @@
 .save-action-button {
   min-height: 52px;
   padding: 12px 14px;
+}
+
+.save-share-status {
+  min-height: 22px;
+  margin-top: 14px;
+  text-align: center;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.save-share-note {
+  margin: 10px 0 0;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 .save-action-group:nth-child(2) .save-button-grid {
@@ -354,7 +378,7 @@
   }
 
   .save-preview {
-    padding: 0px 16px 16px 16px;
+    padding: 0 16px 16px;
   }
 
   .save-preview .renderer {
@@ -368,5 +392,13 @@
 
   .save-back {
     margin-top: 12px;
+  }
+
+  .save-share-status {
+    margin-top: 12px;
+  }
+
+  .save-share-note {
+    font-size: 11px;
   }
 }
