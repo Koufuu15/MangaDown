@@ -83,7 +83,7 @@ function endDrag() {
 <template>
   <div
     class="manga-panel relative shadow-sm overflow-hidden bg-white"
-    @pointerdown.self="startDrag($event, props.panel, 'pixel')"
+    @pointerdown="startDrag($event, props.panel, 'pixel')"
     @pointermove="moveDrag"
     @pointerup="endDrag"
     @pointercancel="endDrag"

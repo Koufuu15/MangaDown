@@ -1,3 +1,5 @@
+import parseObject from "../utils/parseObject"
+
 export default function parseText(
   bubble,
   key,
@@ -30,6 +32,10 @@ export default function parseText(
       } else {
         bubble.text.direction = value
       }
+      break
+
+    case "position":
+      bubble.text.position = parseObject(value)
       break
   }
 }

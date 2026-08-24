@@ -45,6 +45,10 @@ initialBlocks.forEach(block => {
 
   if (block.type === "manga") {
     parseManga(block.content).panels.forEach(panel => {
+      panel.components.forEach(component => {
+        const bubble = component.bubble?.[0]
+        if (bubble?.text && !bubble.text.position) bubble.text.position = { x: 0, y: 0 }
+      })
       editorBlocks.value.push({ type: "panel", panel })
     })
   }
@@ -93,7 +97,7 @@ function serializeManga(panel) {
     const image = component.image?.[0]
 
     if (bubble) {
-      lines.push("## bubble", `- layer: ${numberValue(bubble.layer, 1)}`, `- shape: ${bubble.shape || "round"}`, `- background: ${bubble.background || "#ffffff"}`, `- border: ${bubble.border !== false}`, `- borderWidth: ${numberValue(bubble.borderWidth, 3)}`, `- borderColor: ${bubble.borderColor || "#111111"}`, `- position: ${serializeObject(bubble.position)}`, `- size: ${serializeSize(bubble.size)}`, "", "### text", `- content: "${String(bubble.text?.content || "").replaceAll('"', '\\"')}"`, `- font: ${bubble.text?.font || "sans-serif"}`, `- size: ${numberValue(bubble.text?.fontSize, 18)}`, `- color: ${bubble.text?.color || "#111111"}`, `- direction: ${bubble.text?.direction || "rl"}`, "")
+      lines.push("## bubble", `- layer: ${numberValue(bubble.layer, 1)}`, `- shape: ${bubble.shape || "round"}`, `- background: ${bubble.background || "#ffffff"}`, `- border: ${bubble.border !== false}`, `- borderWidth: ${numberValue(bubble.borderWidth, 3)}`, `- borderColor: ${bubble.borderColor || "#111111"}`, `- position: ${serializeObject(bubble.position)}`, `- size: ${serializeSize(bubble.size)}`, "", "### text", `- content: "${String(bubble.text?.content || "").replaceAll('"', '\\"')}"`, `- font: ${bubble.text?.font || "sans-serif"}`, `- size: ${numberValue(bubble.text?.fontSize, 18)}`, `- color: ${bubble.text?.color || "#111111"}`, `- direction: ${bubble.text?.direction || "rl"}`, `- position: ${serializeObject(bubble.text?.position)}`, "")
       ;(bubble.tail || []).forEach(tail => lines.push("### tail", `- shape: ${tail.shape || "triangle"}`, `- position: ${numberValue(tail.position)}`, `- size: ${numberValue(tail.size, 1)}`, `- distance: ${numberValue(tail.distance, 47)}`, ""))
     }
 
@@ -160,7 +164,7 @@ function endBlockDrag() {
 }
 
 function addBubble(panel) {
-  panel.components.push({ bubble: [{ layer: 1, shape: "round", background: "#ffffff", border: true, borderWidth: 3, borderColor: "#111111", position: { x: 20, y: 15 }, size: { width: 200, height: 100 }, text: { content: "", font: "sans-serif", fontSize: 18, color: "#111111", direction: "rl" }, tail: [] }] })
+  panel.components.push({ bubble: [{ layer: 1, shape: "round", background: "#ffffff", border: true, borderWidth: 3, borderColor: "#111111", position: { x: 20, y: 15 }, size: { width: 200, height: 100 }, text: { content: "", font: "sans-serif", fontSize: 18, color: "#111111", direction: "rl", position: { x: 0, y: 0 } }, tail: [] }] })
   syncContent()
 }
 
@@ -346,7 +350,7 @@ syncContent()
                     <label>塗り<input v-model="component.bubble[0].background" type="color" @change="syncContent"></label>
                     <label>枠線<select v-model="component.bubble[0].border" @change="syncContent"><option :value="true">表示</option><option :value="false">非表示</option></select></label>
                   </div>
-                  <div class="write-md-text-editor"><strong>本文</strong><textarea v-model="component.bubble[0].text.content" rows="2" placeholder="吹き出しの文章" @input="syncContent" /><div class="write-md-fields"><label>文字サイズ<input v-model.number="component.bubble[0].text.fontSize" type="number" min="1" @change="syncContent"></label><label>方向<select v-model="component.bubble[0].text.direction" @change="syncContent"><option value="rl">横書き</option><option value="tb">縦書き</option></select></label></div></div>
+                  <div class="write-md-text-editor"><strong>本文</strong><textarea v-model="component.bubble[0].text.content" rows="2" placeholder="吹き出しの文章" @input="syncContent" /><div class="write-md-fields"><label>文字サイズ<input v-model.number="component.bubble[0].text.fontSize" type="number" min="1" @change="syncContent"></label><label>方向<select v-model="component.bubble[0].text.direction" @change="syncContent"><option value="rl">横書き</option><option value="tb">縦書き</option></select></label><label>本文 X (%)<input v-model.number="component.bubble[0].text.position.x" type="number" @change="syncContent"></label><label>本文 Y (%)<input v-model.number="component.bubble[0].text.position.y" type="number" @change="syncContent"></label></div></div>
                   <div v-for="(tail, tailIndex) in component.bubble[0].tail" :key="tailIndex" class="write-md-tail-row"><select v-model="tail.shape" @change="syncContent"><option value="triangle">三角</option><option value="circle">丸</option></select><label>角度<input v-model.number="tail.position" type="number" min="0" max="360" @change="syncContent"></label><label>倍率<input v-model.number="tail.size" type="number" min="0" step="0.1" @change="syncContent"></label><label>距離<input v-model.number="tail.distance" type="number" min="0" @change="syncContent"></label><button class="write-md-remove-link" @click="removeTail(component.bubble[0], tail)">削除</button></div>
                   <button class="write-md-small-button" @click="addTail(component.bubble[0])">＋ しっぽを追加</button>
                 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { marked } from "marked"
 import Tail from "./Tail.vue"
 
@@ -9,6 +9,52 @@ const props = defineProps({
     required: true
   }
 })
+
+const textDrag = ref(null)
+const tailDrag = ref(null)
+
+function startTextDrag(event) {
+  if (event.button !== 0) return
+  const rect = event.currentTarget.closest(".bubble").getBoundingClientRect()
+  textDrag.value = { x: event.clientX, y: event.clientY, rect, startX: props.bubble.text.position?.x ?? 0, startY: props.bubble.text.position?.y ?? 0 }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  event.preventDefault()
+  event.stopPropagation()
+}
+
+function moveTextDrag(event) {
+  if (!textDrag.value) return
+  const current = textDrag.value
+  props.bubble.text.position = { x: current.startX + (event.clientX - current.x) / current.rect.width * 100, y: current.startY + (event.clientY - current.y) / current.rect.height * 100 }
+}
+
+function endTextDrag() {
+  textDrag.value = null
+}
+
+function startTailDrag(event, tail) {
+  if (event.button !== 0) return
+  const rect = event.currentTarget.closest(".bubble").getBoundingClientRect()
+  tailDrag.value = { tail, rect }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  event.preventDefault()
+  event.stopPropagation()
+}
+
+function moveTailDrag(event) {
+  if (!tailDrag.value) return
+  const { tail, rect } = tailDrag.value
+  const centerX = rect.left + rect.width / 2
+  const centerY = rect.top + rect.height / 2
+  const deltaX = event.clientX - centerX
+  const deltaY = centerY - event.clientY
+  tail.position = (Math.atan2(deltaY, deltaX) * 180 / Math.PI + 360) % 360
+  tail.distance = Math.min(100, Math.max(0, Math.sqrt(deltaX ** 2 + deltaY ** 2) / Math.min(rect.width, rect.height) * 100))
+}
+
+function endTailDrag() {
+  tailDrag.value = null
+}
 
 const shape = computed(() => props.bubble.shape ?? "round")
 const background = computed(() => props.bubble.background ?? "#ffffff")
@@ -237,6 +283,10 @@ const strokeWidth = computed(() =>
       :border-color="borderColor"
       :border-width="borderWidth"
       :border-enabled="borderEnabled"
+      @pointerdown="startTailDrag($event, tail)"
+      @pointermove="moveTailDrag"
+      @pointerup="endTailDrag"
+      @pointercancel="endTailDrag"
     />
 
 
@@ -251,9 +301,15 @@ const strokeWidth = computed(() =>
         fontSize: bubble.text.fontSize,
         color: bubble.text.color,
         fontFamily: bubble.text.font,
-        writingMode: textDirection
+        writingMode: textDirection,
+        left: `${bubble.text.position?.x ?? 0}%`,
+        top: `${bubble.text.position?.y ?? 0}%`
       }"
       v-html="textHtml"
+      @pointerdown="startTextDrag"
+      @pointermove="moveTextDrag"
+      @pointerup="endTextDrag"
+      @pointercancel="endTextDrag"
     />
 
   </div>
@@ -267,7 +323,8 @@ const strokeWidth = computed(() =>
 
 .bubble-svg {
   position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
 
   width: 100%;
   height: 100%;
@@ -277,7 +334,8 @@ const strokeWidth = computed(() =>
 
 .bubble-text {
   position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
 
   display: flex;
   align-items: center;
@@ -294,7 +352,7 @@ const strokeWidth = computed(() =>
 
   z-index: 2;
 
-  pointer-events: none;
+  pointer-events: auto;
 
   /*
    * Markdownが生成するpなどの余白を

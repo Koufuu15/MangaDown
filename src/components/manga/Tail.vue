@@ -33,6 +33,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(["pointerdown", "pointermove", "pointerup", "pointercancel"])
+
 /*
  * =========================
  * Tail設定
@@ -307,6 +309,10 @@ function pointsToString(points) {
     class="bubble-tail"
     viewBox="0 0 100 100"
     preserveAspectRatio="none"
+    @pointerdown="emit('pointerdown', $event)"
+    @pointermove="emit('pointermove', $event)"
+    @pointerup="emit('pointerup', $event)"
+    @pointercancel="emit('pointercancel', $event)"
   >
 
     <!-- =========================
@@ -359,5 +365,10 @@ function pointsToString(points) {
   pointer-events: none;
 
   z-index: 1;
+}
+
+.bubble-tail polygon,
+.bubble-tail circle {
+  pointer-events: visiblePainted;
 }
 </style>
