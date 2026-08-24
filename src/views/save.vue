@@ -19,7 +19,7 @@ const previewRef = ref(null)
 
 const { copyMarkdown, copyImage } = useClipboard(previewRef, markdown)
 const { exportMarkdown, exportPNG, exportPDF } = useExport(previewRef, markdown)
-const { shareX, shareFacebook, shareNative } = useShare(copyImage)
+const { shareX, shareFacebook, shareNative } = useShare(previewRef, copyImage)
 
 const toggleView = () => {
   activeView.value = activeView.value === "preview" ? "markdown" : "preview"
