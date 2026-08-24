@@ -5,10 +5,14 @@ import Viewer from "../manga/Viewer.vue"
 import parseManga from "@/parser/manga/parseManga"
 
 const props=defineProps({
-    content:String
+    content:String,
+    panels: {
+        type: Array,
+        default: null
+    }
 })
 
-const manga=computed(()=>parseManga(props.content))
+const manga=computed(()=>props.panels ? { panels: props.panels } : parseManga(props.content))
 </script>
 
 <template>

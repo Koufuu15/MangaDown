@@ -1,7 +1,7 @@
 <script setup>
 import "../assets/writeMD.css"
 
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 
 import Renderer from "@/components/renderer/Renderer.vue"
@@ -25,7 +25,8 @@ const selectedFile = ref(null)
 const assets = ref([])
 
 const initialContent = localStorage.getItem("content") ?? ""
-const initialMangaBlock = parseMarkdown(initialContent).find(block => block.type === "manga")
+const initialBlocks = parseMarkdown(initialContent)
+const initialMangaBlock = initialBlocks.find(block => block.type === "manga")
 
 const createPanel = () => ({
   position: { x: 0, y: 0 },
@@ -40,6 +41,13 @@ const createPanel = () => ({
 const manga = ref(initialMangaBlock ? parseManga(initialMangaBlock.content).panels : [])
 if (manga.value.length === 0) manga.value.push(createPanel())
 
+const markdownText = ref(
+  initialBlocks
+    .filter(block => block.type === "markdown")
+    .map(block => block.content.trim())
+    .filter(Boolean)
+    .join("\n\n")
+)
 const content = ref("")
 
 const mobileView = ref("editor")
@@ -89,7 +97,10 @@ function serializeManga() {
 }
 
 function syncContent() {
-  content.value = serializeManga()
+  const parts = []
+  if (markdownText.value.trim()) parts.push(markdownText.value.trim())
+  if (manga.value.length > 0) parts.push(serializeManga())
+  content.value = parts.join("\n\n")
   localStorage.setItem("content", content.value)
 }
 
@@ -99,7 +110,6 @@ function addPanel() {
 }
 
 function removePanel(panelIndex) {
-  if (manga.value.length === 1) return
   manga.value.splice(panelIndex, 1)
   syncContent()
 }
@@ -195,6 +205,8 @@ function selectAsset(asset) {
   pickerOpen.value = false
 }
 
+watch(manga, syncContent, { deep: true })
+
 const panelCountLabel = computed(() => `${manga.value.length} panel${manga.value.length === 1 ? "" : "s"}`)
 syncContent()
 </script>
@@ -239,10 +251,15 @@ syncContent()
         </div>
 
         <div class="write-md-form">
+          <label class="write-md-plain-text">
+            <span>普通の文章</span>
+            <textarea v-model="markdownText" rows="5" placeholder="漫画の前後に表示する文章" @input="syncContent" />
+          </label>
+
           <article v-for="(panel, panelIndex) in manga" :key="panelIndex" class="write-md-panel-card">
             <header class="write-md-card-header">
               <div><span class="write-md-index">{{ String(panelIndex + 1).padStart(2, "0") }}</span><strong>Panel</strong></div>
-              <button class="write-md-icon-button" :disabled="manga.length === 1" title="コマを削除" @click="removePanel(panelIndex)">×</button>
+              <button class="write-md-icon-button" title="コマを削除" @click="removePanel(panelIndex)">×</button>
             </header>
             <div class="write-md-fields">
               <label>背景色<input v-model="panel.backgroundColor" type="color" @change="syncContent"></label>
@@ -289,7 +306,7 @@ syncContent()
         </div>
 
         <div class="write-md-preview">
-          <Renderer :content="content" />
+          <Renderer :content="content" :panels="manga" />
         </div>
       </section>
     </main>

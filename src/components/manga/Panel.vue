@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue"
 import { resolveAsset } from "@/utils/assetResolver"
 import Bubble from "./Bubble.vue"
 
@@ -8,6 +9,40 @@ defineProps({
     required: true
   }
 })
+
+const drag = ref(null)
+
+function startDrag(event, target) {
+  if (event.button !== 0) return
+
+  const panelElement = event.currentTarget.closest(".relative")
+  const rect = panelElement.getBoundingClientRect()
+  drag.value = {
+    target,
+    startX: event.clientX,
+    startY: event.clientY,
+    x: target.position?.x ?? 0,
+    y: target.position?.y ?? 0,
+    width: rect.width,
+    height: rect.height
+  }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  event.preventDefault()
+}
+
+function moveDrag(event) {
+  if (!drag.value) return
+
+  const current = drag.value
+  current.target.position = {
+    x: current.x + (event.clientX - current.startX) / current.width * 100,
+    y: current.y + (event.clientY - current.startY) / current.height * 100
+  }
+}
+
+function endDrag() {
+  drag.value = null
+}
 </script>
 
 <template>
@@ -38,6 +73,10 @@ defineProps({
         :style="{
           zIndex: bubble.layer
         }"
+        @pointerdown="startDrag($event, bubble)"
+        @pointermove="moveDrag"
+        @pointerup="endDrag"
+        @pointercancel="endDrag"
       />
 
       <!-- Image -->
@@ -54,6 +93,10 @@ defineProps({
           height: (image.size?.height ?? 100) + 'px',
           zIndex: image.layer
         }"
+        @pointerdown="startDrag($event, image)"
+        @pointermove="moveDrag"
+        @pointerup="endDrag"
+        @pointercancel="endDrag"
       />
 
     </template>
@@ -61,6 +104,18 @@ defineProps({
 </template>
 
 <style scoped>
+.bubble,
+img {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.bubble:active,
+img:active {
+  cursor: grabbing;
+}
+
 p {
   margin: 0;
   word-break: break-word;

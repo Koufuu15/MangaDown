@@ -12,6 +12,10 @@ const props = defineProps({
     content: {
         type: String,
         default: ""
+    },
+    panels: {
+        type: Array,
+        default: null
     }
 })
 
@@ -28,6 +32,7 @@ const blocks = computed(() => parseMarkdown(props.content))
             <MangaBlock
                 v-else-if="block.type===BLOCK_TYPES.MANGA"
                 :content="block.content"
+                :panels="props.panels"
             />
         </template>
     </div>
