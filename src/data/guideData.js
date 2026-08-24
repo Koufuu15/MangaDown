@@ -4,35 +4,40 @@ export default [
     title: "はじめに",
     description:
       "MangaDownでは、通常のMarkdownの中に:::mangaブロックを置いて漫画を作ります。",
-    code: `# 漫画の説明
-
-通常のMarkdown本文はそのまま表示されます。
+    code: `# 【初心者向け】HTTPSとは？
+---
+Webサイトを見ていると、URLの先頭に https:// と表示されていることがあります。
+HTTPSは、Webブラウザとサーバーの間でやり取りするデータを安全に送受信するための仕組みです。
 
 :::manga
 # panel
 - backgroundColor: #f4f0e8
 - position: { x: 0, y: 0 }
-- size: { w: 300, h: 200 }
+- size: { w: 300, h: 300 }
 
 ## bubble
-- layer: 1
+- layer: 2
 - shape: round
-- position: { x: 20, y: 18 }
-- size: { w: 200, h: 100 }
+- position: { x: 5, y: 10 }
+- size: { w: 150, h: 90 }
+
+### tail
+- position: 320
 
 ### text
-- content: "こんにちは！"
 - font: UTF-8
-- size: 18
+- size: 14
 - color: black
 - position: { x: 0, y: 0 }
+HTTPSでは、
+通信が<span style="color: red;">**暗号化**</span>
+されるんだ！
 
 ## image
-- name: boy_arm
-- layer: 0
-- position: { x: 20, y: 20 }
-- size: { w: 150, h: 150 }
-
+- name: girl_standing
+- layer: 1
+- position: { x: 55, y: 23 }
+- size: { w: 120, h: 220 }
 :::`
   },
 
@@ -47,26 +52,35 @@ export default [
 - border: solid
 - borderWidth: 2
 - borderColor: #333333
-- position: { x: 0, y: 0 }
-- size: { w: 300, h: 300 }
+- position: { x: -80, y: 15 }
+- size: { w: 150, h: 150 }
+
+# panel
+- backgroundColor: pink
+- border: dotted
+- borderWidth: 2
+- borderColor: rgb(51, 51, 51)
+- size: { w: 150, h: 150 }
+
+# panel
+- backgroundColor: lightblue
+- border: dashed
+- borderWidth: 2
+- borderColor: gray
+- position: { x: 80, y: -333 }
+- size: { w: 150, h: 150 }
 :::`,
     properties: [
       {
         name: "backgroundColor",
         type: "string",
         description: "背景色",
-        default: "表示側の既定色"
-      },
-      {
-        name: "backgroundImage",
-        type: "string",
-        description: "背景画像の値",
-        default: "なし"
+        default: "#ffffff"
       },
       {
         name: "border",
         type: "string",
-        description: "枠線のスタイル",
+        description: "solid/dotted/dashed",
         default: "solid"
       },
       {
@@ -103,15 +117,42 @@ export default [
       "BubbleはPanelの中に吹き出しを追加します。本文を表示するには、子要素としてtextを置きます。",
     code: `:::manga
 # panel
+- position: { x: 0, y: 10 }
 - size: { w: 300, h: 300 }
 
 ## bubble
 - layer: 1
 - shape: thought
-- background: #ffffff
+- background: #c7e7f4
 - border: true
-- position: { x: 25, y: 20 }
-- size: { w: 220, h: 120 }
+- position: { x: 0, y: 0 }
+- size: { w: 180, h: 120 }
+
+## bubble
+- layer: 2
+- shape: square
+- background: lightgreen
+- border: true
+- borderWidth: 1
+- position: { x: 45, y: 20 }
+- size: { w: 150, h: 100 }
+
+## bubble
+- layer: 3
+- shape: star
+- background: purple
+- border: none
+- position: { x: 0, y: 30 }
+- size: { w: 200, h: 150 }
+
+## bubble
+- layer: 4
+- shape: shout
+- background: #ffdab3
+- border: true
+- borderColor: gray
+- position: { x: 40, y: 58 }
+- size: { w: 170, h: 120 }
 :::`,
     properties: [
       {
@@ -169,21 +210,43 @@ export default [
     id: "text",
     title: "Text",
     description:
-      "TextはBubbleの中に配置します。contentは属性として書くほか、属性でない行を本文として書くこともできます。",
+      "TextはBubbleの中に配置します。文章はcontentの中に書くほか、\
+      何の属性もつけずに書くこともできます。マークダウンや改行も反映されます。",
     code: `:::manga
 # panel
+- position: { x: 0, y: 10 }
 - size: { w: 300, h: 300 }
+- backgroundColor: #ccefff
 
 ## bubble
-- position: { x: 25, y: 20 }
-- size: { w: 220, h: 120 }
+- shape: square
+- position: { x: 50, y: 2 }
+- size: { w: 140, h: 40 }
 
 ### text
-- size: 20
+- size: 13
 - color: #111111
 - direction: rl
-これは本文です。
-複数行も書けます。
+**①sshへの接続**
+
+## bubble
+- shape: square
+- position: { x: 5, y: 5 }
+- size: { w: 40, h: 300 }
+- background: transparent
+- border: none
+
+### text
+- size: 18
+- color: 
+- direction: tb
+CUIを用いて操作します。
+
+## image
+- name: terminal-cli
+- layer: 1
+- position: { x:15, y: 10 }
+- size: { w: 250, h: 250 }
 :::`,
     properties: [
       {
@@ -191,12 +254,6 @@ export default [
         type: "string",
         description: "表示する文章。Markdownとして描画",
         default: "空文字列"
-      },
-      {
-        name: "font",
-        type: "string",
-        description: "フォント名",
-        default: "実装依存"
       },
       {
         name: "size",
@@ -232,20 +289,45 @@ export default [
       "TailはBubbleのしっぽです。1つのBubbleに複数追加できます。",
     code: `:::manga
 # panel
+- position: { x: 0, y: 10 }
 - size: { w: 300, h: 300 }
 
 ## bubble
-- position: { x: 30, y: 20 }
-- size: { w: 220, h: 120 }
+- position: { x: 5, y: 65 }
+- size: { w: 180, h: 80 }
+- background: pink
 
 ### text
-- content: "右下を指す吹き出し"
+- content: "**Wi-Fiが遅いんです!**"
 
 ### tail
 - shape: triangle
 - position: 225
 - size: 1
 - distance: 47
+
+### tail
+- shape: triangle
+- position: 250
+- size: 1
+- distance: 47
+
+## bubble
+- shape: thought
+- position: { x: 15, y: 5 }
+- size: { w: 230, h: 160 }
+- background: lightblue
+
+### text
+**どの端末？いつから？
+もっと詳しく
+教えてくれ、、、**
+
+### tail
+- shape: circle
+- position: 310
+- size: 1.5
+- distance: 40
 :::`,
     properties: [
       {
@@ -316,34 +398,6 @@ export default [
         description: "サイズ。単位はpx",
         default: "{ w: 100, h: 100 }"
       }
-    ]
-  },
-
-  {
-    id: "layer-position-size",
-    title: "共通ルール",
-    description:
-      "位置・サイズ・重なり順は、要素を調整するときに最もよく使う属性です。単位の違いに注意してください。",
-    code: `:::manga
-# panel
-- position: { x: 0, y: 0 }
-- size: { w: 300, h: 300 }
-
-## image
-- name: boy_arm
-- layer: 0
-- position: { x: 10, y: 10 }
-- size: { w: 200, h: 200 }
-
-## bubble
-- layer: 1
-- position: { x: 35, y: 20 }
-- size: { w: 180, h: 90 }
-:::`,
-    notes: [
-      "Panelのpositionはpx、BubbleとImageのpositionはパーセントです。",
-      "sizeのwとhはすべてpxです。",
-      "layerが大きい要素ほど前面に表示されます。"
     ]
   }
 ]
