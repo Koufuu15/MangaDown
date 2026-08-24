@@ -18,8 +18,8 @@ const activeView = ref("preview")
 const previewRef = ref(null)
 
 const { copyMarkdown, copyImage } = useClipboard(previewRef, markdown)
-const { exportMarkdown, exportHTML, exportPNG, exportPDF } = useExport(previewRef, markdown)
-const { shareX, shareFacebook, shareNative } = useShare()
+const { exportMarkdown, exportPNG, exportPDF } = useExport(previewRef, markdown)
+const { shareX, shareFacebook, shareNative } = useShare(copyImage)
 
 const toggleView = () => {
   activeView.value = activeView.value === "preview" ? "markdown" : "preview"
@@ -92,7 +92,6 @@ const toggleView = () => {
           <h2 class="save-action-title">出力する</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="exportMarkdown">Markdown</button>
-            <button class="save-action-button" @click="exportHTML">HTML</button>
             <button class="save-action-button" @click="exportPNG">PNG</button>
             <button class="save-action-button" @click="exportPDF">PDF</button>
           </div>
