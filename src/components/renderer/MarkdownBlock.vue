@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { inject, ref } from "vue"
 import { marked } from "marked"
 
 marked.setOptions({
@@ -17,7 +17,7 @@ const props = defineProps({
 
 const resizing = ref(null)
 const moving = ref(null)
-const selected = ref(false)
+const selected = inject("previewSelection", ref(null))
 const textStyle = () => props.editableBlock ? {
     position: "relative",
     left: `${props.editableBlock.position?.x ?? 0}px`,
@@ -26,16 +26,16 @@ const textStyle = () => props.editableBlock ? {
     minHeight: props.editableBlock.size?.height > 0 ? `${props.editableBlock.size.height}px` : undefined
 } : undefined
 
-function startResize(event) {
+function startResize(event, corner) {
     if (!props.editableBlock) return
-    selected.value = true
-    resizing.value = { x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight }
+    selected.value = props.editableBlock
+    resizing.value = { corner, x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
 }
 
 function startMove(event) {
     if (!props.editableBlock || event.button !== 0) return
-    selected.value = true
+    selected.value = props.editableBlock
     moving.value = { x: event.clientX, y: event.clientY, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
     event.preventDefault()
@@ -52,7 +52,13 @@ function endMove() {
 
 function moveResize(event) {
     if (!resizing.value || !props.editableBlock) return
-    props.editableBlock.size = { width: Math.max(80, resizing.value.width + event.clientX - resizing.value.x), height: Math.max(40, resizing.value.height + event.clientY - resizing.value.y) }
+    const deltaX = event.clientX - resizing.value.x
+    const deltaY = event.clientY - resizing.value.y
+    const fromLeft = resizing.value.corner.includes("left")
+    const fromTop = resizing.value.corner.includes("top")
+    props.editableBlock.size = { width: Math.max(80, resizing.value.width + (fromLeft ? -deltaX : deltaX)), height: Math.max(40, resizing.value.height + (fromTop ? -deltaY : deltaY)) }
+    if (fromLeft) props.editableBlock.position.x = resizing.value.left + deltaX
+    if (fromTop) props.editableBlock.position.y = resizing.value.top + deltaY
 }
 
 function endResize() {
@@ -62,9 +68,11 @@ function endResize() {
 
 <template>
 
-<div class="markdown-preview-item" :class="{ 'markdown-selected': selected }" :style="textStyle()" @pointerdown="startMove" @pointermove="moveBlock" @pointerup="endMove" @pointercancel="endMove">
+<div class="markdown-preview-item" :class="{ 'markdown-selected': selected === editableBlock }" :style="textStyle()" @pointerdown="startMove" @pointermove="moveBlock" @pointerup="endMove" @pointercancel="endMove">
     <div class="markdown" v-html="marked.parse(content, {breaks: true})" />
-    <span v-if="editableBlock && selected" class="markdown-resize-handle" @pointerdown.stop="startResize" @pointermove="moveResize" @pointerup="endResize" @pointercancel="endResize" />
+        <template v-if="editableBlock && selected === editableBlock">
+            <span v-for="corner in ['top-left', 'top-right', 'bottom-left', 'bottom-right']" :key="corner" class="markdown-resize-handle" :class="`handle-${corner}`" @pointerdown.stop="startResize($event, corner)" @pointermove="moveResize" @pointerup="endResize" @pointercancel="endResize" />
+        </template>
 </div>
 
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue"
+import { computed, provide, ref } from "vue"
 
 import parseMarkdown from "@/parser/markdown/parseMarkdown"
 
@@ -30,6 +30,8 @@ const blocks = computed(() => props.editorBlocks
         source: block
     }))
     : parseMarkdown(props.content))
+const selectedElement = ref(null)
+provide("previewSelection", selectedElement)
 
 function panelsForBlock(index) {
     if (!props.panelGroups) return null

@@ -653,15 +653,18 @@
 
 .markdown-resize-handle{
   position:absolute;
-  right:0;
-  bottom:0;
   width:14px;
   height:14px;
-  border:2px solid var(--write-md-line);
+  border:2px solid #2563eb;
+  border-radius:50%;
   background:#fff;
-  cursor:nwse-resize;
   touch-action:none;
 }
+
+.markdown-resize-handle.handle-top-left { left:-7px; top:-7px; cursor:nwse-resize; }
+.markdown-resize-handle.handle-top-right { right:-7px; top:-7px; cursor:nesw-resize; }
+.markdown-resize-handle.handle-bottom-left { left:-7px; bottom:-7px; cursor:nesw-resize; }
+.markdown-resize-handle.handle-bottom-right { right:-7px; bottom:-7px; cursor:nwse-resize; }
 
 .markdown-selected{
   outline:2px dashed #2563eb;
