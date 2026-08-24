@@ -18,8 +18,8 @@ const activeView = ref("preview")
 const previewRef = ref(null)
 
 const { copyMarkdown, copyImage } = useClipboard(previewRef, markdown)
-const { exportMarkdown, exportHTML, exportPNG, exportPDF } = useExport(previewRef, markdown)
-const { shareX, shareFacebook, shareNative } = useShare()
+const { exportMarkdown, exportPNG, exportPDF } = useExport(previewRef, markdown)
+const { shareX, shareFacebook, shareNative } = useShare(previewRef, copyImage)
 
 const toggleView = () => {
   activeView.value = activeView.value === "preview" ? "markdown" : "preview"
@@ -76,8 +76,10 @@ const toggleView = () => {
           </div>
 
           <div v-if="activeView === 'preview'" ref="previewRef" class="save-preview">
-            <Renderer :content="markdown" />
-          </div>
+            <div class="save-preview-export">
+              <Renderer :content="markdown" />
+            </div>
+          </div> 
 
           <textarea v-else v-model="markdown" readonly class="save-markdown" />
         </div>
@@ -90,7 +92,6 @@ const toggleView = () => {
           <h2 class="save-action-title">出力する</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="exportMarkdown">Markdown</button>
-            <button class="save-action-button" @click="exportHTML">HTML</button>
             <button class="save-action-button" @click="exportPNG">PNG</button>
             <button class="save-action-button" @click="exportPDF">PDF</button>
           </div>

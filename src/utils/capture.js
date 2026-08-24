@@ -1,49 +1,32 @@
 import * as htmlToImage from "html-to-image"
 
-/**
- * Preview全体をPNG(DataURL)として取得
- */
-export async function capturePNG(node) {
-  const scale = 4
+const SCALE = 4
+const PADDING_X = 40
 
-  return await htmlToImage.toPng(node, {
-    pixelRatio: scale,
+function getOptions(node) {
+  const width = node.scrollWidth
+  const height = node.scrollHeight
 
-    canvasWidth: node.scrollWidth * scale,
-    canvasHeight: node.scrollHeight * scale,
-
-    width: node.scrollWidth,
-    height: node.scrollHeight,
-
-    cacheBust: true,
-
+  return {
+    pixelRatio: SCALE,
+    width: width + PADDING_X,
+    height,
+    backgroundColor: "#ffffff",
     style: {
+      paddingLeft: `${PADDING_X}px`,
+      paddingRight: `${PADDING_X}px`,
+      boxSizing: "border-box",
       overflow: "visible",
-      height: `${node.scrollHeight}px`
+      maxHeight: "none",
+      height: `${height}px`
     }
-  })
+  }
 }
 
-/**
- * Preview全体をBlobとして取得
- */
-export async function captureBlob(node) {
-  const scale = 4
+export function capturePNG(node) {
+  return htmlToImage.toPng(node, getOptions(node))
+}
 
-  return await htmlToImage.toBlob(node, {
-    pixelRatio: scale,
-
-    canvasWidth: node.scrollWidth * scale,
-    canvasHeight: node.scrollHeight * scale,
-
-    width: node.scrollWidth,
-    height: node.scrollHeight,
-
-    cacheBust: true,
-
-    style: {
-      overflow: "visible",
-      height: `${node.scrollHeight}px`
-    }
-  })
+export function captureBlob(node) {
+  return htmlToImage.toBlob(node, getOptions(node))
 }
