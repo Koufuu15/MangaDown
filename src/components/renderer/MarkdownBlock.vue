@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue"
 import { marked } from "marked"
 
 marked.setOptions({
@@ -7,16 +8,61 @@ marked.setOptions({
 });
 
 const props = defineProps({
-  content:String
+    content:String,
+    editableBlock: {
+        type: Object,
+        default: null
+    }
 })
+
+const resizing = ref(null)
+const moving = ref(null)
+const textStyle = () => props.editableBlock ? {
+    position: "relative",
+    left: `${props.editableBlock.position?.x ?? 0}px`,
+    top: `${props.editableBlock.position?.y ?? 0}px`,
+    width: props.editableBlock.size?.width > 0 ? `${props.editableBlock.size.width}px` : "100%",
+    minHeight: props.editableBlock.size?.height > 0 ? `${props.editableBlock.size.height}px` : undefined
+} : undefined
+
+function startResize(event) {
+    if (!props.editableBlock) return
+    resizing.value = { x: event.clientX, y: event.clientY, width: props.editableBlock.size.width || event.currentTarget.parentElement.offsetWidth, height: props.editableBlock.size.height || event.currentTarget.parentElement.offsetHeight }
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+}
+
+function startMove(event) {
+    if (!props.editableBlock || event.button !== 0) return
+    moving.value = { x: event.clientX, y: event.clientY, left: props.editableBlock.position?.x ?? 0, top: props.editableBlock.position?.y ?? 0 }
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+    event.preventDefault()
+}
+
+function moveBlock(event) {
+    if (!moving.value || !props.editableBlock) return
+    props.editableBlock.position = { x: moving.value.left + event.clientX - moving.value.x, y: moving.value.top + event.clientY - moving.value.y }
+}
+
+function endMove() {
+    moving.value = null
+}
+
+function moveResize(event) {
+    if (!resizing.value || !props.editableBlock) return
+    props.editableBlock.size = { width: Math.max(80, resizing.value.width + event.clientX - resizing.value.x), height: Math.max(40, resizing.value.height + event.clientY - resizing.value.y) }
+}
+
+function endResize() {
+    resizing.value = null
+}
 </script>
 
 <template>
 
-<div
-    class="markdown"
-    v-html="marked.parse(content, {breaks: true})"
-/>
+<div class="markdown-preview-item" :style="textStyle()" @pointerdown="startMove" @pointermove="moveBlock" @pointerup="endMove" @pointercancel="endMove">
+    <div class="markdown" v-html="marked.parse(content, {breaks: true})" />
+    <span v-if="editableBlock" class="markdown-resize-handle" @pointerdown.stop="startResize" @pointermove="moveResize" @pointerup="endResize" @pointercancel="endResize" />
+</div>
 
 </template>
 

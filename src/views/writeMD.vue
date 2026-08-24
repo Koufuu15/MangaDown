@@ -40,7 +40,7 @@ const editorBlocks = ref([])
 
 initialBlocks.forEach(block => {
   if (block.type === "markdown" && block.content.trim()) {
-    editorBlocks.value.push({ type: "text", content: block.content.trim() })
+    editorBlocks.value.push({ type: "text", content: block.content.trim(), position: { x: 0, y: 0 }, size: { width: 0, height: 0 } })
   }
 
   if (block.type === "manga") {
@@ -122,7 +122,7 @@ function removePanel(blockIndex) {
 }
 
 function addText(index = editorBlocks.value.length) {
-  editorBlocks.value.splice(index, 0, { type: "text", content: "" })
+  editorBlocks.value.splice(index, 0, { type: "text", content: "", position: { x: 0, y: 0 }, size: { width: 0, height: 0 } })
   syncContent()
 }
 
@@ -371,7 +371,7 @@ syncContent()
         </div>
 
         <div class="write-md-preview">
-          <Renderer :content="content" :panel-groups="panelGroups" />
+          <Renderer :content="content" :panel-groups="panelGroups" :editor-blocks="editorBlocks" />
         </div>
       </section>
     </main>

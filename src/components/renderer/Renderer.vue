@@ -16,10 +16,20 @@ const props = defineProps({
     panelGroups: {
         type: Array,
         default: null
+    },
+    editorBlocks: {
+        type: Array,
+        default: null
     }
 })
 
-const blocks = computed(() => parseMarkdown(props.content))
+const blocks = computed(() => props.editorBlocks
+    ? props.editorBlocks.map(block => ({
+        type: block.type === "text" ? BLOCK_TYPES.MARKDOWN : BLOCK_TYPES.MANGA,
+        content: block.content || "",
+        source: block
+    }))
+    : parseMarkdown(props.content))
 
 function panelsForBlock(index) {
     if (!props.panelGroups) return null
@@ -38,6 +48,7 @@ function panelsForBlock(index) {
             <MarkdownBlock
                 v-if="block.type===BLOCK_TYPES.MARKDOWN"
                 :content="block.content"
+                :editable-block="block.source"
             />
             <MangaBlock
                 v-else-if="block.type===BLOCK_TYPES.MANGA"

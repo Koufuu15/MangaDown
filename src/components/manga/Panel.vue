@@ -3,7 +3,7 @@ import { ref } from "vue"
 import { resolveAsset } from "@/utils/assetResolver"
 import Bubble from "./Bubble.vue"
 
-defineProps({
+const props = defineProps({
   panel: {
     type: Object,
     required: true
@@ -12,13 +12,18 @@ defineProps({
 
 const drag = ref(null)
 
-function startDrag(event, target) {
+function getPanelRect(event) {
+  return event.currentTarget.closest(".manga-panel").getBoundingClientRect()
+}
+
+function startDrag(event, target, unit = "percent") {
   if (event.button !== 0) return
 
-  const panelElement = event.currentTarget.closest(".relative")
-  const rect = panelElement.getBoundingClientRect()
+  const rect = getPanelRect(event)
   drag.value = {
+    mode: "drag",
     target,
+    unit,
     startX: event.clientX,
     startY: event.clientY,
     x: target.position?.x ?? 0,
@@ -30,13 +35,43 @@ function startDrag(event, target) {
   event.preventDefault()
 }
 
+function startResize(event, target) {
+  if (event.button !== 0) return
+
+  const rect = getPanelRect(event)
+  drag.value = {
+    mode: "resize",
+    target,
+    startX: event.clientX,
+    startY: event.clientY,
+    x: target.size?.width ?? rect.width,
+    y: target.size?.height ?? rect.height,
+    width: rect.width,
+    height: rect.height
+  }
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  event.preventDefault()
+}
+
 function moveDrag(event) {
   if (!drag.value) return
 
   const current = drag.value
+  const deltaX = event.clientX - current.startX
+  const deltaY = event.clientY - current.startY
+
+  if (current.mode === "resize") {
+    current.target.size = {
+      width: Math.max(40, current.x + deltaX),
+      height: Math.max(40, current.y + deltaY)
+    }
+    return
+  }
+
+  const scale = current.unit === "percent" ? 100 : 1
   current.target.position = {
-    x: current.x + (event.clientX - current.startX) / current.width * 100,
-    y: current.y + (event.clientY - current.startY) / current.height * 100
+    x: current.x + deltaX / current.width * scale,
+    y: current.y + deltaY / current.height * scale
   }
 }
 
@@ -47,7 +82,11 @@ function endDrag() {
 
 <template>
   <div
-    class="relative shadow-sm overflow-hidden bg-white"
+    class="manga-panel relative shadow-sm overflow-hidden bg-white"
+    @pointerdown.self="startDrag($event, props.panel, 'pixel')"
+    @pointermove="moveDrag"
+    @pointerup="endDrag"
+    @pointercancel="endDrag"
     :style="{
       left: (panel.position?.x ?? 0) + 'px',
       top: (panel.position?.y ?? 0) + 'px',
@@ -59,6 +98,13 @@ function endDrag() {
       borderColor: panel.borderColor ?? '#18181b'
     }"
   >
+    <span
+      class="panel-resize-handle"
+      @pointerdown.stop="startResize($event, props.panel)"
+      @pointermove="moveDrag"
+      @pointerup="endDrag"
+      @pointercancel="endDrag"
+    />
     <template
       v-for="(component, index) in panel.components"
       :key="index"
@@ -73,7 +119,18 @@ function endDrag() {
         :style="{
           zIndex: bubble.layer
         }"
-        @pointerdown="startDrag($event, bubble)"
+        @pointerdown.stop="startDrag($event, bubble)"
+        @pointermove="moveDrag"
+        @pointerup="endDrag"
+        @pointercancel="endDrag"
+      />
+      <span
+        v-if="component.bubble"
+        v-for="bubble in component.bubble"
+        :key="`bubble-resize-${index}`"
+        class="element-resize-handle"
+        :style="{ left: `calc(${bubble.position?.x ?? 0}% + ${(bubble.size?.width ?? 100) - 14}px)`, top: `calc(${bubble.position?.y ?? 0}% + ${(bubble.size?.height ?? 60) - 14}px)`, zIndex: (bubble.layer ?? 0) + 1 }"
+        @pointerdown.stop="startResize($event, bubble)"
         @pointermove="moveDrag"
         @pointerup="endDrag"
         @pointercancel="endDrag"
@@ -93,7 +150,18 @@ function endDrag() {
           height: (image.size?.height ?? 100) + 'px',
           zIndex: image.layer
         }"
-        @pointerdown="startDrag($event, image)"
+        @pointerdown.stop="startDrag($event, image)"
+        @pointermove="moveDrag"
+        @pointerup="endDrag"
+        @pointercancel="endDrag"
+      />
+      <span
+        v-if="component.image"
+        v-for="image in component.image"
+        :key="`image-resize-${index}`"
+        class="element-resize-handle"
+        :style="{ left: `calc(${image.position?.x ?? 0}% + ${(image.size?.width ?? 100) - 14}px)`, top: `calc(${image.position?.y ?? 0}% + ${(image.size?.height ?? 100) - 14}px)`, zIndex: (image.layer ?? 0) + 1 }"
+        @pointerdown.stop="startResize($event, image)"
         @pointermove="moveDrag"
         @pointerup="endDrag"
         @pointercancel="endDrag"
@@ -114,6 +182,28 @@ img {
 .bubble:active,
 img:active {
   cursor: grabbing;
+}
+
+.panel-resize-handle,
+.element-resize-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #18181b;
+  background: #fff;
+  cursor: nwse-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.panel-resize-handle {
+  right: 2px;
+  bottom: 2px;
+  z-index: 10000;
+}
+
+.element-resize-handle {
+  pointer-events: auto;
 }
 
 p {

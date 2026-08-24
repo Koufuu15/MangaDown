@@ -639,3 +639,26 @@
     display:none;
   }
 }
+
+.markdown-preview-item{
+  touch-action:none;
+}
+
+.markdown-preview-item .markdown{
+  cursor:grab;
+  user-select:none;
+}
+
+.markdown-preview-item .markdown:active{cursor:grabbing}
+
+.markdown-resize-handle{
+  position:absolute;
+  right:0;
+  bottom:0;
+  width:14px;
+  height:14px;
+  border:2px solid var(--write-md-line);
+  background:#fff;
+  cursor:nwse-resize;
+  touch-action:none;
+}
