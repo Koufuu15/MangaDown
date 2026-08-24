@@ -76,8 +76,10 @@ const toggleView = () => {
           </div>
 
           <div v-if="activeView === 'preview'" ref="previewRef" class="save-preview">
-            <Renderer :content="markdown" />
-          </div>
+            <div class="save-preview-export">
+              <Renderer :content="markdown" />
+            </div>
+          </div> 
 
           <textarea v-else v-model="markdown" readonly class="save-markdown" />
         </div>
