@@ -82,16 +82,18 @@ function moveDrag(event) {
       width: Math.max(40, current.x + (left ? -deltaX : deltaX)),
       height: Math.max(40, current.y + (top ? -deltaY : deltaY))
     }
-    const positionScale = current.unit === "percent" ? 100 : 1
-    if (left) current.target.position.x = current.positionX + deltaX / current.width * positionScale
-    if (top) current.target.position.y = current.positionY + deltaY / current.height * positionScale
+    const positionDeltaX = current.unit === "percent" ? deltaX / current.width * 100 : deltaX
+    const positionDeltaY = current.unit === "percent" ? deltaY / current.height * 100 : deltaY
+    if (left) current.target.position.x = current.positionX + positionDeltaX
+    if (top) current.target.position.y = current.positionY + positionDeltaY
     return
   }
 
-  const scale = current.unit === "percent" ? 100 : 1
+  const positionDeltaX = current.unit === "percent" ? deltaX / current.width * 100 : deltaX
+  const positionDeltaY = current.unit === "percent" ? deltaY / current.height * 100 : deltaY
   current.target.position = {
-    x: current.x + deltaX / current.width * scale,
-    y: current.y + deltaY / current.height * scale
+    x: current.x + positionDeltaX,
+    y: current.y + positionDeltaY
   }
 }
 
