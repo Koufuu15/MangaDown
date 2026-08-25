@@ -1,7 +1,7 @@
 <script setup>
 import "../assets/writeMD.css"
 
-import { computed, ref, watch } from "vue"
+import { computed, nextTick, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 
 import Renderer from "@/components/renderer/Renderer.vue"
@@ -115,6 +115,13 @@ function syncContent() {
   localStorage.setItem("content", content.value)
 }
 
+function resizeTextArea(textarea) {
+  if (!textarea) return
+
+  textarea.style.height = "0px"
+  textarea.style.height = `${textarea.scrollHeight}px`
+}
+
 function addPanel(index = editorBlocks.value.length) {
   editorBlocks.value.splice(index, 0, { type: "panel", panel: createPanel() })
   syncContent()
@@ -126,8 +133,20 @@ function removePanel(blockIndex) {
 }
 
 function addText(index = editorBlocks.value.length) {
-  editorBlocks.value.splice(index, 0, { type: "text", content: "", position: { x: 0, y: 0 }, size: { width: 0, height: 0 } })
+  editorBlocks.value.splice(index, 0, {
+    type: "text",
+    content: "",
+    position: { x: 0, y: 0 },
+    size: { width: 0, height: 0 }
+  })
+
   syncContent()
+
+  nextTick(() => {
+    const textareas = document.querySelectorAll(".write-md-text-block-body textarea")
+    const textarea = textareas[textareas.length - 1]
+    resizeTextArea(textarea)
+  })
 }
 
 function removeText(blockIndex) {
@@ -314,7 +333,12 @@ syncContent()
               <button class="write-md-icon-button" title="テキストを削除" @click="removeText(blockIndex)">×</button>
             </header>
             <div class="write-md-text-block-body">
-              <textarea v-model="block.content" rows="5" placeholder="普通の文章を入力" @input="syncContent" />
+              <textarea
+                v-model="block.content"
+                rows="1"
+                placeholder="普通の文章を入力"
+                @input="resizeTextArea($event.target); syncContent"
+              ></textarea>
             </div>
           </article>
 

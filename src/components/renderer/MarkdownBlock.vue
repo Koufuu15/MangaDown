@@ -24,7 +24,8 @@ const textStyle = () => props.editableBlock ? {
     left: `${props.editableBlock.position?.x ?? 0}px`,
     top: `${props.editableBlock.position?.y ?? 0}px`,
     width: props.editableBlock.size?.width > 0 ? `${props.editableBlock.size.width}px` : "100%",
-    minHeight: props.editableBlock.size?.height > 0 ? `${props.editableBlock.size.height}px` : undefined
+    minHeight: props.editableBlock.size?.height > 0 ? `${props.editableBlock.size.height}px` : undefined,
+    height: "auto"
 } : undefined
 
 function startResize(event, corner) {
@@ -85,6 +86,12 @@ function endResize() {
     font-size: 2em;
     font-weight: bold;
     margin: .67em 0;
+}
+
+.markdown-preview-item {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
 }
 
 .markdown h2 {

@@ -366,13 +366,21 @@
   background:#f7f7f5;
 }
 
-.write-md-text-block-body{padding:16px}
+.write-md-text-block{
+  height:fit-content;
+}
+
+.write-md-text-block-body{
+  padding:16px;
+}
 
 .write-md-text-block-body textarea{
   display:block;
   width:100%;
+  height:auto;
   min-height:110px;
-  resize:vertical;
+  overflow:hidden;
+  resize:none;
   padding:12px;
   border:1px solid var(--write-md-line);
   background:#fff;
