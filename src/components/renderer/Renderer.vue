@@ -42,6 +42,10 @@ const previewSelection = {
 }
 provide("previewSelection", previewSelection)
 
+function handleRendererPointerDown(event) {
+    if (event.target === event.currentTarget) previewSelection.clear()
+}
+
 function panelsForBlock(index) {
     if (!props.panelGroups) return null
 
@@ -54,7 +58,7 @@ function panelsForBlock(index) {
 </script>
 
 <template>
-    <div class="renderer" @pointerdown="previewSelection.clear">
+    <div class="renderer" @pointerdown="handleRendererPointerDown">
         <template v-for="(block,index) in blocks" :key="index">
             <MarkdownBlock
                 v-if="block.type===BLOCK_TYPES.MARKDOWN"

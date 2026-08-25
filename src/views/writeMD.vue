@@ -333,6 +333,8 @@ syncContent()
               <label>背景色<input v-model="block.panel.backgroundColor" type="color" @change="syncContent"></label>
               <label>枠線<select v-model="block.panel.border" @change="syncContent"><option value="solid">実線</option><option value="dashed">破線</option><option value="none">なし</option></select></label>
               <label>枠線幅<input v-model.number="block.panel.borderWidth" type="number" min="0" step="1" @change="syncContent"></label>
+              <label>左位置 (px)<input v-model.number="block.panel.position.x" type="number" @change="syncContent"></label>
+              <label>上位置 (px)<input v-model.number="block.panel.position.y" type="number" @change="syncContent"></label>
               <label>幅 (px)<input v-model.number="block.panel.size.width" type="number" min="1" @change="syncContent"></label>
               <label>高さ (px)<input v-model.number="block.panel.size.height" type="number" min="1" @change="syncContent"></label>
             </div>

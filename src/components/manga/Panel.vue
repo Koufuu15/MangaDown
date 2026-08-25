@@ -41,12 +41,7 @@ function selectTarget(target) {
   previewSelection.select(target)
 }
 
-function selectPanelOrClear(event) {
-  if (event.target === event.currentTarget) {
-    previewSelection.clear()
-    return
-  }
-
+function selectPanel(event) {
   previewSelection.select(props.panel)
   startDrag(event, props.panel, "pixel")
 }
@@ -109,7 +104,7 @@ function endDrag() {
   <div
     class="manga-panel relative shadow-sm overflow-hidden bg-white"
     :class="{ 'panel-selected': selectedTarget === props.panel }"
-    @pointerdown="selectPanelOrClear"
+    @pointerdown="selectPanel"
     @pointermove="moveDrag"
     @pointerup="endDrag"
     @pointercancel="endDrag"
@@ -208,6 +203,16 @@ img {
   cursor: grab;
   touch-action: none;
   user-select: none;
+}
+
+.manga-panel {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.manga-panel:active {
+  cursor: grabbing;
 }
 
 .element-selected {
